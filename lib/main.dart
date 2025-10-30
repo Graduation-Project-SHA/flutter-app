@@ -10,6 +10,7 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
+import 'init_home_screen.dart';
 
 
 Future<void> main() async {
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         OnboardingScreen.routeName:(context)=>OnboardingScreen(),
         Loginscreen.routeName:(context)=>Loginscreen(),
         RegisterUserScreen.routeName:(context)=>RegisterUserScreen(),
+        HomeScreen.routeName:(context)=>HomeScreen(),
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
       },
       );

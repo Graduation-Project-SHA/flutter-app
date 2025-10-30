@@ -12,37 +12,77 @@ class AuthCubit extends Cubit<AuthState> {
 
   static AuthCubit get(context) => BlocProvider.of(context);
 
+  String _translateError(String englishError) {
+    if (englishError.contains('email or password is incorrect')) {
+      return 'البريد الإلكتروني أو كلمة السر غير صحيحة.';
+    }
+    if (englishError.contains('Invalid credentials')) {
+      return 'البريد الإلكتروني أو كلمة السر غير صالحة.';
+    }
+    if (englishError.contains('User with this email not found')) {
+      return 'لم يتم العثور على مستخدم بهذا البريد الإلكتروني.';
+    }
+    if (englishError.contains('code is invalid or expired')) {
+      return 'الرمز المُدخل غير صحيح أو انتهت صلاحيته.';
+    }
+    if (englishError.contains('Password must be')) {
+      return 'كلمة السر ضعيفة. يجب أن تكون 8 أحرف على الأقل وتحتوي على رموز وحروف كبيرة وصغيرة وارقام.';
+    }
+    if (englishError.contains('phone')) {
+      return 'رقم الهاتف غير صالح.';
+    }
+    return 'فشل الاتصال بالخادم. حاول مجدداً.';
+  }
+
   String _handleDioError(error) {
-    String errorMessage = "حدث خطأ غير متوقع.";
+    String rawErrorMessage = "حدث خطأ غير متوقع.";
     if (error is DioException && error.response != null) {
       final responseData = error.response!.data;
 
       if (responseData is Map) {
         if (responseData.containsKey('message')) {
-          errorMessage = responseData['message'];
+          rawErrorMessage = responseData['message'];
         } else if (responseData.containsKey('error')) {
-          errorMessage = responseData['error'];
+          if (responseData['error'] is List && responseData['error'].isNotEmpty) {
+            rawErrorMessage = responseData['error'].first.toString();
+          } else {
+            rawErrorMessage = responseData['error'].toString();
+          }
+        }
+      }
+      else if (responseData is List && responseData.isNotEmpty) {
+        try {
+          if (responseData.first is Map && responseData.first.containsKey('message')) {
+            rawErrorMessage = responseData.first['message'];
+          } else {
+            rawErrorMessage = responseData.first.toString();
+          }
+        } catch (e) {
+          rawErrorMessage = responseData.first.toString();
         }
       }
       else if (responseData is String) {
         try {
           final decoded = json.decode(responseData);
           if (decoded is Map && decoded.containsKey('message')) {
-            errorMessage = decoded['message'];
+            rawErrorMessage = decoded['message'];
           } else {
-            errorMessage = responseData;
+            rawErrorMessage = responseData;
           }
         } catch (e) {
-          errorMessage = responseData;
+          rawErrorMessage = responseData;
         }
       } else {
-        errorMessage = "خطأ من السيرفر: ${error.response!.statusCode}";
+        rawErrorMessage = "خطأ من السيرفر: ${error.response!.statusCode}";
       }
 
+    } else if (error is DioException && error.error.toString().contains('SocketException')) {
+      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
     } else if (error.toString().contains('SocketException')) {
-      errorMessage = "خطأ في الاتصال بالشبكة.";
+      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
     }
-    return errorMessage;
+
+    return _translateError(rawErrorMessage);
   }
 
   void userRegister({
@@ -174,5 +214,11 @@ class AuthCubit extends Cubit<AuthState> {
       print(error.toString());
       emit(VerifyCodeErrorState(_handleDioError(error)));
     });
+  }
+
+  void userLogout() async {
+    final authBox = Hive.box('authBox');
+    await authBox.clear();
+    emit(AuthInitial());
   }
 }

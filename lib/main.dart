@@ -10,6 +10,7 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
+import 'features/main_layout/main_layout.dart';
 import 'init_home_screen.dart';
 
 
@@ -47,12 +48,12 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      initialRoute: OnboardingScreen.routeName,
+      initialRoute: MainLayout.routeName,
       routes: {
         OnboardingScreen.routeName:(context)=>OnboardingScreen(),
         Loginscreen.routeName:(context)=>Loginscreen(),
         RegisterUserScreen.routeName:(context)=>RegisterUserScreen(),
-        HomeScreen.routeName:(context)=>HomeScreen(),
+        MainLayout.routeName:(context)=>MainLayout(),
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
       },
       );

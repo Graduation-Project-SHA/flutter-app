@@ -51,6 +51,8 @@ dependencies:
   path_provider: ^2.1.5
   hive_generator: ^2.0.1
   hive_flutter: ^1.1.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -85,11 +87,21 @@ flutter:
     - assets/images/frame3.png
     - assets/images/frame4.png
     - assets/images/frame5.png
+    - assets/images/Blob1.png
+    - assets/images/Blob2.png
+    - assets/images/Blob3.png
     - assets/images/doctor.png
     - assets/images/button.png
     - assets/images/bg.png
+    - assets/images/hospital.png
+    - assets/images/appointment.png
     - assets/images/splash.png
     - assets/images/success.png
+    - assets/images/donors.png
+    - assets/images/Medicine.png
+    - assets/images/Nurse.png
+    - assets/images/Home_care.png
+
 
 
 

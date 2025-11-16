@@ -10,6 +10,10 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
+import 'features/main_layout/appointment/AppointmentTimeScreen.dart';
+import 'features/main_layout/appointment/DoctorDetailsScreen.dart';
+import 'features/main_layout/main_layout.dart';
+import 'init_home_screen.dart';
 
 
 Future<void> main() async {
@@ -46,11 +50,14 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      initialRoute: OnboardingScreen.routeName,
+      initialRoute: MainLayout.routeName,
       routes: {
         OnboardingScreen.routeName:(context)=>OnboardingScreen(),
         Loginscreen.routeName:(context)=>Loginscreen(),
         RegisterUserScreen.routeName:(context)=>RegisterUserScreen(),
+        MainLayout.routeName:(context)=>MainLayout(),
+        AppointmentTimeScreen.routeName:(context)=>AppointmentTimeScreen(),
+        DoctorDetailsScreen.routeName:(context)=>DoctorDetailsScreen(),
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
       },
       );

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
+import 'api_constants.dart';
 
 
 class DioHelper {
@@ -9,7 +10,7 @@ class DioHelper {
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'https://3s4rmd3r-3000.uks1.devtunnels.ms',
+        baseUrl: ApiConstants.baseUrl ,
         receiveDataWhenStatusError: true,
         headers: {
           'Content-Type': 'application/json',
@@ -60,8 +61,7 @@ class AuthInterceptor extends Interceptor {
 
   Future<String?> _performTokenRefresh(String refreshToken) async {
     try {
-      final response = await _dio.post(
-        'https://wekaya.onrender.com/auth/refresh-token',
+      final response = await _dio.post(ApiConstants.refreshToken,
         data: {'refreshToken': refreshToken},
       );
 

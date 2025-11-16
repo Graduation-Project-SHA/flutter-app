@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/auth/reset_password/reset_password_screen.dart';
@@ -28,13 +29,30 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool isSubmitted = false;
 
   static const int pinCodeLength = 6;
+  Timer? _timer;
+  int _secondsLeft = 0;
+  static const int _resendDuration = 30;
+
+  void _startTimer() {
+    _secondsLeft = _resendDuration;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsLeft > 0) {
+        setState(() {
+          _secondsLeft--;
+        });
+      } else {
+        _timer?.cancel();
+      }
+    });
+  }
 
   @override
   void dispose() {
+    _timer?.cancel();
     pinCodeController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +100,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   backgroundColor: Colors.blue,
                 ),
               );
-            } else if (state is RequestResetErrorState) {
+              _startTimer();
+            }
+            else if (state is RequestResetErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text("فشل في إعادة الإرسال: ${state.error}"),
@@ -187,24 +207,33 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             ),
                           ),
                           DefaultTextButton(
-                            textButtonTitle: isResending ? 'جاري الإرسال...' : 'إعادة إرسال',
-                            onPressed: isResending ? null : () {
+                            textButtonTitle: isResending
+                                ? 'جاري الإرسال...'
+                                : (_secondsLeft > 0 ? 'إعادة إرسال' : 'إعادة إرسال'),
+
+                            onPressed: (isResending || _secondsLeft > 0) ? null : () {
                               AuthCubit.get(context).requestPasswordReset(
                                 email: widget.email,
                               );
                             },
-                            textButtonColor: const Color.fromRGBO(27, 106, 243, 1),
+                            textButtonColor: (_secondsLeft > 0 || isResending)
+                                ? Colors.grey
+                                : const Color.fromRGBO(27, 106, 243, 1),
                           ),
                         ],
                       ),
-                      Text(
-                        'إعادة إرسال خلال 30ث',
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w400,
-                          color: const Color.fromRGBO(48, 54, 81, 1),
-                        ),
-                      ),
+
+                      if (_secondsLeft > 0)
+                        Text(
+                          'إعادة إرسال خلال ${_secondsLeft}ث',
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: const Color.fromRGBO(48, 54, 81, 1),
+                          ),
+                        )
+                      else
+                        SizedBox(height: 10.h),
                     ],
                   ),
                   SizedBox(height: 30.h),

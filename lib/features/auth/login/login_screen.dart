@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/shared/component/defaultTextButton/defaultTextButton.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
+import '../../../init_home_screen.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../forgetpassword/forget_password_screen.dart';
@@ -62,10 +63,20 @@ class _LoginscreenState extends State<Loginscreen> {
                   backgroundColor: Colors.green,
                 ),
               );
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => BlocProvider.value(
+                    value: AuthCubit.get(context),
+                    child: const HomeScreen(),
+                  ),
+                ),
+                    (route) => false,
+              );
             } else if (state is LoginErrorState) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("فشل تسجيل الدخول. تأكد من البريد وكلمة السر."),
+                SnackBar(
+                  content: Text("فشل تسجيل الدخول: ${state.error}"),
                   backgroundColor: Colors.redAccent,
                 ),
               );

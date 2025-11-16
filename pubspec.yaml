@@ -101,6 +101,15 @@ flutter:
     - assets/images/Medicine.png
     - assets/images/Nurse.png
     - assets/images/Home_care.png
+    - assets/images/bone.png
+    - assets/images/brain.png
+    - assets/images/ear.png
+    - assets/images/tooth.png
+    - assets/images/filter.png
+    - assets/images/home_icon.png
+    - assets/images/settings_icon.png
+    - assets/images/message-text_icon.png
+    - assets/images/calendar_icon.png
 
 
 

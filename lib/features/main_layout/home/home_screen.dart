@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
+import '../../../shared/component/filterButton/filter_button.dart';
+import '../../../shared/component/searchField/search_field.dart';
+import '../appointment/appointment_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = "HomeScreen";
@@ -124,49 +127,18 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      textAlign: TextAlign.right,
-                      decoration: InputDecoration(
-                        hintText: "البحث عن طبيب...",
-                        hintStyle: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey[600],
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 15.w),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.r),
-                          borderSide: BorderSide(color: const Color(0xffEDF1F3), width: 1),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.r),
-                          borderSide: BorderSide(color: const Color(0xffEDF1F3), width: 1),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.r),
-                          borderSide: BorderSide(color: const Color(0xffEDF1F3),width:1),
-                        ),
-                      ),
+                    child: SearchField(
+                      hint: "البحث عن طبيب...",
+                      onChanged: (value) {
+                        print("بحث عن: $value");
+                      },
                     ),
                   ),
-                  SizedBox(width: 8.w,),
-                  Container(
-                    width:50.w,
-                    height:63.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.r),
-                      border: Border.all(color: const Color(0xffEDF1F3),width:1)
-                    ),
-                    child: Center(
-                      child: Icon(
-                          Icons.tune,
-                          size: 24.sp,
-                          color: const Color(0xff6161FF)
-                      ),
-                    ),
+                  SizedBox(width: 8.w),
+                  FilterButton(
+                    onPressed: () {
+                      print("فتح الفلتر");
+                    },
                   ),
                 ],
               ),
@@ -307,7 +279,9 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, AppointmentScreen.routeName);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonColor,
                 shape: RoundedRectangleBorder(

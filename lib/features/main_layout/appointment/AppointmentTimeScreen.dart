@@ -120,9 +120,7 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
           style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
-        actions: [
 
-        ],
 
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
@@ -212,6 +210,7 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
               child: ElevatedButton(
                 onPressed: _selectedDayIndex != null && _selectedTimeIndex != null
                     ? () {
+
                 }
                     : null,
                 style: ElevatedButton.styleFrom(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/main_layout/appointment/Payment.dart';
 
 class AppointmentTimeScreen extends StatefulWidget {
   static const String routeName = "AppointmentTimeScreen";
-  const AppointmentTimeScreen({super.key});
+  const AppointmentTimeScreen({ super.key});
+  
 
   @override
   State<AppointmentTimeScreen> createState() => _AppointmentTimeScreenState();
@@ -12,7 +14,6 @@ class AppointmentTimeScreen extends StatefulWidget {
 class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
   int? _selectedDayIndex;
   int? _selectedTimeIndex;
-
 
   Widget _buildDayCard(String day, String date, int index) {
     bool isSelected = _selectedDayIndex == index;
@@ -27,7 +28,7 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
       },
       child: Container(
         width: 72.w,
-        margin: EdgeInsets.only(left:12.w),
+        margin: EdgeInsets.only(left: 12.w),
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
           color: isSelected ? primaryColor : Colors.white,
@@ -105,8 +106,6 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
       {"day": "Sat", "date": "13"},
       {"day": "Sun", "date": "30"},
       {"day": "Mon", "date": "21"},
-
-
     ];
 
     final List<String> morningTimes = ["9:30", "10:00", "10:30", "11:00"];
@@ -117,7 +116,11 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
       appBar: AppBar(
         title: Text(
           "حجز موعد",
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
 
@@ -140,17 +143,23 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
               children: [
                 Text(
                   "اختر معاد الكشف",
-                  style: TextStyle(fontSize:20.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                SizedBox(height:8.h ,),
+                SizedBox(height: 8.h),
                 Text(
                   "تستطيع أن تحدد تاريخ اليوم المناسب لك والساعة المناسبة في هذا اليوم",
-                  style: TextStyle(fontSize:12.sp, color: Colors.grey),
+                  style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                 ),
                 SizedBox(height: 20.h),
                 Text(
                   "اختار يوم من شهر 10 - 2025",
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 SizedBox(
@@ -160,14 +169,21 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
                     reverse: true,
                     itemCount: days.length,
                     itemBuilder: (context, index) {
-                      return _buildDayCard(days[index]['day']!, days[index]['date']!, index);
+                      return _buildDayCard(
+                        days[index]['day']!,
+                        days[index]['date']!,
+                        index,
+                      );
                     },
                   ),
                 ),
                 SizedBox(height: 20.h),
                 Text(
                   "مواعيد الصباح",
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Wrap(
@@ -181,7 +197,10 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
                 SizedBox(height: 20.h),
                 Text(
                   "مواعيد المساء",
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Wrap(
@@ -189,11 +208,14 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
                   runSpacing: 0,
                   spacing: 0,
                   children: List.generate(eveningTimes.length, (index) {
-                    return _buildTimeChip(eveningTimes[index], index + morningTimes.length);
+                    return _buildTimeChip(
+                      eveningTimes[index],
+                      index + morningTimes.length,
+                    );
                   }),
                 ),
 
-                SizedBox(height:280.h),
+                SizedBox(height: 280.h),
               ],
             ),
           ),
@@ -208,18 +230,35 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
               ),
               child: ElevatedButton(
-                onPressed: _selectedDayIndex != null && _selectedTimeIndex != null
+                onPressed:
+                    _selectedDayIndex != null && _selectedTimeIndex != null
                     ? () {
-
-                }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Payment();
+                            },
+                          ),
+                        );
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   disabledBackgroundColor: Colors.grey,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
                   padding: EdgeInsets.symmetric(vertical: 13.5.h),
                 ),
-                child: Text("تأكيد الحجز", style: TextStyle(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.w600)),
+                child: Text(
+                  "تأكيد الحجز",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ),

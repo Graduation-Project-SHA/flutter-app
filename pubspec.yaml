@@ -115,6 +115,15 @@ flutter:
     - assets/images/time-fill.png
     - assets/images/Maps.png
     - assets/images/bill_icon.png
+    - assets/images/visa_logo.png
+    - assets/images/InstaPay_Logo.png
+    - assets/images/instapay_bigLogo.png
+    - assets/images/meza_logo.png
+    - assets/images/mastecard_logo.png
+    - assets/images/visaa_logo.png
+    - assets/images/pay_done_back2.png
+    - assets/images/pay_done_back1.png
+    - assets/images/pay_done.png
 
 
 

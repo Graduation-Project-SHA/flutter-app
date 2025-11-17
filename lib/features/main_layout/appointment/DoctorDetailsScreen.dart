@@ -1,80 +1,206 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'AppointmentTimeScreen.dart';
 
 class DoctorDetailsScreen extends StatelessWidget {
   static const String routeName = "DoctorDetailsScreen";
   const DoctorDetailsScreen({super.key});
 
-  Widget _buildUserReview(String name, String date, String review, String image) {
+  Widget _wrapInContainer(Widget child) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 0.w),
-      decoration: const BoxDecoration(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
         color: Colors.white,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CircleAvatar(radius: 20.r, backgroundImage: AssetImage("assets/images/doctor.png")),
-                    SizedBox(width: 12.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(name, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 4.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text("4.5", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
-                            SizedBox(width: 4.w),
-                            Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                            Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                            Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                            Icon(Icons.star, color: Colors.amber, size: 16.sp),
-                            Icon(Icons.star, color: Colors.grey.shade300, size: 16.sp),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 8.w),
-
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 50.w,
-                child: Text(
-                  date,
-                  style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.h),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Text(
-              review,
-              style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-              textAlign: TextAlign.right,
-            ),
-          ),
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
         ],
       ),
+      child: child,
     );
   }
 
+  Widget _doctorHeader() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 35.r, backgroundImage: AssetImage("assets/images/doctor.png")),
+            SizedBox(width: 24.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("د. مرام علي", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                  Text("أنف وأذن وحنجرة", style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "سعر الكشف: 300 جنيه",
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.black87),
+                  ),
+                  SizedBox(height: 16.h),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Image(image: AssetImage("assets/images/time-fill.png")),
+                    SizedBox(width: 4.w),
+                    Text("ساعات العمل", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
+                  ],
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "07:00 صباحاً - 07:00 مساءً",
+                  style: TextStyle(fontSize: 15.sp, color: Colors.black, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+            Container(height: 40.h, width: 1.w, color: Colors.grey.shade300),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Image(image: AssetImage("assets/images/redhospital.png")),
+                    SizedBox(width: 4.w),
+                    Text("المستشفى", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
+                  ],
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  "القصر العيني",
+                  style: TextStyle(fontSize: 15.sp, color: Colors.black, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _bioSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("سيرة ذاتية", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        SizedBox(height: 8.h),
+        Text(
+          "دكتورة مرام علي، أخصائية أنف وأذن وحنجرة، وتعمل في القصر العيني...",
+          style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+          textAlign: TextAlign.right,
+        ),
+      ],
+    );
+  }
+
+  Widget _clinicLocation() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("موقع العيادة", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        SizedBox(height: 8.h),
+        Text(
+          "المنيل: قسم مصر القديمة، محافظة القاهرة 11956",
+          style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+          textAlign: TextAlign.right,
+        ),
+        Container(
+          height: 150.h,
+          margin: EdgeInsets.symmetric(vertical: 8.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.r),
+            color: Colors.white,
+          ),
+          child: Center(child: Image(image: AssetImage("assets/images/Maps.png"),fit: BoxFit.cover,)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserReview(String name, String date, String review, String image) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(radius: 20.r, backgroundImage: AssetImage(image)),
+                SizedBox(width: 12.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Text("4.5", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
+                        SizedBox(width: 4.w),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.grey.shade300, size: 16.sp),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 50.w,
+              child: Text(date, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Text(review, style: TextStyle(fontSize: 13.sp, color: Colors.black87), textAlign: TextAlign.right),
+        ),
+      ],
+    );
+  }
+
+  Widget _reviewsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("التقييمات (74)", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        SizedBox(height: 12.h),
+        _buildUserReview(
+          "أحمد كريم",
+          "اليوم",
+          "قمة في الذوق والادب وخبرة في مجالها",
+          "assets/images/user.png",
+        ),
+        SizedBox(height: 12.h),
+        Divider(color: Color(0xffF3F4F6),),
+        SizedBox(height: 12.h),
+        _buildUserReview(
+          "محمود ممدوح",
+          "اليوم",
+          "لما روحت للدكتورة مرام، أول حاجة عجبتني إنها سمعت كل شكوتي بالتفصيل ومقاطعتنيش، وكانت صبورة جداً. شرحتلي المشكلة ببساطة ومن غير مصطلحات طبية مكلكعة",
+          "assets/images/user.png",
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +208,10 @@ class DoctorDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "أطباء أنف وأذن وحنجرة",
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+        title: Text("أطباء أنف وأذن وحنجرة", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black)),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
@@ -101,120 +224,28 @@ class DoctorDetailsScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(radius: 35.r, backgroundImage: const AssetImage("assets/images/doctor.png")),
-                    SizedBox(width: 24.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("د. مرام علي", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                          Text("أنف وأذن وحنجرة", style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
-                          SizedBox(height: 4.h),
-                          Text("سعر الكشف: 300 جنيه", style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
-                          SizedBox(height: 16.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text("ساعات العمل", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
-                                      SizedBox(width: 4.w),
-                                      Icon(Icons.access_time_filled, color: primaryColor, size: 16.sp),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text("07:00 صباحاً - 07:00 مساءً", style: TextStyle(fontSize: 15.sp, color: Colors.black, fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-                              SizedBox(width: 15.w),
-                              Container(
-                                height: 40.h,
-                                width: 1.w,
-                                color: Colors.grey.shade300,
-                              ),
-                              SizedBox(width: 15.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.local_hospital, color: Colors.red.shade700, size: 16.sp),
-                                      SizedBox(width: 4.w),
-                                      Text("المستشفى", style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
-                                    ],
-                                  ),
-                                  SizedBox(height: 4.h),
-                                  Text("القصر العيني", style: TextStyle(fontSize: 15.sp, color: Colors.black, fontWeight: FontWeight.w600)),
-                                ],
-                              ),
-
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 24.w),
-                  ],
-                ),
-                SizedBox(height: 28.h),
-                Text("سيرة ذاتية", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
-                SizedBox(height: 8.h),
-                Text(
-                  "دكتورة مرام علي، أخصائية أنف وأذن وحنجرة، وتعمل في القصر العيني. إنها حقيقة مثبتة منذ زمن طويل أن المحتوى المقروء سيشتت انتباه القارئ......",
-                  style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-                  textAlign: TextAlign.right,
-                ),
-                SizedBox(height: 28.h),
-
-                Text("موقع العيادة", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
-                SizedBox(height: 8.h),
-                Text(
-                  "العميل: قسم مصر القديمة، محافظة القاهرة 11956",
-                  style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-                  textAlign: TextAlign.right,
-                ),
-                Container(
-                  height: 150.h,
-                  margin: EdgeInsets.symmetric(vertical: 8.h),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.r),
-                    color: Colors.grey[200],
-                  ),
-                  child: Center(child: Text("خريطة", style: TextStyle(fontSize: 16.sp))),
-                ),
-                SizedBox(height: 20.h),
-
-                Text("التقييمات (74)", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold), textAlign: TextAlign.right),
-                SizedBox(height: 12.h),
-
-                _buildUserReview("أحمد كريم", "اليوم", "قمة في الذوق والادب وخبرة في مجالها", "assets/images/user.png"),
-                _buildUserReview("محمود ممدوح", "اليوم", "لما روحت للدكتورة مرام، أول حاجة عجبتني إنها سمعت كل شكوتي بالتفصيل ومقاطعتنيش، وكانت صبورة جداً. شرحتلي المشكلة ببساطة ومن غير مصطلحات طبية مكلكعة", "assets/images/user.png"),
-
+                _wrapInContainer(_doctorHeader()),
+                _wrapInContainer(_bioSection()),
+                _wrapInContainer(_clinicLocation()),
+                _wrapInContainer(_reviewsSection()),
                 SizedBox(height: 100.h),
               ],
             ),
           ),
+
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-              ),
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)]),
               child: Row(
                 children: [
-                  IconButton(onPressed: (){}, icon:Image(image: AssetImage("assets/images/message-text_icon.png"))),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Image(image: AssetImage("assets/images/message-text_icon.png")),
+                  ),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {

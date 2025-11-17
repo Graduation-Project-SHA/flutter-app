@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(8.r),
                             border: Border.all(color: Colors.grey.shade300)
                         ),
-                        child: Icon(Icons.shopping_bag_outlined, size: 22.sp, color: Colors.black54),
+                        child: Icon(Icons.shopping_bag_outlined, size:27.sp, color: Colors.black54),
                       ),
                       SizedBox(width: 8.w),
                       Container(
@@ -100,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(10.r),
                             border: Border.all(color: Colors.grey.shade300)
                         ),
-                        child: Icon(Icons.notifications_none, size: 22.sp, color: Colors.black54),
+                        child: Image(image: AssetImage("assets/images/bill_icon.png")),
+
                       ),
                     ],
                   ),
@@ -317,12 +318,12 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(imagePath,height:40.h,width:40.w),
+          Image.asset(imagePath,height:45.h,width:45.w),
           SizedBox(height:5.h),
           Text(
             title,
             style: TextStyle(
-              fontSize: 10.sp,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
             ),
               textAlign: TextAlign.center,

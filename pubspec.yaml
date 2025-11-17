@@ -54,6 +54,7 @@ dependencies:
   geolocator: ^10.1.0
   geocoding: ^2.1.1
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -110,6 +111,10 @@ flutter:
     - assets/images/settings_icon.png
     - assets/images/message-text_icon.png
     - assets/images/calendar_icon.png
+    - assets/images/redhospital.png
+    - assets/images/time-fill.png
+    - assets/images/Maps.png
+    - assets/images/bill_icon.png
     - assets/images/visa_logo.png
     - assets/images/InstaPay_Logo.png
     - assets/images/instapay_bigLogo.png

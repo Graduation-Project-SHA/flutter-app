@@ -32,7 +32,19 @@ class DoctorSelection extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(icon: const Icon(Icons.arrow_forward_ios_outlined, color: Colors.black), onPressed: onBack),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Color.fromRGBO(205, 205, 205, 1)),
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+              child: IconButton(
+                onPressed: onBack,
+                icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+              ),
+            ),
+          ),
         ],
         backgroundColor: Colors.white,
         elevation: 0,

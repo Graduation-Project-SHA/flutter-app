@@ -234,7 +234,6 @@ class _VisaPayState extends State<VisaPay> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        height: 230.h,
 
         decoration: BoxDecoration(
           color: Colors.white,
@@ -247,83 +246,87 @@ class _VisaPayState extends State<VisaPay> {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text(
-                  '300 جنيه',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  'حجز الكشف',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 16.h),
-            Row(
-              children: [
-                Text(
-                  "مجانا",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  "إعادة",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
-            ),
+        child: SafeArea(
 
-            SizedBox(height: 15.h),
-            Row(
-              children: [
-                Text(
-                  "300 جنيه",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16.sp,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    '300 جنيه',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.sp,
+                    ),
                   ),
-                ),
-                Spacer(),
-                Text(
-                  "المجموع",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.sp,
+                  Spacer(),
+                  Text(
+                    'حجز الكشف',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 15.h),
-            DefaultButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Pin()),
-                );
-              },
-              buttonText: 'أدفع',
-              buttonTextSize: 16.sp,
-            ),
-          ],
+                ],
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                children: [
+                  Text(
+                    "مجانا",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "إعادة",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+              ),
+          
+              SizedBox(height: 15.h),
+              Row(
+                children: [
+                  Text(
+                    "300 جنيه",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "المجموع",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.sp,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h),
+              DefaultButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Pin()),
+                  );
+                },
+                buttonText: 'أدفع',
+                buttonTextSize: 16.sp,
+              ),
+            ],
+          ),
         ),
       ),
     );

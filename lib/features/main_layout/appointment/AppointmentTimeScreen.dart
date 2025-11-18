@@ -226,54 +226,45 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
                   }),
                 ),
 
-                SizedBox(height:300.h),
               ],
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+        ),
+        child: SafeArea(
+          child: ElevatedButton(
+            onPressed: _selectedDayIndex != null && _selectedTimeIndex != null
+                ? () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => Payment()),
+              );
+            }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              disabledBackgroundColor: Colors.grey,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6.r),
               ),
-              child: ElevatedButton(
-                onPressed:
-                    _selectedDayIndex != null && _selectedTimeIndex != null
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return Payment();
-                            },
-                          ),
-                        );
-                      }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  disabledBackgroundColor: Colors.grey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 13.5.h),
-                ),
-                child: Text(
-                  "تأكيد الحجز",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+              padding: EdgeInsets.symmetric(vertical: 13.5.h),
+            ),
+            child: Text(
+              "تأكيد الحجز",
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

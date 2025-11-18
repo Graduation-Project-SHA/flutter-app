@@ -38,7 +38,7 @@ class SpecializationSelection extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                 // Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),

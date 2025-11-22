@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:health_care_project/features/main_layout/profile/profile_screen.dart';
-import 'package:health_care_project/features/main_layout/settings/settings_screen.dart';
 import 'appointment/appointment_screen.dart';
 import 'home/home_screen.dart';
 import 'messages/messages_screen.dart';
+import 'profile/profile_screen.dart';
+import 'settings/settings_screen.dart';
 
 class MainLayout extends StatefulWidget {
-  static const String routeName="MainLayout";
-  const MainLayout({super.key});
+  static const String routeName = "MainLayout";
+
+  final int selectedIndex;
+  const MainLayout({super.key, this.selectedIndex = 0});
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
 }
 
 class _MainLayoutState extends State<MainLayout> {
-  int currentIndex = 0;
+  late int currentIndex;
 
   final List<Widget> tabs = [
     const HomeScreen(),
@@ -23,6 +25,12 @@ class _MainLayoutState extends State<MainLayout> {
     const SettingsScreen(),
     const ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.selectedIndex;
+  }
 
   void changeSelectedIndex(int selectedIndex) {
     setState(() {
@@ -49,7 +57,7 @@ class _MainLayoutState extends State<MainLayout> {
               backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,
               selectedItemColor: Colors.blueAccent,
-              unselectedItemColor: Color.fromRGBO(51, 51, 51, 1),
+              unselectedItemColor: const Color.fromRGBO(51, 51, 51, 1),
               showSelectedLabels: false,
               showUnselectedLabels: false,
               items: const [

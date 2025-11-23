@@ -51,9 +51,14 @@ dependencies:
   path_provider: ^2.1.5
   hive_generator: ^2.0.1
   hive_flutter: ^1.1.0
-  geolocator: ^10.1.0
+  flutter_map: ^4.0.0
+
+  latlong2: ^0.8.1
+
+  geolocator: ^14.0.2
   geocoding: ^2.1.1
   emoji_picker_flutter: ^4.3.0
+  google_maps_flutter: ^2.14.0
 
 
 dev_dependencies:
@@ -125,6 +130,11 @@ flutter:
     - assets/images/pay_done_back2.png
     - assets/images/pay_done_back1.png
     - assets/images/pay_done.png
+    - assets/images/eme.png
+    - assets/images/shield-plus.png
+    - assets/images/shield_red.png
+    - assets/images/j.png
+    - assets/images/direction.png
 
 
 

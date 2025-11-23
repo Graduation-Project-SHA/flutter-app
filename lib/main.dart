@@ -13,6 +13,8 @@ import 'features/auth/reset_password/reset_password_screen.dart';
 import 'features/main_layout/appointment/AppointmentTimeScreen.dart';
 import 'features/main_layout/appointment/DoctorDetailsScreen.dart';
 import 'features/main_layout/main_layout.dart';
+import 'features/nearby_services/find_nearby_services_screen.dart';
+import 'features/nearby_services/hospital_details_screen.dart';
 
 
 Future<void> main() async {
@@ -69,7 +71,8 @@ class MyApp extends StatelessWidget {
         AppointmentTimeScreen.routeName:(context)=>AppointmentTimeScreen(),
         DoctorDetailsScreen.routeName:(context)=>DoctorDetailsScreen(),
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
-
+        FindNearbyServicesScreen.routeName: (_) =>  FindNearbyServicesScreen(),
+        HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
       },
       );
      }

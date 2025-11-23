@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/core/%20theme/app_colors.dart';
 import 'package:hive/hive.dart';
 import '../../../shared/component/filterButton/filter_button.dart';
 import '../../../shared/component/searchField/search_field.dart';
+import '../../nearby_services/find_nearby_services_screen.dart';
 import '../main_layout.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -163,19 +165,24 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: "assets/images/hospital.png",
                       bgicon: const Color(0xffF9D2D4),
                       onButtonPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MainLayout(selectedIndex: 1)),
-                        );
+                        Navigator.pushNamed(context, FindNearbyServicesScreen.routeName);
                       },
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 24.h),
-              Text(
-                "خدماتنا",
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "خدماتنا",
+                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ), Text(
+                    "عرض الكل",
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color:AppColors.gradientColor2),
+                  ),
+                ],
               ),
               SizedBox(height: 12.h),
               SizedBox(
@@ -192,13 +199,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 12.h),
-              Text(
-                "أشهر الأطباء",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "أشهر الأطباء",
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  Text(
+                    "عرض الكل",
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color:AppColors.gradientColor2),
+                  ),
+                ],
               ),
               SizedBox(height: 8.h),
               ListView.builder(
-                itemCount: 3,
+                itemCount: 2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {

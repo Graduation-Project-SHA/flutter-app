@@ -51,10 +51,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       isDelivered: true,
     ),
     Message(
-      text: "اتفضلي يا ريم ارتاح شوية الأول، متضغطش على جسمك زيادة. عشان لو فضلت تِجهد نفسك، حالتك هتسوء أكتر وهيأثر على كل حاجة حواليك.",
+      text: "ارتاح شوية الأول، متضغطش على جسمك زيادة. عشان لو فضلت تِجهد نفسك، حالتك هتسوء أكتر وهيأثر على كل حاجة حواليك.",
       time: DateTime.now().subtract(const Duration(minutes: 2)),
       isMe: true,
-      isDelivered: false,
+      isDelivered: true,
     ),
   ];
 
@@ -179,7 +179,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       statusIcon = Icon(
         message.isDelivered ? Icons.done_all : Icons.done,
         size: 14.sp,
-        color: message.isDelivered ? Color(0xFF6C63FF) : Colors.grey,
+        color: message.isDelivered ? Color(0xFF12B76A) : Colors.grey,
       );
     } else {
       statusIcon = const SizedBox.shrink();
@@ -337,7 +337,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           children: [
             Expanded(
               child: ListView.builder(
-                controller: _scrollController, 
+                controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
@@ -368,7 +368,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                         color: Colors.white,
                         size: 24,
                       ),
-                      onPressed: _sendMessage, 
+                      onPressed: _sendMessage,
                     ),
                   ),
                   SizedBox(width: 8.w),

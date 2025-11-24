@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = "https://tape-ate-unknown-rides.trycloudflare.com";
+  static const String baseUrl = "https://3412pfwq-3000.uks1.devtunnels.ms";
 
   static const String register = "$baseUrl/auth/sign-up";
   static const String login = "$baseUrl/auth/local-login";
@@ -8,4 +8,9 @@ class ApiConstants {
   static const String resetPassword = "$baseUrl/auth/reset-password";
   static const String refreshToken = "$baseUrl/auth/refresh-token";
   static const String getProfile = "$baseUrl/users/profile";
+
+
+
+  static const String messages = "/messages";
+
 }

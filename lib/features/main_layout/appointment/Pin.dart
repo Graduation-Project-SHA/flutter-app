@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/main_layout/appointment/appointment.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 
 class Pin extends StatefulWidget {
@@ -20,66 +21,100 @@ class _PinState extends State<Pin> {
     }
   }
 
-void submitPin() {
-  if (pin.length == 6) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Center(
-          child: Column(
-            children: [Stack(children: [
-              
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset('assets/images/pay_done_back1.png', width: 200, height: 124)),
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset('assets/images/pay_done_back2.png', width: 185, height: 160)),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Image.asset('assets/images/pay_done.png', width: 148, height: 148)),
-            ],),
-            SizedBox(height: 16,),
-            Text('تم الحجز بنجاح', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            SizedBox(height: 8,),
-            Text( 'لقد اتممت عملية الدفع بنجاح', style: TextStyle(fontSize: 16, color: Colors.grey),),
-            SizedBox(height: 24,),
-            DefaultButton(onPressed: (){}, buttonText:'مواعيدي' )
-            
-            ]
+  void submitPin() {
+    if (pin.length == 6) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Center(
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        'assets/images/pay_done_back1.png',
+                        width: 200,
+                        height: 124,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        'assets/images/pay_done_back2.png',
+                        width: 185,
+                        height: 160,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        'assets/images/pay_done.png',
+                        width: 148,
+                        height: 148,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'تم الحجز بنجاح',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'لقد اتممت عملية الدفع بنجاح',
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+                SizedBox(height: 24),
+                DefaultButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return Appointment();
+                        },
+                      ),
+                    );
+                  },
+                  buttonText: 'مواعيدي',
+                ),
+              ],
+            ),
           ),
         ),
-        
-        
-      ),
-    );
-  } else {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('خطأ'),
-        content: Text('من فضلك أدخل 6 أرقام'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('حسناً'),
-          ),
-        ],
-      ),
-    );
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('خطأ'),
+          content: Text('من فضلك أدخل 6 أرقام'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('حسناً'),
+            ),
+          ],
+        ),
+      );
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
-    final List<String> numbers = ['1','2','3','4','5','6','7','8','9'];
+    final List<String> numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 10.h),
-          child: Container(color: Color.fromRGBO(237, 237, 237, 1), height: 2.h),
+          child: Container(
+            color: Color.fromRGBO(237, 237, 237, 1),
+            height: 2.h,
+          ),
         ),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
@@ -124,7 +159,11 @@ void submitPin() {
           SizedBox(height: 8.h),
           Text(
             'ادخل رمز الهاتف الخاص بك',
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Color.fromRGBO(147, 147, 147, 1)),
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: Color.fromRGBO(147, 147, 147, 1),
+            ),
           ),
           SizedBox(height: 24.h),
 
@@ -160,15 +199,19 @@ void submitPin() {
                 return ElevatedButton(
                   onPressed: () => addDigit(numbers[index]),
                   style: ElevatedButton.styleFrom(
-                        shadowColor: Colors.blue,
-    elevation: 4,
+                    shadowColor: Colors.blue,
+                    elevation: 4,
                     shape: CircleBorder(),
                     backgroundColor: Colors.white,
                     side: BorderSide(color: Color.fromRGBO(220, 220, 220, 1)),
                   ),
                   child: Text(
                     numbers[index],
-                    style: TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(
+                      fontSize: 28.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 );
               },
@@ -177,16 +220,28 @@ void submitPin() {
 
           SizedBox(height: 20.h),
 
-        Text('هذه الخطوة تجعل بياناتك امنة', style: TextStyle(fontSize: 14.sp, color: Color.fromRGBO(147, 147, 147, 1))),
+          Text(
+            'هذه الخطوة تجعل بياناتك امنة',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Color.fromRGBO(147, 147, 147, 1),
+            ),
+          ),
           Padding(
-            padding:  EdgeInsets.all(14.0.w),
+            padding: EdgeInsets.all(14.0.w),
             child: ElevatedButton(
-              onPressed:submitPin,
+              onPressed: submitPin,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
-                padding: EdgeInsets.symmetric(horizontal: 100.w, vertical: 15.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 100.w,
+                  vertical: 15.h,
+                ),
               ),
-              child: Text('تأكيد', style: TextStyle(fontSize: 18.sp, color: Colors.white)),
+              child: Text(
+                'تأكيد',
+                style: TextStyle(fontSize: 18.sp, color: Colors.white),
+              ),
             ),
           ),
         ],

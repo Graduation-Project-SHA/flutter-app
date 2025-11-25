@@ -135,8 +135,16 @@ flutter:
     - assets/images/shield_red.png
     - assets/images/j.png
     - assets/images/direction.png
+<<<<<<< HEAD
     - assets/images/female_doctor.png
 
+=======
+    - assets/images/doctor1.png
+    - assets/images/doctor2.png
+    - assets/images/doctor3.png
+    - assets/images/doctor4.png
+    - assets/images/doctor5.png
+>>>>>>> 2569434da799aa1331a984733fd14e5402013090
 
 
 

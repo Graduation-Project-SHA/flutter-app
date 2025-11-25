@@ -13,6 +13,7 @@ import 'features/auth/reset_password/reset_password_screen.dart';
 import 'features/main_layout/appointment/AppointmentTimeScreen.dart';
 import 'features/main_layout/appointment/DoctorDetailsScreen.dart';
 import 'features/main_layout/main_layout.dart';
+import 'features/nearby_services/emergency_request_screen.dart';
 import 'features/nearby_services/find_nearby_services_screen.dart';
 import 'features/nearby_services/hospital_details_screen.dart';
 
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
         FindNearbyServicesScreen.routeName: (_) =>  FindNearbyServicesScreen(),
         HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
+        EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
       },
       );
      }

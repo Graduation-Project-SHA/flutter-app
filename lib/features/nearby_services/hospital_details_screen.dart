@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
 import 'package:latlong2/latlong.dart';
+import 'emergency_request_screen.dart';
 
 class HospitalDetailsScreen extends StatelessWidget {
   static const String routeName = "HospitalDetailsScreen";
@@ -14,7 +15,7 @@ class HospitalDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
           title: Text("تفاصيل المستشفى",
@@ -37,7 +38,7 @@ class HospitalDetailsScreen extends StatelessWidget {
     ],
         backgroundColor: Colors.white,
         elevation: 0,
-        foregroundColor: Colors.black,
+
       ),
 
       body: Center(
@@ -52,6 +53,7 @@ class HospitalDetailsScreen extends StatelessWidget {
                 width: 321.w,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.pushNamed(context, EmergencyRequestScreen.routeName);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xffE7000B),

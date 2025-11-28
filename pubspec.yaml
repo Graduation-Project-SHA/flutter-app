@@ -102,7 +102,7 @@ flutter:
     - assets/images/button.png
     - assets/images/bg.png
     - assets/images/hospital.png
-    - assets/images/doctor_appointment.png
+    - assets/images/appointment.png
     - assets/images/splash.png
     - assets/images/success.png
     - assets/images/donors.png
@@ -150,6 +150,7 @@ flutter:
     - assets/images/doctor5.png
     - assets/images/emergency_car_icon.png
     - assets/images/message-icon.png
+
 
 
 

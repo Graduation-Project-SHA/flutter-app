@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/shared/component/defaultTextButton/defaultTextButton.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
-import '../../main_layout/main_layout.dart';
+import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../forgetpassword/forget_password_screen.dart';

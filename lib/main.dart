@@ -10,12 +10,13 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
-import 'features/main_layout/appointment/AppointmentTimeScreen.dart';
-import 'features/main_layout/appointment/DoctorDetailsScreen.dart';
-import 'features/main_layout/main_layout.dart';
-import 'features/nearby_services/emergency_request_screen.dart';
-import 'features/nearby_services/find_nearby_services_screen.dart';
-import 'features/nearby_services/hospital_details_screen.dart';
+import 'features/doctor/main_layout/doctor_main_layout.dart';
+import 'features/patient/main_layout/appointment/AppointmentTimeScreen.dart';
+import 'features/patient/main_layout/appointment/DoctorDetailsScreen.dart';
+import 'features/patient/main_layout/main_layout.dart';
+import 'features/patient/nearby_services/emergency_request_screen.dart';
+import 'features/patient/nearby_services/find_nearby_services_screen.dart';
+import 'features/patient/nearby_services/hospital_details_screen.dart';
 
 
 Future<void> main() async {
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         FindNearbyServicesScreen.routeName: (_) =>  FindNearbyServicesScreen(),
         HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
         EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
+        DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
       },
       );
      }

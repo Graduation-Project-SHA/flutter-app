@@ -163,7 +163,7 @@ class _PaymentState extends State<Payment> {
                                   borderRadius: BorderRadius.circular(30.r),
                                   image: DecorationImage(
                                     image: AssetImage(
-                                      'assets/images/appointment.png',
+                                      'assets/images/doctor_appointment.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),

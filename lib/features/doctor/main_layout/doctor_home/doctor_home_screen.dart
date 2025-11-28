@@ -134,7 +134,7 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                       buttonText: "حجز موعد",
                       cardColor: const Color(0xffF0F0FF),
                       buttonColor: const Color(0xff6161FF),
-                      icon: "assets/images/appointment.png",
+                      icon: "assets/images/doctor_appointment.png",
                       bgicon: const Color(0xffCCCCFF),
                       onButtonPressed: () {
                         Navigator.pushReplacement(

@@ -7,10 +7,10 @@ class ApiConstants {
   static const String verifyResetCode = "$baseUrl/auth/verify-reset-code";
   static const String resetPassword = "$baseUrl/auth/reset-password";
   static const String refreshToken = "$baseUrl/auth/refresh-token";
-  static const String getProfile = "$baseUrl/users/profile";
+  static const String getProfile = "$baseUrl/users/doctor_profile";
 
 
 
-  static const String messages = "/messages";
+  static const String messages = "/doctor_messages";
 
 }

@@ -10,7 +10,7 @@ class MessagesRepository {
   Future<List<MessageModel>> getMessages() async {
     final response = await dio.get(ApiConstants.messages);
 
-    List data = response.data["messages"];
+    List data = response.data["doctor_messages"];
     return data.map((e) => MessageModel.fromJson(e)).toList();
   }
 }

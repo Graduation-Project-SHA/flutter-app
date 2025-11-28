@@ -19,14 +19,14 @@ class Message {
   });
 }
 
-class ChatDetailsScreen extends StatefulWidget {
-  const ChatDetailsScreen({super.key});
+class DoctorChatDetailsScreen extends StatefulWidget {
+  const DoctorChatDetailsScreen({super.key});
 
   @override
-  State<ChatDetailsScreen> createState() => _ChatDetailsScreenState();
+  State<DoctorChatDetailsScreen> createState() => _ChatDetailsScreenState();
 }
 
-class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
+class _ChatDetailsScreenState extends State<DoctorChatDetailsScreen> {
   final TextEditingController messageController = TextEditingController();
   final FocusNode focusNode = FocusNode();
   bool isEmojiVisible = false;

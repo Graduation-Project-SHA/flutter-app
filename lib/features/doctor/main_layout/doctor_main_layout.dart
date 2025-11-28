@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'appointment/doctor_appointment_screen.dart';
-import 'home/doctor_home_screen.dart';
-import 'messages/messages_screen.dart';
-import 'profile/doctor_profile_screen.dart';
-import 'settings/doctor_settings_screen.dart';
+
+import '../../patient/main_layout/messages/messages_screen.dart';
+import 'doctor_appointment/doctor_appointment_screen.dart';
+import 'doctor_home/doctor_home_screen.dart';
+import 'doctor_messages/doctor_messages_screen.dart';
+import 'doctor_profile/doctor_profile_screen.dart';
+import 'doctor_settings/doctor_settings_screen.dart';
+
 
 class DoctorMainLayout extends StatefulWidget {
   static const String routeName = "DoctorMainLayout";
@@ -21,7 +24,7 @@ class _MainLayoutState extends State<DoctorMainLayout> {
 
   final List<Widget> tabs = [
     const DoctorHomeScreen(),
-    const MessagesScreen(),
+    const DoctorMessagesScreen(),
     const DoctorAppointmentScreen(),
     const DoctorSettingsScreen(),
     const DoctorProfileScreen(),

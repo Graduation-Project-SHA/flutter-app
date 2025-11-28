@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/searchField/search_field.dart';
-import 'chat_details_screen.dart';
+import 'doctor_chat_details_screen.dart';
 
 class Doctor {
   final String name;
@@ -198,8 +198,8 @@ class DoctorStatusItem extends StatelessWidget {
   }
 }
 
-class MessagesScreen extends StatelessWidget {
-  const MessagesScreen({super.key});
+class DoctorMessagesScreen extends StatelessWidget {
+  const DoctorMessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +302,7 @@ class MessagesScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const ChatDetailsScreen(),
+                          builder: (_) => const DoctorChatDetailsScreen(),
                         ),
                       );
                     },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/patient/nearby_services/wating_emergency_screen.dart';
 
 class EmergencyRequestScreen extends StatelessWidget {
   static const String routeName = "EmergencyRequestScreen";
@@ -16,7 +17,11 @@ class EmergencyRequestScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           "طلب سيارة اسعاف",
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold,color: Colors.black),
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         automaticallyImplyLeading: false,
         actions: [
@@ -28,10 +33,13 @@ class EmergencyRequestScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: (){Navigator.pop(context);},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
-            ),),
+            ),
+          ),
         ],
       ),
 
@@ -46,7 +54,10 @@ class EmergencyRequestScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black12, blurRadius: 5, offset: Offset(0, 3))
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
                 ],
               ),
               child: Column(
@@ -56,39 +67,46 @@ class EmergencyRequestScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.error_outline, color:Color(0xffE7000B),size: 30.sp,),
-                          SizedBox(width:12.w),
+                          Icon(
+                            Icons.error_outline,
+                            color: Color(0xffE7000B),
+                            size: 30.sp,
+                          ),
+                          SizedBox(width: 12.w),
                           Text(
                             "تفعيل الطواري",
                             style: TextStyle(
-                              color:Color(0xffE7000B),
+                              color: Color(0xffE7000B),
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ],
                   ),
                   SizedBox(height: 24.h),
                   Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
-                      children: [
-                        Icon(Icons.location_on_outlined,
-                            color: Colors.red, size: 18.sp),
-                        SizedBox(width:12.w),
-                        Text(
-                          "موقعك الحالي:",
-                          style: TextStyle(
-                            color: Color(0xff4A5565),
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.red,
+                            size: 18.sp,
                           ),
-                        )
-                      ],
-                    ),
+                          SizedBox(width: 12.w),
+                          Text(
+                            "موقعك الحالي:",
+                            style: TextStyle(
+                              color: Color(0xff4A5565),
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           Text(
@@ -99,18 +117,21 @@ class EmergencyRequestScreen extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width:12.w),
-                          Icon(Icons.edit, color:Color(0xffE7000B), size:20.sp),
+                          SizedBox(width: 12.w),
+                          Icon(
+                            Icons.edit,
+                            color: Color(0xffE7000B),
+                            size: 20.sp,
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(height:10.h),
+                  SizedBox(height: 10.h),
                   Text(
                     "طريق الشباب، مدينة الشروق، القاهرة - مصر",
-                    style: TextStyle(
-                        fontSize: 16.sp,color: Color(0xff4A5565),),
-                  )
+                    style: TextStyle(fontSize: 16.sp, color: Color(0xff4A5565)),
+                  ),
                 ],
               ),
             ),
@@ -124,7 +145,10 @@ class EmergencyRequestScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black12, blurRadius: 5, offset: Offset(0, 3))
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
                 ],
               ),
               child: Column(
@@ -132,19 +156,24 @@ class EmergencyRequestScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.access_time, color: Color(0xff2B73F3),size: 20.sp,),
-                      SizedBox(width:14.w),
+                      Icon(
+                        Icons.access_time,
+                        color: Color(0xff2B73F3),
+                        size: 20.sp,
+                      ),
+                      SizedBox(width: 14.w),
                       Text(
                         "لأهمية الوقت",
                         style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      )
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 21.5.h),
-                  Divider(color: Color(0xffDCDCDC),),
+                  Divider(color: Color(0xffDCDCDC)),
                   SizedBox(height: 16.h),
                   _inputTitle("الأمراض المزمنة"),
                   SizedBox(height: 8.h),
@@ -160,7 +189,9 @@ class EmergencyRequestScreen extends StatelessWidget {
 
                   _inputTitle(" البيانات الشخصية"),
                   SizedBox(height: 8.h),
-                  _textField("اسم المريض، عمره، وهل لديه حساسية من أدوية معينة؟"),
+                  _textField(
+                    "اسم المريض، عمره، وهل لديه حساسية من أدوية معينة؟",
+                  ),
 
                   SizedBox(height: 16.h),
 
@@ -179,7 +210,14 @@ class EmergencyRequestScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return WaitingEmergencyScreen();
+                            },
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xffE7000B),
@@ -191,11 +229,18 @@ class EmergencyRequestScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.phone_outlined,size:15.sp,color: Colors.white,),
-                          SizedBox(width:9.w),
+                          Icon(
+                            Icons.phone_outlined,
+                            size: 15.sp,
+                            color: Colors.white,
+                          ),
+                          SizedBox(width: 9.w),
                           Text(
                             "تاكيد الاتصال",
-                            style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -210,15 +255,18 @@ class EmergencyRequestScreen extends StatelessWidget {
     );
   }
 
-
   Widget _inputTitle(String title) {
     return Text(
       title,
       style: TextStyle(
-          fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.black),
+        fontSize: 12.sp,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
       textAlign: TextAlign.right,
     );
   }
+
   Widget _textField(String hint) {
     return TextField(
       maxLines: null,
@@ -229,7 +277,7 @@ class EmergencyRequestScreen extends StatelessWidget {
         hintStyle: TextStyle(fontSize: 12.sp, color: Color(0xff939393)),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(vertical:8.h, horizontal: 16.w),
+        contentPadding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide(color: Color(0xffDCDCDC)),
@@ -242,7 +290,6 @@ class EmergencyRequestScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(8.r),
           borderSide: BorderSide(color: Color(0xffDCDCDC)),
         ),
-
       ),
     );
   }

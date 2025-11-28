@@ -70,13 +70,13 @@ class MyApp extends StatelessWidget {
         Loginscreen.routeName:(context)=>Loginscreen(),
         RegisterUserScreen.routeName:(context)=>RegisterUserScreen(),
         MainLayout.routeName:(context)=>MainLayout(),
-        DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
         AppointmentTimeScreen.routeName:(context)=>AppointmentTimeScreen(),
         DoctorDetailsScreen.routeName:(context)=>DoctorDetailsScreen(),
         ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
         FindNearbyServicesScreen.routeName: (_) =>  FindNearbyServicesScreen(),
         HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
         EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
+        DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
       },
       );
      }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'appointment/appointment_screen.dart';
 import 'home/home_screen.dart';
 import 'messages/messages_screen.dart';
@@ -60,28 +61,56 @@ class _MainLayoutState extends State<MainLayout> {
               unselectedItemColor: const Color.fromRGBO(51, 51, 51, 1),
               showSelectedLabels: false,
               showUnselectedLabels: false,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage("assets/images/home_icon.png")),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage("assets/images/message-text_icon.png")),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage("assets/images/calendar_icon.png")),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageIcon(AssetImage("assets/images/settings_icon.png")),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: '',
-                ),
-              ],
+                items: [
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      "assets/images/home_icon.svg",
+                      height: 24,
+                      width: 24,
+                      color: currentIndex == 0 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1),
+                    ),
+                    label: '',
+                  ),
+
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      "assets/images/message-text_icon.svg",
+                      height: 24,
+                      width: 24,
+                      color: currentIndex == 1 ? Colors.blueAccent :Color.fromRGBO(51, 51, 51, 1)
+                    ),
+                    label: '',
+                  ),
+
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      "assets/images/calendar_icon.svg",
+                      height: 24,
+                      width: 24,
+                      color: currentIndex == 2 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
+                    ),
+                    label: '',
+                  ),
+
+                  BottomNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      "assets/images/settings_icon.svg",
+                      height: 24,
+                      width: 24,
+                      color: currentIndex == 3 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
+                    ),
+                    label: '',
+                  ),
+
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.person,
+                      color: currentIndex == 4 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
+                    ),
+                    label: '',
+                  ),
+                ]
+
             ),
           ),
         ),

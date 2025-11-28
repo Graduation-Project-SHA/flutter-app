@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class FilterButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -16,7 +17,7 @@ class FilterButton extends StatelessWidget {
         border: Border.all(color: const Color(0xffEDF1F3), width: 1),
       ),
       child: IconButton(
-        icon: Image.asset("assets/images/filter.png", width: 18.w, height: 18.h),
+        icon: SvgPicture.asset("assets/images/filter.svg", width: 18.w, height: 18.h),
         onPressed: onPressed,
       ),
     );

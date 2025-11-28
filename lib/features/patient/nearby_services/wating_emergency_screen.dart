@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
-import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
-import 'package:hive_flutter/adapters.dart';
 
 class WaitingEmergencyScreen extends StatefulWidget {
   const WaitingEmergencyScreen({super.key});

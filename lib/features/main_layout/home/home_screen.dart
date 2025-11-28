@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
 import 'package:hive/hive.dart';
 import '../../../shared/component/filterButton/filter_button.dart';
@@ -80,23 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 40.w,
-                        height: 40.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: Colors.grey.shade300),
-                        ),
-                        child: Icon(Icons.shopping_bag_outlined, size: 27.sp, color: Colors.black54),
-                      ),
-                      SizedBox(width: 8.w),
-                      Container(
-                        width: 40.w,
-                        height: 40.h,
+                        width: 30.w,
+                        height: 30.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(color: Colors.grey.shade300),
                         ),
-                        child: Image.asset("assets/images/bill_icon.png"),
+                        child: SvgPicture.asset("assets/images/bill_icon.svg",),
                       ),
                     ],
                   ),

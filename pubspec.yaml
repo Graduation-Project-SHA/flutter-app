@@ -59,6 +59,7 @@ dependencies:
   geocoding: ^2.1.1
   emoji_picker_flutter: ^4.3.0
   google_maps_flutter: ^2.14.0
+  flutter_svg: ^2.0.9
 
 
 dev_dependencies:
@@ -112,15 +113,21 @@ flutter:
     - assets/images/brain.png
     - assets/images/ear.png
     - assets/images/tooth.png
-    - assets/images/filter.png
-    - assets/images/home_icon.png
-    - assets/images/settings_icon.png
-    - assets/images/message-text_icon.png
-    - assets/images/calendar_icon.png
+
+    - assets/images/filter.svg
+
+    - assets/images/home_icon.svg
+
+    - assets/images/settings_icon.svg
+
+    - assets/images/message-text_icon.svg
+
+    - assets/images/calendar_icon.svg
     - assets/images/redhospital.png
     - assets/images/time-fill.png
     - assets/images/Maps.png
-    - assets/images/bill_icon.png
+
+    - assets/images/bill_icon.svg
     - assets/images/visa_logo.png
     - assets/images/InstaPay_Logo.png
     - assets/images/instapay_bigLogo.png
@@ -136,7 +143,6 @@ flutter:
     - assets/images/j.png
     - assets/images/direction.png
     - assets/images/female_doctor.png
-
     - assets/images/doctor1.png
     - assets/images/doctor2.png
     - assets/images/doctor3.png

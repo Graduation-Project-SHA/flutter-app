@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:health_care_project/features/main_layout/appointment/insta_pay.dart';
-import 'package:health_care_project/features/main_layout/appointment/visa_pay.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/visa_pay.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'insta_pay.dart';
 
 class Payment extends StatefulWidget {
   const Payment({super.key});

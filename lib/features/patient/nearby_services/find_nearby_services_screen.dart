@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../../shared/component/searchField/search_field.dart';
+import '../../../shared/component/searchField/search_field.dart';
 import 'hospital_details_screen.dart';
 
 class FindNearbyServicesScreen extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/features/main_layout/appointment/Payment.dart';
+
+import 'Payment.dart';
 
 class AppointmentTimeScreen extends StatefulWidget {
   static const String routeName = "AppointmentTimeScreen";

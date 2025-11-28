@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:health_care_project/features/main_layout/appointment/specialization_selection.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/specialization_selection.dart';
+
 import 'doctor_selection.dart';
 
 class AppointmentScreen extends StatefulWidget {

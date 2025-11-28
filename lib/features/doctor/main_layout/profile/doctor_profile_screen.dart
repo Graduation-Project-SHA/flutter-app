@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/features/auth/cubit/auth_cubit.dart';
-import '../../auth/login/login_screen.dart';
+import '../../../auth/login/login_screen.dart';
 
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class DoctorProfileScreen extends StatelessWidget {
+  const DoctorProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

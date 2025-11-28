@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../../core/network/api_constants.dart';
+import '../../../../../core/network/api_constants.dart';
 import 'message_model.dart';
 
 class MessagesRepository {

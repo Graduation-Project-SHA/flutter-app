@@ -3,21 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
 import 'package:hive/hive.dart';
-import '../../../shared/component/filterButton/filter_button.dart';
-import '../../../shared/component/searchField/search_field.dart';
-import '../../nearby_services/find_nearby_services_screen.dart';
-import '../main_layout.dart';
+import '../../../../shared/component/filterButton/filter_button.dart';
+import '../../../../shared/component/searchField/search_field.dart';
+import '../doctor_main_layout.dart';
 
-class HomeScreen extends StatefulWidget {
+class DoctorHomeScreen extends StatefulWidget {
   static const String routeName = "HomeScreen";
 
-  const HomeScreen({super.key});
+  const DoctorHomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<DoctorHomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<DoctorHomeScreen> {
   late Box authBox;
 
   @override
@@ -140,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onButtonPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const MainLayout(selectedIndex: 2)),
+                          MaterialPageRoute(builder: (context) => const DoctorMainLayout(selectedIndex: 2)),
                         );
                       },
                     ),
@@ -156,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: "assets/images/hospital.png",
                       bgicon: const Color(0xffF9D2D4),
                       onButtonPressed: () {
-                        Navigator.pushNamed(context, FindNearbyServicesScreen.routeName);
+
                       },
                     ),
                   ),

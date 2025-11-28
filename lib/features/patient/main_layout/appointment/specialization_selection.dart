@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/features/main_layout/appointment/widgets/specialty_card.dart';
-import '../../../shared/component/filterButton/filter_button.dart';
-import '../../../shared/component/searchField/search_field.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/widgets/specialty_card.dart';
+import '../../../../shared/component/filterButton/filter_button.dart';
+import '../../../../shared/component/searchField/search_field.dart';
+
 
 class SpecializationSelection extends StatelessWidget {
   final String selectedSpecialty;

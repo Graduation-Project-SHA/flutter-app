@@ -16,10 +16,10 @@ class DoctorMainLayout extends StatefulWidget {
   const DoctorMainLayout({super.key, this.selectedIndex = 0});
 
   @override
-  State<DoctorMainLayout> createState() => _MainLayoutState();
+  State<DoctorMainLayout> createState() => _DoctorMainLayoutState();
 }
 
-class _MainLayoutState extends State<DoctorMainLayout> {
+class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   late int currentIndex;
 
   final List<Widget> tabs = [

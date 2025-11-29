@@ -53,13 +53,13 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      initialRoute: MainLayout.routeName,
+      initialRoute: DoctorMainLayout.routeName,
       onGenerateRoute: (settings) {
-        if (settings.name == MainLayout.routeName) {
+        if (settings.name == DoctorMainLayout.routeName) {
           final selectedIndex = settings.arguments as int? ?? 0;
 
           return MaterialPageRoute(
-            builder: (_) => MainLayout(selectedIndex: selectedIndex),
+            builder: (_) => DoctorMainLayout(selectedIndex: selectedIndex),
           );
         }
         return null;

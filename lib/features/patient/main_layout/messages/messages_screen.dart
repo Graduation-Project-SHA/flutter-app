@@ -98,28 +98,32 @@ class MessageListItem extends StatelessWidget {
                   doctor.time,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: Color(0xff8A8A8E),
+                    color: const Color(0xff8A8A8E),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
+                SizedBox(height: 5.h),
                 if (doctor.unreadCount > 0)
                   Container(
-                    height: 20.h,
-                    width: 20.w,
-                    padding: const EdgeInsets.all(5),
+                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                     decoration: const BoxDecoration(
                       color: Colors.red,
                       shape: BoxShape.circle,
                     ),
+                    constraints: BoxConstraints(minWidth: 20.w, minHeight: 20.h),
                     child: Center(
                       child: Text(
                         doctor.unreadCount.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
+                  )
+                else
+                  SizedBox(height: 20.h),
               ],
             ),
             SizedBox(width: 12.w),
@@ -130,27 +134,32 @@ class MessageListItem extends StatelessWidget {
                   Text(
                     doctor.name,
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black
+                      color: Colors.black,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height:4.h),
+                  SizedBox(height: 4.h),
                   Text(
                     doctor.lastMessage,
                     style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Color(0xff8A8A8E),
+                      fontSize: 13.sp,
+                      color: const Color(0xff8A8A8E),
+                      height: 1.2,
                     ),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             SizedBox(width: 16.w),
-             CircleAvatar(
-              radius: 35,
+            CircleAvatar(
+              radius: 28.r,
               backgroundImage: AssetImage(doctor.imageUrl),
+              backgroundColor: Colors.grey.shade200,
             ),
           ],
         ),
@@ -170,23 +179,29 @@ class DoctorStatusItem extends StatelessWidget {
       children: [
         Stack(
           children: [
-            CircleAvatar(
-              radius: 35,
-              backgroundImage: AssetImage(doctor.imageUrl),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: CircleAvatar(
+                radius: 32.r,
+                backgroundImage: AssetImage(doctor.imageUrl),
+                backgroundColor: Colors.grey.shade200,
+              ),
             ),
             if (doctor.isOnline)
               Positioned(
-                right: 0,
-                bottom: 0,
+                right: 2.w,
+                bottom: 2.h,
                 child: Container(
-                  width: 16,
-                  height: 16,
+                  width: 14.w,
+                  height: 14.w,
                   decoration: BoxDecoration(
                     color: Colors.green,
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white,
-                      width: 1,
+                      width: 1.w,
                     ),
                   ),
                 ),
@@ -203,8 +218,11 @@ class MessagesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double topPadding = MediaQuery.of(context).padding.top;
     final double bottomPadding = MediaQuery.of(context).padding.bottom;
+
     final List<Doctor> statusDoctors = doctorsList.take(6).toList();
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -213,7 +231,7 @@ class MessagesScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
-            backgroundColor: Colors.transparent,
+            backgroundColor: const Color(0xff4786F5),
             elevation: 0,
             expandedHeight: 280.h,
             automaticallyImplyLeading: false,
@@ -231,7 +249,7 @@ class MessagesScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 60.h),
+                  padding: EdgeInsets.only(top: topPadding + 10.h),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -239,26 +257,29 @@ class MessagesScreen extends StatelessWidget {
                         child: Text(
                           "الرسائل",
                           style: TextStyle(
-                            fontSize: 22.sp,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      SizedBox(height: 21.h),
+                      SizedBox(height: 20.h),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 18.w),
                         child: Container(
+                          height: 50.h,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
-                          child: const SearchField(
-                            hint: "بحث",
+                          child: const Center(
+                            child: SearchField(
+                              hint: "بحث",
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 28.h),
+                      SizedBox(height: 25.h),
                       SizedBox(
                         height: 85.h,
                         child: ListView.separated(
@@ -269,11 +290,10 @@ class MessagesScreen extends StatelessWidget {
                               doctor: statusDoctors[index],
                             );
                           },
-                          separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                          separatorBuilder: (_, __) => SizedBox(width: 12.w),
                           itemCount: statusDoctors.length,
                         ),
                       ),
-                      SizedBox(height: 20.h),
                     ],
                   ),
                 ),
@@ -283,6 +303,9 @@ class MessagesScreen extends StatelessWidget {
 
           SliverToBoxAdapter(
             child: Container(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 300.h,
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -290,30 +313,44 @@ class MessagesScreen extends StatelessWidget {
                   topRight: Radius.circular(30.r),
                 ),
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: doctorsList.length * 2,
-                itemBuilder: (context, index) {
-                  final doctor = doctorsList[index % doctorsList.length];
-                  return MessageListItem(
-                    doctor: doctor,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ChatDetailsScreen(),
-                        ),
-                      );
-                    },
-                  );
-                },
+              child: ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30.r),
+                  topRight: Radius.circular(30.r),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 10.h),
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: doctorsList.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: Colors.grey.shade100,
+                        indent: 80.w,
+                        endIndent: 20.w,
+                        height: 1,
+                      ),
+                      itemBuilder: (context, index) {
+                        final doctor = doctorsList[index];
+                        return MessageListItem(
+                          doctor: doctor,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ChatDetailsScreen(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: bottomPadding + 20.h),
+                  ],
+                ),
               ),
             ),
-          ),
-
-          SliverToBoxAdapter(
-            child: SizedBox(height: bottomPadding + 60.h),
           ),
         ],
       ),

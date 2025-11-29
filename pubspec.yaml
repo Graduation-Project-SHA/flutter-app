@@ -60,6 +60,7 @@ dependencies:
   emoji_picker_flutter: ^4.3.0
   google_maps_flutter: ^2.14.0
   flutter_svg: ^2.0.9
+  image_picker: ^1.2.1
 
 
 dev_dependencies:
@@ -153,6 +154,10 @@ flutter:
     - assets/images/pay.png
     - assets/images/person_image.png
     - assets/images/memoji.png
+    - assets/images/review.png
+    - assets/images/wallet.png
+    - assets/images/personalcard.png
+    - assets/images/clock.png
 
 
 

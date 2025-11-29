@@ -258,7 +258,7 @@ class DoctorDetailsScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {},
-                    icon: Image(image: AssetImage("assets/images/message-text_icon.png")),
+                    icon: Image(image: AssetImage("assets/images/message-icon.png")),
                   ),
                   Expanded(
                     child: ElevatedButton(

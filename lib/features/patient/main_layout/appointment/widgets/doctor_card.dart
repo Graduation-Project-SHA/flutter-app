@@ -110,7 +110,7 @@ class DoctorCard extends StatelessWidget {
                 children: [Text("4.5", style: TextStyle(fontSize: 12.sp, color: Colors.grey)), SizedBox(width: 4.w), Icon(Icons.star, color: Colors.amber, size: 20.sp)],
               ),
               SizedBox(height: 16.h),
-              Image.asset("assets/images/message-text_icon.png", color: Color(0xff2B73F3), width: 24.w, height: 24.h),
+              Image.asset("assets/images/message-icon.png", color: Color(0xff2B73F3), width: 24.w, height: 24.h),
             ],
           ),
         ],

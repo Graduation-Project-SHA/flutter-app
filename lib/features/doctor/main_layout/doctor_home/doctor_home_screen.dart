@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_home/widgets/time_filter_widget.dart';
 import 'package:hive/hive.dart';
-import '../../../../shared/component/filterButton/filter_button.dart';
-import '../../../../shared/component/searchField/search_field.dart';
-import '../doctor_main_layout.dart';
 
 class DoctorHomeScreen extends StatefulWidget {
   static const String routeName = "HomeScreen";
@@ -29,11 +27,10 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
   Widget build(BuildContext context) {
     final userName = authBox.get('userName');
     final userImage = authBox.get('userImage');
-    final location = 'القاهرة, دار السلام';
 
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 17.h),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +51,7 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            " $userName ",
+                            "  مرحبا, $userName",
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
@@ -63,14 +60,9 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                           ),
                           Row(
                             children: [
-                              Icon(Icons.location_on, size: 16.sp, color: Colors.black),
-                              SizedBox(width: 4.w),
-                              Text(
-                                location,
-                                style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                              Text("كيف الحال",
+                                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                               ),
-                              SizedBox(width: 4.w),
-                              Icon(Icons.keyboard_arrow_down_sharp, size: 16.sp, color: Colors.black),
                             ],
                           ),
                         ],
@@ -80,11 +72,11 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 30.w,
-                        height: 30.h,
+                        width: 36.w,
+                        height: 36.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: Colors.grey.shade200),
                         ),
                         child: SvgPicture.asset("assets/images/bill_icon.svg",),
                       ),
@@ -93,107 +85,65 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                 ],
               ),
               SizedBox(height: 24.h),
-              Text(
-                "المواعيد القادمة",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
-              ),
-              SizedBox(height: 8.h),
-              _buildUpcomingAppointmentCard(
-                doctorName: "د.محمد مرعي",
-                specialty: "استشاري مخ واعصاب",
-                date: "الأربعاء, 10 نوفمبر, 2025",
-                time: "11:00",
-                doctorImage: "assets/images/doctor.png",
-              ),
-              SizedBox(height: 24.h),
-              Row(
+              Column(
                 children: [
-                  Expanded(
-                    child: SearchField(
-                      hint: "البحث عن طبيب...",
-                      onChanged: (value) {
-                        print("بحث عن: $value");
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  FilterButton(
-                    onPressed: () {
-                      print("فتح الفلتر");
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 24.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildSideBySideCard(
-                      title: "حجز موعد",
-                      description: "اختر الدكتور المناسب في التخصص الذي تحتاجه",
-                      buttonText: "حجز موعد",
-                      cardColor: const Color(0xffF0F0FF),
-                      buttonColor: const Color(0xff6161FF),
-                      icon: "assets/images/doctor_appointment.png",
-                      bgicon: const Color(0xffCCCCFF),
-                      onButtonPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const DoctorMainLayout(selectedIndex: 2)),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 15.w),
-                  Expanded(
-                    child: _buildSideBySideCard(
-                      title: "مسعف قريب",
-                      description: "استكشف المستشفيات والاطباء والممرضين الاقرب",
-                      buttonText: "ابحث عن مسعف",
-                      cardColor: const Color(0xffFDF1F2),
-                      buttonColor: const Color(0xffE6474F),
-                      icon: "assets/images/hospital.png",
-                      bgicon: const Color(0xffF9D2D4),
-                      onButtonPressed: () {
+                  SizedBox(height: 24.h),
+                  const TimeFilterWidget(),
+                  SizedBox(height: 24.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildSideBySideCard(
+                          title: "4,500",
+                          description: "مدفوعات",
+                          cardColor: const Color(0xffEBF2E9),
 
-                      },
-                    ),
+                          icon:  "assets/images/pay.png",
+                          bgicon: const Color(0xffDBE6D5),
+                        ),
+                      ),
+                      SizedBox(width: 19.w),
+                      Expanded(
+                        child: _buildSideBySideCard(
+                          title: "45",
+                          description: "حجز",
+                          cardColor: const Color(0xffF0F0FF),
+                          icon: "assets/images/appointment.png",
+                          bgicon: const Color(0xffCCCCFF),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 32.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "خدماتنا",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ), Text(
-                    "عرض الكل",
+                    "الحجوزات الجديدة",
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  Text(
+                    "الحجوزات الجديدة",
                     style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color:AppColors.gradientColor2),
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
-              SizedBox(
-                height: 100.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildServiceCard("assets/images/Home_care.png","رعاية منزلية"),
-                    _buildServiceCard("assets/images/Medicine.png","أدوية"),
-                    _buildServiceCard("assets/images/Nurse.png", "ممرضة"),
-                    _buildServiceCard("assets/images/donors.png", "متبرعون"),
-                    _buildServiceCard("assets/images/doctor_logo.png", "طبيب"),
-                  ],
-                ),
+              SizedBox(height:24.h),
+              _buildUpcomingAppointmentCard(
+                doctorName: "محمد ممدوح",
+                specialty: "نوع الحجز نفسي",
+                date: "الأربعاء, 10 نوفمبر, 2025",
+                time: "11:00",
+                doctorImage: "assets/images/person_image.png",
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: 16.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "أشهر الأطباء",
+                    "تقييماتى",
                     style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   Text(
@@ -202,17 +152,16 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: 18.h),
               ListView.builder(
                 itemCount: 2,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _buildDoctorCard(
-                    rating: 4.8,
-                    name: "د.محمد مرعي",
-                    specialty: "استشاري مخ واعصاب",
-                    image: "assets/images/doctor.png",
+                    name: "احمد عادل",
+                    specialty: "دكتور محترم ومستمع جيد وتم تشخيصي من اول مرة بعد معاناة بلا فائدة",
+                    image: "assets/images/memoji.png",
                   );
                 },
               ),
@@ -226,12 +175,10 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
   Widget _buildSideBySideCard({
     required String title,
     required String description,
-    required String buttonText,
     required Color cardColor,
-    required Color buttonColor,
     required String icon,
     required Color bgicon,
-    VoidCallback? onButtonPressed,
+
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 15.h),
@@ -245,92 +192,55 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(color: bgicon, shape: BoxShape.circle),
-            child: Image.asset(icon, height: 45.w),
+            child: Image.asset(icon, height: 39.h,width:40.w ,),
           ),
           SizedBox(height: 12.h),
-          Text(title, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87), textAlign: TextAlign.center),
-          SizedBox(height: 8.h),
-          Text(description, style: TextStyle(fontSize: 12.sp, color: Colors.black54), textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
+          Text(title, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black), textAlign: TextAlign.center),
+
+          Text(description, style: TextStyle(fontSize: 16.sp, color: Colors.black), textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
           SizedBox(height: 15.h),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: onButtonPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
-                padding: EdgeInsets.symmetric(vertical: 8.h),
-              ),
-              child: Text(buttonText, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.white)),
-            ),
-          ),
+
         ],
       ),
     );
   }
 
-  Widget _buildServiceCard(String imagePath, String title) {
-    return Container(
-      width: 74.25.w,
-      height: 78.75.h,
-      margin: EdgeInsets.only(right: 16.w),
-      padding: EdgeInsets.symmetric(vertical: 7.5.h, horizontal: 5.w),
-      decoration: BoxDecoration(
-        color: const Color(0xffFFFFFF),
-        borderRadius: BorderRadius.circular(7.5.r),
-        border: Border.all(color: const Color(0xffEDF1F3), width: 0.75),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(imagePath, height: 45.h, width: 45.w),
-          SizedBox(height: 5.h),
-          Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDoctorCard({required double rating, required String name, required String specialty, required String image}) {
+  Widget _buildDoctorCard({required String name, required String specialty, required String image}) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r), border: Border.all(color: const Color(0xffEDF1F3), width: 0.75)),
-      child: Column(
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8.r), border: Border.all(color: const Color(0xffEDF1F3), width: 0.75)),
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 89.w,
-                height: 112.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.r),
-                  image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Row(
+                    Container(
+                    width: 48.w,
+                    height: 48.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(999.r),
+                      image: DecorationImage(image: AssetImage(image),),
+                    ),
+                  ),
+                    SizedBox(width: 16.w),
+                    Column(
                       children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 18),
-                        SizedBox(width: 4.w),
-                        Text(rating.toString(), style: TextStyle(fontSize: 13.sp, color: Colors.black54)),
+                        Text(name, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                        Text("⭐⭐⭐⭐⭐", style: TextStyle(fontSize: 16.sp, )),
                       ],
                     ),
-                    SizedBox(height: 8.h),
-                    Text(name, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 8.h),
-                    Text(specialty, style: TextStyle(fontSize: 13.sp, color: Colors.grey[700])),
                   ],
                 ),
-              ),
-            ],
+                SizedBox(height:12.h),
+                Text(specialty, style: TextStyle(fontSize: 14.sp, color: Colors.grey[700])),
+              ],
+            ),
           ),
-          SizedBox(height: 16.h),
-          ElevatedButton(onPressed: () {}, child: Text("ارسال رسالة")),
         ],
       ),
     );
@@ -360,6 +270,7 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                         height: 48.h,
                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r), image: DecorationImage(image: AssetImage(doctorImage), fit: BoxFit.cover)),
                       ),
+                      SizedBox(width:12.w ,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [

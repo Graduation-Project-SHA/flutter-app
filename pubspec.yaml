@@ -150,6 +150,9 @@ flutter:
     - assets/images/doctor5.png
     - assets/images/emergency_car_icon.png
     - assets/images/message-icon.png
+    - assets/images/pay.png
+    - assets/images/person_image.png
+    - assets/images/memoji.png
 
 
 

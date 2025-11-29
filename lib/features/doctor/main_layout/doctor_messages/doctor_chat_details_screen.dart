@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../../shared/component/customAppbarButton/custom_app_bar_button.dart';
 
 
 class Message {
@@ -308,21 +309,7 @@ class _ChatDetailsScreenState extends State<DoctorChatDetailsScreen> {
         ),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color.fromRGBO(205, 205, 205, 1)),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
-              ),
-            ),
-          ),
+          CustomAppBarBtn()
         ],
       ),
       body: WillPopScope(

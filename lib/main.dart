@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      initialRoute: MainLayout.routeName,
+      initialRoute: RegisterUserScreen.routeName,   // MainLayout.routeName,
       routes: {
         OnboardingScreen.routeName:(context)=>OnboardingScreen(),
         Loginscreen.routeName:(context)=>Loginscreen(),

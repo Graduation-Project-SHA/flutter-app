@@ -11,6 +11,7 @@ class Defaulttextformfield extends StatelessWidget {
   final Color? borderColor;
   final String? initialValue;
   final bool readOnly;
+  final int maxLines;
 
   const Defaulttextformfield({
     super.key,
@@ -23,12 +24,14 @@ class Defaulttextformfield extends StatelessWidget {
     this.onChanged,
     this.borderColor,
     this.initialValue,
-    this.readOnly = false
+    this.readOnly = false,
+    this.maxLines=1,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: maxLines ,
       initialValue: initialValue,
       readOnly: readOnly,
       controller: controller,

@@ -53,6 +53,10 @@ dependencies:
   hive_flutter: ^1.1.0
   geolocator: ^10.1.0
   geocoding: ^2.1.1
+  step_progress_indicator: ^1.0.2
+  easy_stepper: ^0.9.1
+  google_maps_flutter: ^2.14.0
+  flutter_map: ^8.2.2
 
 dev_dependencies:
   flutter_test:
@@ -110,6 +114,11 @@ flutter:
     - assets/images/settings_icon.png
     - assets/images/message-text_icon.png
     - assets/images/calendar_icon.png
+    - assets/images/progress_bar1.png
+    - assets/images/progress_bar2.png
+    - assets/images/progress_bar3.png
+    - assets/images/mapImage.png
+    - assets/images/markOnMap.png
 
 
 

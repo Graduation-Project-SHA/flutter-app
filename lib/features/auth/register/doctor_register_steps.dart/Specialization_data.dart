@@ -30,6 +30,7 @@ class _SpecializationDataState extends State<SpecializationData> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            
             children: [
               Text(
                 'موقعك الحالي',
@@ -55,10 +56,10 @@ class _SpecializationDataState extends State<SpecializationData> {
           ),
           SizedBox(height: 5.h),
           Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 25),
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
             child: Container(
-              width: 330.w,
-              height: 120.h,
+              width: 380.w,
+              height: 140.h,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 172, 160, 160),
                 borderRadius: BorderRadius.circular(12),
@@ -68,8 +69,8 @@ class _SpecializationDataState extends State<SpecializationData> {
                 ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(12),
                   child: Image.asset('assets/images/mapImage.png',
-                  height: 120.h,
-                  width: 330.w,
+                  height: 140.h,
+                  width: 380.w,
                   
                   fit: BoxFit.cover,),
                 ),

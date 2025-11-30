@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_care_project/features/auth/register/doctor_register_steps.dart/SendingtheCard.dart';
 import 'package:health_care_project/features/auth/register/doctor_register_steps.dart/Specialization_data.dart';
 import 'package:health_care_project/features/auth/success_register/success_register_screen.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +22,7 @@ class RegisterUserScreen extends StatefulWidget {
 }
 
 class _RegisterUserScreenState extends State<RegisterUserScreen> {
-  int currentIndex = 1;
+  int currentIndex = 2;
   bool isDoctor = false;
   bool isSubmitted = false;
   bool isRegisterTabSelected = true;
@@ -579,25 +580,46 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       create: (context) => AuthCubit(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: (isDoctor && currentIndex == 1||currentIndex == 2)?
-         AppBar(
-        title: Text(
-          "حجز موعد",
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        centerTitle: true,
-        actions: [
-
-        ],
-
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-          alignment: Alignment.topLeft,
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ):null,
+        appBar: (isDoctor && currentIndex == 1 || isDoctor && currentIndex == 2)
+            ? AppBar(
+                backgroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                automaticallyImplyLeading: false,
+                title: Text(
+                  currentIndex == 1
+                      ? 'بيانات التخصص'
+                      : currentIndex == 2
+                      ? "إرسال كارنيه النقابة"
+                      : "",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24.sp,
+                  ),
+                ),
+                actions: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromRGBO(205, 205, 205, 1),
+                        ),
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            currentIndex -= 1;
+                          });
+                        },
+                        icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : null,
         body: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is RegisterSuccessState) {
@@ -635,12 +657,15 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 15.h),
-                    _buildUserTypeSelector(),
 
-                    SizedBox(height: 25.h),
+                    if (isDoctor && (currentIndex == 0 || currentIndex == 1) ||
+                        !isDoctor) ...[
+                      _buildUserTypeSelector(),
+                      SizedBox(height: 25.h),
+                      _buildAuthTabBar(),
+                      SizedBox(height: 25.h),
+                    ],
 
-                    _buildAuthTabBar(),
-                    SizedBox(height: 25.h),
                     if (isDoctor)
                       if (currentIndex == 0)
                         SizedBox(
@@ -652,8 +677,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                         SizedBox(
                           height: 30.h,
                           width: 380.w,
-                          child: Image.asset('assets/images/progress_bar2.png',
-                          )
+                          child: Image.asset('assets/images/progress_bar2.png'),
                         )
                       else
                         SizedBox(
@@ -661,12 +685,17 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                           width: 380.w,
                           child: Image.asset('assets/images/progress_bar3.png'),
                         ),
-                    if(!isDoctor)firstForm()
-                    else if(isDoctor&&currentIndex==0)firstForm()
-                    else if(isDoctor&&currentIndex==1)SpecializationData()
-                    else if(isDoctor&&currentIndex==2)Column(children: [Text("3",style: TextStyle(fontSize: 50),)],),
-                    
+                    if (!isDoctor)
+                      firstForm()
+                    else if (isDoctor && currentIndex == 0)
+                      firstForm()
+                    else if (isDoctor && currentIndex == 1)
+                      SpecializationData()
+                    else if (isDoctor && currentIndex == 2)
+                      Sendingthecard(),
+
                     SizedBox(height: 25.h),
+                  
 
                     DefaultButton(
                       buttonText: isLoading
@@ -678,7 +707,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                               setState(() {
                                 isSubmitted = true;
                               });
-
+                    
                               if (firstNameController.text.isEmpty ||
                                   lastNameController.text.isEmpty ||
                                   emailController.text.isEmpty ||
@@ -708,7 +737,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                                 );
                                 return;
                               }
-
+                    
                               AuthCubit.get(context).userRegister(
                                 name:
                                     "${firstNameController.text} ${lastNameController.text}",
@@ -731,25 +760,3 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
     );
   }
 }
-
-
-
-
-// appBar: AppBar(
-//         title: Text(
-//           "حجز موعد",
-//           style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
-//         ),
-//         centerTitle: true,
-//         actions: [
-
-//         ],
-
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-//           onPressed: () => Navigator.pop(context),
-//           alignment: Alignment.topLeft,
-//         ),
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//       ),

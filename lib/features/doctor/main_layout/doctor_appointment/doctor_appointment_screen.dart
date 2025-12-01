@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_appointment/patient_medical_record.dart';
 import '../../../../shared/component/customAppbarButton/custom_app_bar_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
 
@@ -87,16 +88,27 @@ class _AppointmentScreenState extends State<DoctorAppointmentScreen> {
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.only(bottom: 20.h),
       itemBuilder: (context, index) {
-        return AppointmentCard(
-          doctorName: "احمد الشافعي",
-          specialty: "نوع الحجز: استشارة",
-          date: "Wed, 17 May | 08:30 AM",
-          image: "assets/images/person_image.png",
-          status: status,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PatientDetailsScreen(),
+              ),
+            );
+          },
+          child: AppointmentCard(
+            doctorName: "احمد الشافعي",
+            specialty: "نوع الحجز: استشارة",
+            date: "Wed, 17 May | 08:30 AM",
+            image: "assets/images/person_image.png",
+            status: status,
+          ),
         );
       },
     );
   }
+
 }
 
 class AppointmentCard extends StatelessWidget {

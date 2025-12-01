@@ -12,6 +12,7 @@ class Defaulttextformfield extends StatelessWidget {
   final String? initialValue;
   final bool readOnly;
   final void Function()? onTap;
+  final int maxLines;
 
    Defaulttextformfield({
     super.key,
@@ -25,14 +26,15 @@ class Defaulttextformfield extends StatelessWidget {
     this.borderColor,
     this.initialValue,
     this.readOnly = false,
-    this.onTap , 
+    this.onTap ,
+     this.maxLines=1,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onTap: onTap,
-      
+      maxLines: maxLines,
       initialValue: initialValue,
       readOnly: readOnly,
       controller: controller,

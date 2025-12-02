@@ -61,6 +61,7 @@ dependencies:
   google_maps_flutter: ^2.14.0
   flutter_svg: ^2.0.9
   image_picker: ^1.2.1
+  camera: ^0.11.3
 
 
 dev_dependencies:
@@ -164,6 +165,10 @@ flutter:
     - assets/images/mapImage.png
     - assets/images/markOnMap.png
     - assets/images/ID_Logo.png
+    - assets/images/camerarotate.png
+    - assets/images/FaceId.png    
+    - assets/images/completeRegister.png    
+    - assets/images/Loader.png
 
 
 

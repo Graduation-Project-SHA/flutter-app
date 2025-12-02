@@ -34,7 +34,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final TextEditingController birthDateController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -53,7 +53,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       Navigator.pushNamedAndRemoveUntil(
         context,
         Loginscreen.routeName,
-            (route) => false,
+        (route) => false,
       );
     });
   }
@@ -400,7 +400,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     controller: firstNameController,
                     hintText: "الاسم الاول",
                     borderColor:
-                    (isSubmitted && firstNameController.text.isEmpty)
+                        (isSubmitted && firstNameController.text.isEmpty)
                         ? Colors.redAccent
                         : null,
                   ),
@@ -417,7 +417,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     controller: lastNameController,
                     hintText: "الاسم الأخير",
                     borderColor:
-                    (isSubmitted && lastNameController.text.isEmpty)
+                        (isSubmitted && lastNameController.text.isEmpty)
                         ? Colors.redAccent
                         : null,
                   ),
@@ -456,7 +456,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           ),
           child: PhoneFormField(
             countrySelectorNavigator:
-            const CountrySelectorNavigator.modalBottomSheet(),
+                const CountrySelectorNavigator.modalBottomSheet(),
             decoration: InputDecoration(
               hintText: '0123456789',
               focusedBorder: InputBorder.none,
@@ -520,8 +520,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             },
           ),
           borderColor:
-          (isSubmitted &&
-              (!isPasswordValid || passwordController.text.isEmpty))
+              (isSubmitted &&
+                  (!isPasswordValid || passwordController.text.isEmpty))
               ? Colors.redAccent
               : null,
         ),
@@ -582,43 +582,43 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         backgroundColor: Colors.white,
         appBar: (isDoctor && currentIndex == 1 || isDoctor && currentIndex == 2)
             ? AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          automaticallyImplyLeading: false,
-          title: Text(
-            currentIndex == 1
-                ? 'بيانات التخصص'
-                : currentIndex == 2
-                ? "إرسال كارنيه النقابة"
-                : "",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 24.sp,
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromRGBO(205, 205, 205, 1),
+                backgroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                automaticallyImplyLeading: false,
+                title: Text(
+                  currentIndex == 1
+                      ? 'بيانات التخصص'
+                      : currentIndex == 2
+                      ? "إرسال كارنيه النقابة"
+                      : "",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24.sp,
                   ),
-                  borderRadius: BorderRadius.circular(14.r),
                 ),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      currentIndex -= 1;
-                    });
-                  },
-                  icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
-                ),
-              ),
-            ),
-          ],
-        )
+                actions: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Color.fromRGBO(205, 205, 205, 1),
+                        ),
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            currentIndex -= 1;
+                          });
+                        },
+                        icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             : null,
         body: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
@@ -690,16 +690,24 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     else if (isDoctor && currentIndex == 0)
                       firstForm()
                     else if (isDoctor && currentIndex == 1)
-                        SpecializationData()
-                      else if (isDoctor && currentIndex == 2)
-                          Sendingthecard(),
+                      SpecializationData(),
+
                     SizedBox(height: 25.h),
                     DefaultButton(
-                      onPressed: (){
+                      onPressed: () {
                         setState(() {
-                         if(currentIndex <2){
-                           currentIndex ++;
-                         }
+                          if (currentIndex < 1) {
+                            currentIndex++;
+                          } else if (currentIndex == 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return Sendingthecard();
+                                },
+                              ),
+                            );
+                          }
                         });
                       },
                       buttonText: isDoctor ? "التالي" : "إنشاء حساب",

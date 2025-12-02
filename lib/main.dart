@@ -53,18 +53,18 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-      initialRoute: RegisterUserScreen.routeName,
-     // initialRoute: DoctorMainLayout.routeName,
-      // onGenerateRoute: (settings) {
-      //   if (settings.name == DoctorMainLayout.routeName) {
-      //     final selectedIndex = settings.arguments as int? ?? 0;
-      //
-      //     return MaterialPageRoute(
-      //       builder: (_) => DoctorMainLayout(selectedIndex: selectedIndex),
-      //     );
-      //   }
-      //   return null;
-      // },
+  //    initialRoute: RegisterUserScreen.routeName,
+     initialRoute: DoctorMainLayout.routeName,
+      onGenerateRoute: (settings) {
+        if (settings.name == DoctorMainLayout.routeName) {
+          final selectedIndex = settings.arguments as int? ?? 0;
+
+          return MaterialPageRoute(
+            builder: (_) => DoctorMainLayout(selectedIndex: selectedIndex),
+          );
+        }
+        return null;
+      },
 
       routes: {
         OnboardingScreen.routeName:(context)=>OnboardingScreen(),

@@ -158,6 +158,10 @@ flutter:
     - assets/images/wallet.png
     - assets/images/personalcard.png
     - assets/images/clock.png
+    - assets/images/notificationLogo.png
+    - assets/images/message-question.png
+    - assets/images/logout.png
+    - assets/images/lock.png
 
 
 

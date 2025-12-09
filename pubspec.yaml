@@ -169,6 +169,10 @@ flutter:
     - assets/images/FaceId.png    
     - assets/images/completeRegister.png    
     - assets/images/Loader.png
+    - assets/images/notificationLogo.png
+    - assets/images/message-question.png
+    - assets/images/logout.png
+    - assets/images/lock.png
 
     - assets/images/paypal_logo.png
     - assets/images/applepay_logo.png

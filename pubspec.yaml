@@ -170,6 +170,9 @@ flutter:
     - assets/images/completeRegister.png    
     - assets/images/Loader.png
 
+    - assets/images/paypal_logo.png
+    - assets/images/applepay_logo.png
+    - assets/images/mastercard_logo2.png
 
 
 

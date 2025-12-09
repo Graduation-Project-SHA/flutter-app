@@ -5,16 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
-class DoctorProfileScreen extends StatefulWidget {
-  static const String routeName = "DoctorProfileScreen";
+class UserProfileScreen extends StatefulWidget {
+  static const String routeName = "UserProfileScreen";
 
-  const DoctorProfileScreen({super.key});
+  const UserProfileScreen({super.key});
 
   @override
-  State<DoctorProfileScreen> createState() => _DoctorProfileScreenState();
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
   var box = Hive.box('authBox');
 
   late Box authBox;
@@ -57,6 +57,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +197,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           color: Colors.blue,
                           title: "معلومات شخصية",
                           onTap: (){
-                            Navigator.pushNamed(context, "DoctorPersonalInformationScreen");
+                            Navigator.pushNamed(context, "UserPersonalInformationScreen");
                           },
                         ),
                         _buildOptionItem(
@@ -208,18 +209,18 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         _buildOptionItem(
                           image: "assets/images/wallet.png",
                           color: Colors.redAccent,
-                          title: "المدفوعات",
+                          title: "طرق الدفع",
                           onTap: (){
-                            Navigator.pushNamed(context, "DoctorPaymentMethodsScreen");
+                            Navigator.pushNamed(context, "UserPaymentMethodsScreen");
                           },
                         ),
                         _buildOptionItem(
                           image: "assets/images/clock.png",
-                          color: Colors.orange,
-                          title: "مواعيدي",
+                          color: Colors.purple,
+                          title: "السجل الطبي",
                           isLast: true,
                           onTap: () {
-                            Navigator.pushNamed(context, "ManageAppointmentsScreen");
+                            Navigator.pushNamed(context, "MedicalRecordScreen");
                           },
                         ),
                         SizedBox(height:16.h),

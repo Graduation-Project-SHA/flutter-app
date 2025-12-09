@@ -9,6 +9,8 @@ import '../../../shared/component/defaultTextFormField/defaultTextFormField.dart
 import '../../../shared/component/defaultbutton/defaultbutton.dart';
 import '../../doctor/auth/register/doctor_register_steps/SendingtheCard.dart';
 import '../../doctor/auth/register/doctor_register_steps/Specialization_data.dart';
+import '../../doctor/main_layout/doctor_main_layout.dart';
+import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../login/login_screen.dart';
@@ -34,7 +36,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final TextEditingController birthDateController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-      TextEditingController();
+  TextEditingController();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -53,7 +55,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
       Navigator.pushNamedAndRemoveUntil(
         context,
         Loginscreen.routeName,
-        (route) => false,
+            (route) => false,
       );
     });
   }
@@ -400,7 +402,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     controller: firstNameController,
                     hintText: "الاسم الاول",
                     borderColor:
-                        (isSubmitted && firstNameController.text.isEmpty)
+                    (isSubmitted && firstNameController.text.isEmpty)
                         ? Colors.redAccent
                         : null,
                   ),
@@ -417,7 +419,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                     controller: lastNameController,
                     hintText: "الاسم الأخير",
                     borderColor:
-                        (isSubmitted && lastNameController.text.isEmpty)
+                    (isSubmitted && lastNameController.text.isEmpty)
                         ? Colors.redAccent
                         : null,
                   ),
@@ -456,7 +458,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           ),
           child: PhoneFormField(
             countrySelectorNavigator:
-                const CountrySelectorNavigator.modalBottomSheet(),
+            const CountrySelectorNavigator.modalBottomSheet(),
             decoration: InputDecoration(
               hintText: '0123456789',
               focusedBorder: InputBorder.none,
@@ -520,8 +522,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             },
           ),
           borderColor:
-              (isSubmitted &&
-                  (!isPasswordValid || passwordController.text.isEmpty))
+          (isSubmitted &&
+              (!isPasswordValid || passwordController.text.isEmpty))
               ? Colors.redAccent
               : null,
         ),
@@ -558,63 +560,267 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
         SizedBox(height: 14.h),
 
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildCheck("كلمة السر تحتوي على 8 أحرف", hasMinLength),
-                        _buildCheck("تحتوي على حرف كبير وصغير", hasUpperLower),
-                        _buildCheck("تحتوي على رقم", hasNumber),
-                        _buildCheck("تحتوي على رمز مثل @ أو /", hasSymbol),
-                        _buildCheck("كلمة السر متطابقة", isPasswordMatched),
-                      ],
-                    ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCheck("كلمة السر تحتوي على 8 أحرف", hasMinLength),
+            _buildCheck("تحتوي على حرف كبير وصغير", hasUpperLower),
+            _buildCheck("تحتوي على رقم", hasNumber),
+            _buildCheck("تحتوي على رمز مثل @ أو /", hasSymbol),
+            _buildCheck("كلمة السر متطابقة", isPasswordMatched),
+          ],
+        ),
 
-                    SizedBox(height: 24.h),
+        SizedBox(height: 24.h),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => AuthCubit(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: (isDoctor && currentIndex == 1 || isDoctor && currentIndex == 2)
+            ? AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          automaticallyImplyLeading: false,
+          title: Text(
+            currentIndex == 1
+                ? 'بيانات التخصص'
+                : currentIndex == 2
+                ? "إرسال كارنيه النقابة"
+                : "",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 24.sp,
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color.fromRGBO(205, 205, 205, 1),
+                  ),
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      currentIndex -= 1;
+                    });
+                  },
+                  icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+                ),
+              ),
+            ),
+          ],
+        )
+            : null,
+        body: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is RegisterSuccessState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("تم إنشاء الحساب بنجاح"),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SuccessRegisterScreen(
+                    firstName: firstNameController.text,
+                  ),
+                ),
+              );
+            } else if (state is RegisterErrorState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("فشل التسجيل. يرجى مراجعة البيانات."),
+                  backgroundColor: Colors.redAccent,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            bool isLoading = state is RegisterLoadingState;
+
+            return SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 15.h),
+
+                    if (isDoctor && (currentIndex == 0 || currentIndex == 1) ||
+                        !isDoctor) ...[
+                      _buildUserTypeSelector(),
+                      SizedBox(height: 25.h),
+                      _buildAuthTabBar(),
+                      SizedBox(height: 25.h),
+                    ],
+
+                    if (isDoctor)
+                      if (currentIndex == 0)
+                        SizedBox(
+                          height: 30.h,
+                          width: 380.w,
+                          child: Image.asset('assets/images/progress_bar1.png'),
+                        )
+                      else if (currentIndex == 1)
+                        SizedBox(
+                          height: 30.h,
+                          width: 380.w,
+                          child: Image.asset('assets/images/progress_bar2.png'),
+                        )
+                      else
+                        SizedBox(
+                          height: 30.h,
+                          width: 380.w,
+                          child: Image.asset('assets/images/progress_bar3.png'),
+                        ),
+                    if (!isDoctor)
+                      firstForm()
+                    else if (isDoctor && currentIndex == 0)
+                      firstForm()
+                    else if (isDoctor && currentIndex == 1)
+                        SpecializationData(),
+
+                    SizedBox(height: 25.h),
+
+
 
                     DefaultButton(
-                      buttonText: isLoading ? "جاري الإنشاء..." : "إنشاء حساب",
-                      onPressed: isLoading ? null : () {
+                      buttonText: isDoctor ? "التالي" : "إنشاء حساب",
+                      onPressed: () {
                         setState(() {
                           isSubmitted = true;
                         });
+                        if (!isDoctor) {
+                          AuthCubit.get(context).userRegister(
+                            name: "${firstNameController.text} ${lastNameController.text}",
+                            email: emailController.text,
+                            password: passwordController.text,
+                            role: 'Patient',
+                            gender: selectedGender,
+                            dob: birthDateController.text,
+                            phone: fullPhoneNumber,
+                          );
 
-                        if (firstNameController.text.isEmpty ||
-                            lastNameController.text.isEmpty ||
-                            emailController.text.isEmpty ||
-                            fullPhoneNumber.isEmpty ||
-                            birthDateController.text.isEmpty ||
-                            passwordController.text.isEmpty ||
-                            confirmPasswordController.text.isEmpty ||
-                            selectedGender.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("من فضلك املأ كل الحقول المطلوبة "),
-                              backgroundColor: Colors.redAccent,
-                            ),
-                          );
-                          return;
-                        }
-                        if (!isPasswordMatched || !isPasswordValid) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("تأكد من صحة كلمة المرور ومطابقتها للمعايير"),
-                              backgroundColor: Colors.redAccent,
-                            ),
-                          );
+                          Navigator.pushReplacementNamed(context, MainLayout.routeName);
                           return;
                         }
 
-                        AuthCubit.get(context).userRegister(
-                          name: "${firstNameController.text} ${lastNameController.text}",
-                          email: emailController.text,
-                          password: passwordController.text,
-                          role: isDoctor ? 'Doctor' : 'Patient',
-                          gender: selectedGender,
-                          dob: birthDateController.text,
-                          phone: fullPhoneNumber
-                        );
+                        if (isDoctor) {
+                          if (currentIndex == 0) {
+                            setState(() {
+                              currentIndex = 1;
+                            });
+                          } else if (currentIndex == 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => Sendingthecard()),
+                            );
+                          } else if (currentIndex == 2) {
+
+                            AuthCubit.get(context).userRegister(
+                              name: "${firstNameController.text} ${lastNameController.text}",
+                              email: emailController.text,
+                              password: passwordController.text,
+                              role: 'Doctor',
+                              gender: selectedGender,
+                              dob: birthDateController.text,
+                              phone: fullPhoneNumber,
+                            );
+
+                            Navigator.pushReplacementNamed(context, DoctorMainLayout.routeName);
+                          }
+                        }
                       },
                     ),
+
+
+                    // DefaultButton(
+                    //   onPressed: () {
+                    //     setState(() {
+                    //       if (currentIndex < 1) {
+                    //         currentIndex++;
+                    //       } else if (currentIndex == 1) {
+                    //         Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //             builder: (context) {
+                    //               return Sendingthecard();
+                    //             },
+                    //           ),
+                    //         );
+                    //       }
+                    //     });
+                    //   },
+                    //   buttonText: isDoctor ? "التالي" : "إنشاء حساب",
+
+
+
+                      // buttonText: isLoading
+                      //     ? "جاري الإنشاء..."
+                      //     : (isDoctor ? "التالي" : "إنشاء حساب"),
+                      // onPressed: isLoading
+                      //     ? null
+                      //     : () {
+                      //   setState(() {
+                      //     isSubmitted = true;
+                      //   });
+                      //
+                      //   if (firstNameController.text.isEmpty ||
+                      //       lastNameController.text.isEmpty ||
+                      //       emailController.text.isEmpty ||
+                      //       fullPhoneNumber.isEmpty ||
+                      //       birthDateController.text.isEmpty ||
+                      //       passwordController.text.isEmpty ||
+                      //       confirmPasswordController.text.isEmpty ||
+                      //       selectedGender.isEmpty) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       const SnackBar(
+                      //         content: Text(
+                      //           "من فضلك املأ كل الحقول المطلوبة ",
+                      //         ),
+                      //         backgroundColor: Colors.redAccent,
+                      //       ),
+                      //     );
+                      //     return;
+                      //   }
+                      //   if (!isPasswordMatched || !isPasswordValid) {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       const SnackBar(
+                      //         content: Text(
+                      //           "تأكد من صحة كلمة المرور ومطابقتها للمعايير",
+                      //         ),
+                      //         backgroundColor: Colors.redAccent,
+                      //       ),
+                      //     );
+                      //     return;
+                      //   }
+                      //
+                      //   AuthCubit.get(context).userRegister(
+                      //     name:
+                      //     "${firstNameController.text} ${lastNameController.text}",
+                      //     email: emailController.text,
+                      //     password: passwordController.text,
+                      //     role: isDoctor ? 'Doctor' : 'Patient',
+                      //     gender: selectedGender,
+                      //     dob: birthDateController.text,
+                      //     phone: fullPhoneNumber,
+                      //   );
+                      // },
+                   // ),
                   ],
                 ),
               ),

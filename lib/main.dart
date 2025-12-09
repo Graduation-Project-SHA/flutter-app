@@ -58,8 +58,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-     initialRoute: RegisterUserScreen.routeName,
-   //  initialRoute: MainLayout.routeName,
+      initialRoute: RegisterUserScreen.routeName,
+    // initialRoute: MainLayout.routeName,
       onGenerateRoute: (settings) {
         if (settings.name == MainLayout.routeName) {
           final selectedIndex = settings.arguments as int? ?? 0;
@@ -83,7 +83,6 @@ class MyApp extends StatelessWidget {
         HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
         EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
         DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
-
 
 
         ManageAppointmentsScreen.routeName: (_) => ManageAppointmentsScreen(),

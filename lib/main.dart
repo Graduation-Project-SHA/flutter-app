@@ -11,9 +11,14 @@ import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
+import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
+import 'features/patient/main_layout/profile/medical_record_screen.dart';
+import 'features/patient/main_layout/profile/user_payment_methods_screen.dart';
+import 'features/doctor/main_layout/doctor_profile/doctor_personal_information_screen.dart';
 import 'features/patient/main_layout/appointment/AppointmentTimeScreen.dart';
 import 'features/patient/main_layout/appointment/DoctorDetailsScreen.dart';
 import 'features/patient/main_layout/main_layout.dart';
+import 'features/patient/main_layout/profile/user_personal_information_screen.dart';
 import 'features/patient/nearby_services/emergency_request_screen.dart';
 import 'features/patient/nearby_services/find_nearby_services_screen.dart';
 import 'features/patient/nearby_services/hospital_details_screen.dart';
@@ -53,14 +58,14 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       debugShowCheckedModeBanner: false,
-  //    initialRoute: RegisterUserScreen.routeName,
-     initialRoute: DoctorMainLayout.routeName,
+     initialRoute: RegisterUserScreen.routeName,
+   //  initialRoute: MainLayout.routeName,
       onGenerateRoute: (settings) {
-        if (settings.name == DoctorMainLayout.routeName) {
+        if (settings.name == MainLayout.routeName) {
           final selectedIndex = settings.arguments as int? ?? 0;
 
           return MaterialPageRoute(
-            builder: (_) => DoctorMainLayout(selectedIndex: selectedIndex),
+            builder: (_) => MainLayout(selectedIndex: selectedIndex),
           );
         }
         return null;
@@ -78,6 +83,16 @@ class MyApp extends StatelessWidget {
         HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
         EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
         DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
+
+
+
+        ManageAppointmentsScreen.routeName: (_) => ManageAppointmentsScreen(),
+        DoctorPersonalInformationScreen.routeName: (_) => DoctorPersonalInformationScreen(),
+
+
+        UserPaymentMethodsScreen.routeName: (_) => UserPaymentMethodsScreen(),
+        MedicalRecordScreen.routeName: (_) => MedicalRecordScreen(),
+        UserPersonalInformationScreen.routeName: (_) => UserPersonalInformationScreen(),
       },
       );
      }

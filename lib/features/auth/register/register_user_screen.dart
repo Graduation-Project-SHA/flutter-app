@@ -598,7 +598,6 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                         _buildCheck("كلمة السر متطابقة", isPasswordMatched),
                       ],
                     ),
-
                     SizedBox(height: 24.h),
 
                     DefaultButton(

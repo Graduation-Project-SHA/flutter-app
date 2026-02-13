@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 
-class SpecializationData extends StatefulWidget {
-  const SpecializationData({super.key});
+class SpecializationData extends StatelessWidget {
+  final String? selectedSpecialization;
+  final Function(String?) onSpecializationChanged;
+  final TextEditingController bioController;
+  final TextEditingController experienceController;
 
-  @override
-  State<SpecializationData> createState() => _SpecializationDataState();
-}
-
-class _SpecializationDataState extends State<SpecializationData> {
-  String? selectedSpecialization;
-
+   SpecializationData({
+    super.key,
+    required this.selectedSpecialization,
+    required this.onSpecializationChanged,
+    required this.bioController,
+    required this.experienceController,
+  });
   final List<String> specializations = [
     'طب أطفال',
     'باطنة',
@@ -19,7 +22,6 @@ class _SpecializationDataState extends State<SpecializationData> {
     'أسنان',
     'نساء وتوليد',
   ];
-  TextEditingController? talkAboutYourSelfControler;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +94,7 @@ class _SpecializationDataState extends State<SpecializationData> {
               color: Color.fromRGBO(108, 114, 120, 1),
             ),
           ),
+
           SizedBox(height: 10.h),
           DropdownButtonFormField<String>(
             value: selectedSpecialization,
@@ -110,9 +113,7 @@ class _SpecializationDataState extends State<SpecializationData> {
               );
             }).toList(),
             onChanged: (val) {
-              setState(() {
-                selectedSpecialization = val;
-              });
+              onSpecializationChanged(val);
             },
           ),
 
@@ -129,7 +130,7 @@ class _SpecializationDataState extends State<SpecializationData> {
           SizedBox(height: 15.h),
           Defaulttextformfield(
             maxLines: 5,
-            controller: talkAboutYourSelfControler,
+            controller: bioController,
 
           ),
           Text(
@@ -151,7 +152,9 @@ class _SpecializationDataState extends State<SpecializationData> {
             ),
           ),
           SizedBox(height: 15.h,),
-          Defaulttextformfield()
+          Defaulttextformfield(
+            controller: experienceController,
+          )
 
         ],
       ),

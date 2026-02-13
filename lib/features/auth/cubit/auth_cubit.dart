@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio.dart';
 import 'auth_state.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
@@ -85,67 +87,105 @@ class AuthCubit extends Cubit<AuthState> {
     return _translateError(rawErrorMessage);
   }
 
-  void userRegister({
-    required String name,
+  void registerUser({
+    required String firstName,
+    required String lastName,
     required String email,
     required String password,
-    required String role,
-    required String gender,
-    required String dob,
     required String phone,
-  }) {
+    required String gender,
+    required String dateOfBirth,
+   // required String profileImagePath,
+  }) async {
     emit(RegisterLoadingState());
 
-    DioHelper.postData(
-      url: ApiConstants.register,
-      data: {
+    try {
+      FormData formData = FormData.fromMap({
+        "firstName": firstName,
+        "lastName": lastName,
         "email": email,
-        "name": name,
         "password": password,
-        "role": role,
-        "gender": gender.toUpperCase(),
-        "dob": dob,
         "phone": phone,
-      },
-    ).then((value) {
-      print(value.data);
+        "gender": gender.toUpperCase(),
+        "dateOfBirth": dateOfBirth,
+        "role": "USER",
+        // "profileImage": await MultipartFile.fromFile(
+        //   profileImagePath,
+        //   filename: profileImagePath.split('/').last,
+        // ),
+      });
+
+      final response = await DioHelper.dio.post(
+        ApiConstants.register,
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
       emit(RegisterSuccessState());
-    }).catchError((error) {
-      print(error.toString());
+    } catch (error) {
       emit(RegisterErrorState(_handleDioError(error)));
-    });
+    }
   }
 
-  void _saveAuthData(Map<String, dynamic> data) async {
+
+
+
+  Future<void> _saveAuthData(Map<String, dynamic> data) async {
     final authBox = Hive.box('authBox');
 
-    await authBox.put('accessToken', data['tokens']['accessToken']);
-    await authBox.put('refreshToken', data['tokens']['refreshToken']);
+    final accessToken = data['data']['access_token'];
+    final refreshToken = data['data']['refresh_token'];
 
-    await authBox.put('userId', data['date']['payload']['id']);
-    await authBox.put('userName', data['date']['payload']['name']);
-    await authBox.put('userRole', data['date']['payload']['role']);
+    await authBox.put('accessToken', accessToken);
+    await authBox.put('refreshToken', refreshToken);
+
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
+
+    await authBox.put('userId', decodedToken['sub']);
+    await authBox.put('userEmail', decodedToken['email']);
+    await authBox.put('userRole', decodedToken['role']);
+
+    print("ROLE SAVED: ${decodedToken['role']}");
   }
 
-  void userLogin({
-    required String email,
-    required String password,
-  }) {
-    emit(LoginLoadingState());
 
-    DioHelper.postData(
-      url: ApiConstants.login,
-      data: {
-        "email": email,
-        "password": password,
-      },
-    ).then((value) {
-      _saveAuthData(value.data);
-      emit(LoginSuccessState(value.data));
-    }).catchError((error) {
-      print(error.toString());
+  void userLogin({required String email, required String password}) async {
+    emit(LoginLoadingState());
+    try {
+      final response = await DioHelper.postData(
+        url: ApiConstants.login,
+        data: {'email': email, 'password': password},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var authBox = Hive.box('authBox');
+
+        String accessToken = response.data['data']['access_token'];
+        String refreshToken = response.data['data']['refresh_token'];
+
+        await authBox.put('accessToken', accessToken);
+        await authBox.put('refreshToken', refreshToken);
+
+        var userData = response.data['data']['user'];
+        await authBox.put('userId', userData['id']);
+        await authBox.put('firstName', userData['firstName']);
+        await authBox.put('lastName', userData['lastName']);
+        await authBox.put('email', userData['email']);
+        await authBox.put('phone', userData['phone']);
+        await authBox.put('gender', userData['gender']);
+        await authBox.put('dateOfBirth', userData['dateOfBirth']);
+        await authBox.put('profileImage', userData['profileImage']);
+        await authBox.put('userRole', userData['role']);
+
+        emit(LoginSuccessState(response.data));
+      }
+    } catch (error) {
       emit(LoginErrorState(_handleDioError(error)));
-    });
+    }
   }
 
   Future<void> checkLoggedInUser() async {
@@ -183,8 +223,9 @@ class AuthCubit extends Cubit<AuthState> {
     DioHelper.postData(
       url: ApiConstants.resetPassword,
       data: {
-        "resetToken": code,
-        "password": newPassword,
+        "email": email,
+        "otp": code,
+        "newPassword": newPassword,
       },
     ).then((value) {
       print(value.data);
@@ -205,7 +246,7 @@ class AuthCubit extends Cubit<AuthState> {
       url: ApiConstants.verifyResetCode,
       data: {
         "email": email,
-        "code": code,
+        "otp": code,
       },
     ).then((value) {
       print(value.data);
@@ -216,9 +257,120 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  void userLogout() async {
-    final authBox = Hive.box('authBox');
-    await authBox.clear();
-    emit(AuthInitial());
+  Future<void> userLogout() async {
+    emit(LogoutLoadingState());
+
+    try {
+      final authBox = Hive.box('authBox');
+      final String? token = authBox.get('accessToken');
+
+
+      await DioHelper.dio.post(
+        ApiConstants.logOut,
+        data: {},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      await authBox.clear();
+
+      emit(AuthInitial());
+      emit(LogoutSuccessState());
+    } catch (error) {
+      await Hive.box('authBox').clear();
+      emit(LogoutSuccessState());
+    }
   }
+
+
+  void registerDoctor({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required String phone,
+    required String gender,
+    required String dateOfBirth,
+  //  required String profileImagePath,
+
+    required String specialization,
+    required String bio,
+    required String practicalExperience,
+    required double latitude,
+    required double longitude,
+    required String syndicateCardPath,
+    required String syndicateCardBackPath,
+
+  }) async {
+    emit(RegisterLoadingState());
+
+    try {
+      FormData formData = FormData.fromMap({
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "password": password,
+        "phone": phone,
+        "gender": gender.toUpperCase(),
+        "dateOfBirth": dateOfBirth,
+        "role": "DOCTOR",
+
+        "specialization": specialization,
+        "bio": bio,
+        "practicalExperience": practicalExperience,
+        "latitude": latitude.toString(),
+        "longitude": longitude.toString(),
+
+        // "profileImage": await MultipartFile.fromFile(
+        //   profileImagePath,
+        //   filename: profileImagePath.split('/').last,
+        // ),
+        "syndicateCard": await MultipartFile.fromFile(
+            syndicateCardPath,
+            filename: 'syndicate.jpg'
+        ),
+
+      });
+
+      await DioHelper.dio.post(
+        ApiConstants.register,
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
+      emit(RegisterSuccessState());
+    } catch (error) {
+      emit(RegisterErrorState(_handleDioError(error)));
+    }
+  }
+
+
+
+  void verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    emit(VerifyEmailLoadingState());
+
+    DioHelper.postData(
+      url: ApiConstants.verifyEmail,
+      data: {
+        "email": email,
+        "code": code,
+      },
+    ).then((value) {
+      emit(VerifyEmailSuccessState());
+    }).catchError((error) {
+      emit(VerifyEmailErrorState(_handleDioError(error)));
+    });
+  }
+
+
 }

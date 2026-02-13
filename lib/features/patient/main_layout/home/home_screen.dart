@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,8 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userName = authBox.get('userName');
-    final userImage = authBox.get('userImage');
+    final firstName = authBox.get('firstName', defaultValue: "");
+    final lastName = authBox.get('lastName', defaultValue: "");
+    final userName = "$firstName $lastName";
+
+    final localImage = authBox.get('profile_image_path');
+    final serverImage = authBox.get('profileImage');
+
     final location = 'القاهرة, دار السلام';
 
     return SafeArea(
@@ -46,9 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       CircleAvatar(
                         radius: 24.r,
-                        backgroundImage: userImage != null
-                            ? NetworkImage(userImage)
-                            : const AssetImage("assets/images/doctor.png") as ImageProvider,
+                        backgroundImage: localImage != null
+                            ? FileImage(File(localImage))
+                            : (serverImage != null
+                            ? NetworkImage(serverImage)
+                            : const AssetImage("assets/images/doctor.png") as ImageProvider)
+                        as ImageProvider,
+
                       ),
                       SizedBox(width: 24.w),
                       Column(

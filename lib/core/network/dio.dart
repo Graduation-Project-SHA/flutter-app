@@ -55,20 +55,27 @@ class AuthInterceptor extends Interceptor {
 
   Future<void> _saveNewTokens(Map<String, dynamic> data) async {
     final authBox = Hive.box('authBox');
-    await authBox.put('accessToken', data['tokens']['accessToken']);
-    await authBox.put('refreshToken', data['tokens']['refreshToken']);
+
+    final accessToken = data['data']['access_token'];
+    final refreshToken = data['data']['refresh_token'];
+
+    await authBox.put('accessToken', accessToken);
+    await authBox.put('refreshToken', refreshToken);
   }
+
 
   Future<String?> _performTokenRefresh(String refreshToken) async {
     try {
-      final response = await _dio.post(ApiConstants.refreshToken,
+      final response = await _dio.post(
+        ApiConstants.refreshToken,
         data: {'refreshToken': refreshToken},
       );
 
       if (response.statusCode == 200) {
         await _saveNewTokens(response.data);
-        return response.data['tokens']['accessToken'];
+        return response.data['data']['access_token'];
       }
+
       return null;
     } catch (e) {
       final authBox = Hive.box('authBox');
@@ -76,6 +83,7 @@ class AuthInterceptor extends Interceptor {
       return null;
     }
   }
+
 
 
   @override

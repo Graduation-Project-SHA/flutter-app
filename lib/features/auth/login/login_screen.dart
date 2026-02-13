@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/shared/component/defaultTextButton/defaultTextButton.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
+import 'package:hive/hive.dart';
 import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -55,30 +56,47 @@ class _LoginscreenState extends State<Loginscreen> {
       create: (context) => AuthCubit(),
       child: Scaffold(
         body: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is LoginSuccessState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("تم تسجيل الدخول بنجاح!"),
-                  backgroundColor: Colors.green,
-                ),
-              );
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainLayout(selectedIndex: 0),
+            listener: (context, state) {
+              if (state is LoginSuccessState) {
+
+                final authBox = Hive.box('authBox');
+                final role = authBox.get('userRole');
+
+                print("ROLE FROM HIVE: $role");
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("تم تسجيل الدخول بنجاح!"),
+                    backgroundColor: Colors.green,
                   ),
                 );
-            } else if (state is LoginErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("فشل تسجيل الدخول: ${state.error}"),
-                  backgroundColor: Colors.redAccent,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
+
+                if (role == "DOCTOR") {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainLayout(selectedIndex: 1),
+                    ),
+                  );
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainLayout(selectedIndex: 0),
+                    ),
+                  );
+                }
+
+              } else if (state is LoginErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("فشل تسجيل الدخول: ${state.error}"),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
             bool isLoading = state is LoginLoadingState;
 
             return Container(

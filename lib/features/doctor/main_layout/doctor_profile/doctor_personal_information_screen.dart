@@ -33,9 +33,12 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
 
 
   void _loadData() {
-    nameController.text = authBox.get('doctor_name', defaultValue: "د.ريم حسام");
-    emailController.text = authBox.get('doctor_email', defaultValue: "email@gmail.com");
-    phoneController.text = authBox.get('doctor_phone', defaultValue: "+20123456789");
+    String firstName = authBox.get('firstName', defaultValue: "");
+    String lastName = authBox.get('lastName', defaultValue: "");
+
+    nameController.text = "د. $firstName $lastName";
+    emailController.text = authBox.get('email', defaultValue: "");
+    phoneController.text = authBox.get('phone', defaultValue: "");
     passController.text = "********";
 
     String? savedImage = authBox.get('profile_image_path');
@@ -43,6 +46,7 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
       _selectedImage = File(savedImage);
     }
   }
+
 
 
   Future<void> pickImage() async {
@@ -80,8 +84,9 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
                   onTap: pickImage,
                   child: CircleAvatar(
                     radius: 55.r,
-                    backgroundImage:
-                    _selectedImage != null ? FileImage(_selectedImage!) : null,
+                    backgroundImage: _selectedImage != null
+                        ? FileImage(_selectedImage!)
+                        : const AssetImage("assets/images/person_image.png") as ImageProvider,
                     child: _selectedImage == null ? Icon(Icons.add_a_photo, size: 30.sp) : null,
                   ),
                 ),
@@ -116,9 +121,18 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
                     borderRadius: BorderRadius.circular(16.r)),
               ),
               onPressed: () {
-                authBox.put('doctor_name', nameController.text);
-                authBox.put('doctor_email', emailController.text);
-                authBox.put('doctor_phone', phoneController.text);
+
+                final fullName = nameController.text.replaceFirst("د. ", "");
+                final nameParts = fullName.split(" ");
+                authBox.put('firstName', nameParts.isNotEmpty ? nameParts[0] : "");
+                authBox.put('lastName', nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "");
+
+                authBox.put('email', emailController.text);
+                authBox.put('phone', phoneController.text);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("تم حفظ التعديلات بنجاح")),
+                );
                 Navigator.pop(context);
               },
               child: Text("حفظ", style: TextStyle(fontSize: 16.sp)),

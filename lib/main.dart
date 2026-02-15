@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/auth/cubit/auth_cubit.dart';
 import 'package:health_care_project/features/onboarding/pages/onboarding_screen.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -23,14 +25,13 @@ import 'features/patient/nearby_services/emergency_request_screen.dart';
 import 'features/patient/nearby_services/find_nearby_services_screen.dart';
 import 'features/patient/nearby_services/hospital_details_screen.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDirectory = await path_provider.getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('authBox');
   DioHelper.init();
-  runApp( MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -38,63 +39,61 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: Size(412, 924),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (context, child) {
-          return MaterialApp(
-            builder: (context, child) {
-              return Directionality(textDirection: TextDirection.rtl, child: child!);
-            },
-            theme: AppTheme.lightTheme.copyWith(
-              textTheme: Theme.of(context).textTheme.apply(fontFamily: 'SF Arabic'),
-            ),
-            supportedLocales: [Locale('ar', 'EG'), Locale('en', 'US')],
-            locale: const Locale('ar', 'EG'),
-            localizationsDelegates: [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            debugShowCheckedModeBanner: false,
-            initialRoute: RegisterUserScreen.routeName,
-            // initialRoute: MainLayout.routeName,
-            onGenerateRoute: (settings) {
-              if (settings.name == MainLayout.routeName) {
-                final selectedIndex = settings.arguments as int? ?? 0;
-
-                return MaterialPageRoute(
-                  builder: (_) => MainLayout(selectedIndex: selectedIndex),
-                );
-              }
-              return null;
-            },
-
-            routes: {
-              OnboardingScreen.routeName:(context)=>OnboardingScreen(),
-              Loginscreen.routeName:(context)=>Loginscreen(),
-              RegisterUserScreen.routeName:(context)=>RegisterUserScreen(),
-              MainLayout.routeName:(context)=>MainLayout(),
-              AppointmentTimeScreen.routeName:(context)=>AppointmentTimeScreen(),
-              DoctorDetailsScreen.routeName:(context)=>DoctorDetailsScreen(),
-              ResetPasswordScreen.routeName:(context)=>ResetPasswordScreen(email: '', code: '',),
-              FindNearbyServicesScreen.routeName: (_) =>  FindNearbyServicesScreen(),
-              HospitalDetailsScreen.routeName: (_) =>  HospitalDetailsScreen(),
-              EmergencyRequestScreen.routeName: (_) =>  EmergencyRequestScreen(),
-              DoctorMainLayout.routeName:(context)=>DoctorMainLayout(),
-
-
-              ManageAppointmentsScreen.routeName: (_) => ManageAppointmentsScreen(),
-              DoctorPersonalInformationScreen.routeName: (_) => DoctorPersonalInformationScreen(),
-
-
-              UserPaymentMethodsScreen.routeName: (_) => UserPaymentMethodsScreen(),
-              MedicalRecordScreen.routeName: (_) => MedicalRecordScreen(),
-              UserPersonalInformationScreen.routeName: (_) => UserPersonalInformationScreen(),
-            },
-          );
-        }
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => AuthCubit()),
+      ],
+      child: ScreenUtilInit(
+          designSize: const Size(412, 924),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) {
+            return MaterialApp(
+              builder: (context, child) {
+                return Directionality(textDirection: TextDirection.rtl, child: child!);
+              },
+              theme: AppTheme.lightTheme.copyWith(
+                textTheme: Theme.of(context).textTheme.apply(fontFamily: 'SF Arabic'),
+              ),
+              supportedLocales: const [Locale('ar', 'EG'), Locale('en', 'US')],
+              locale: const Locale('ar', 'EG'),
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              debugShowCheckedModeBanner: false,
+              initialRoute: RegisterUserScreen.routeName,
+              onGenerateRoute: (settings) {
+                if (settings.name == MainLayout.routeName) {
+                  final selectedIndex = settings.arguments as int? ?? 0;
+                  return MaterialPageRoute(
+                    builder: (_) => MainLayout(selectedIndex: selectedIndex),
+                  );
+                }
+                return null;
+              },
+              routes: {
+                OnboardingScreen.routeName: (context) => OnboardingScreen(),
+                Loginscreen.routeName: (context) => Loginscreen(),
+                RegisterUserScreen.routeName: (context) => RegisterUserScreen(),
+                MainLayout.routeName: (context) => MainLayout(),
+                AppointmentTimeScreen.routeName: (context) => AppointmentTimeScreen(),
+                DoctorDetailsScreen.routeName: (context) => DoctorDetailsScreen(),
+                ResetPasswordScreen.routeName: (context) => const ResetPasswordScreen(email: '', code: '',),
+                FindNearbyServicesScreen.routeName: (_) => FindNearbyServicesScreen(),
+                HospitalDetailsScreen.routeName: (_) => HospitalDetailsScreen(),
+                EmergencyRequestScreen.routeName: (_) => EmergencyRequestScreen(),
+                DoctorMainLayout.routeName: (context) => DoctorMainLayout(),
+                ManageAppointmentsScreen.routeName: (_) => ManageAppointmentsScreen(),
+                DoctorPersonalInformationScreen.routeName: (_) => DoctorPersonalInformationScreen(),
+                UserPaymentMethodsScreen.routeName: (_) => UserPaymentMethodsScreen(),
+                MedicalRecordScreen.routeName: (_) => MedicalRecordScreen(),
+                UserPersonalInformationScreen.routeName: (_) => UserPersonalInformationScreen(),
+              },
+            );
+          }
+      ),
     );
   }
 }

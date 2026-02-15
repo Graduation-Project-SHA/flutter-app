@@ -17,16 +17,35 @@ class DoctorProfileScreen extends StatefulWidget {
 class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   var box = Hive.box('authBox');
 
+  late Box authBox;
+  String name = "";
+  String email = "";
+  File? _selectedImage;
+
   @override
   void initState() {
     super.initState();
-    String? savedPath = box.get('profile_image_path');
-    if (savedPath != null) {
-      _selectedImage = File(savedPath);
-    }
+    authBox = Hive.box('authBox');
+    _loadData();
   }
 
-  File? _selectedImage;
+
+  void _loadData() {
+    String firstName = authBox.get('firstName', defaultValue: "");
+    String lastName = authBox.get('lastName', defaultValue: "");
+
+    name = "د. $firstName $lastName";
+    email = authBox.get('email', defaultValue: "");
+
+    String? imagePath = authBox.get('profile_image_path');
+    if (imagePath != null) {
+      _selectedImage = File(imagePath);
+    }
+
+    setState(() {});
+  }
+
+
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -99,7 +118,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       children: [
                         SizedBox(height: 60.h),
                         Text(
-                          "د.ريم حسام",
+                          name.isEmpty ? "دكتور" : name,
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
@@ -108,7 +127,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "email@gmail.com",
+                          email.isEmpty ? "No Email" : email,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey,
@@ -178,22 +197,32 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           image:"assets/images/personalcard.png",
                           color: Colors.blue,
                           title: "معلومات شخصية",
+                          onTap: (){
+                            Navigator.pushNamed(context, "DoctorPersonalInformationScreen");
+                          },
                         ),
                         _buildOptionItem(
                           image: "assets/images/review.png",
                           color: Colors.green,
                           title: "تقييماتي",
+                          onTap: (){},
                         ),
                         _buildOptionItem(
                           image: "assets/images/wallet.png",
                           color: Colors.redAccent,
                           title: "المدفوعات",
+                          onTap: (){
+                            Navigator.pushNamed(context, "DoctorPaymentMethodsScreen");
+                          },
                         ),
                         _buildOptionItem(
                           image: "assets/images/clock.png",
                           color: Colors.orange,
                           title: "مواعيدي",
                           isLast: true,
+                          onTap: () {
+                            Navigator.pushNamed(context, "ManageAppointmentsScreen");
+                          },
                         ),
                         SizedBox(height:16.h),
                       ],
@@ -245,35 +274,40 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     required Color color,
     required String title,
     bool isLast = false,
+    VoidCallback? onTap,
+
   }) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.sp),
-                width: 40.w,
-                height: 40.h,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16.r),
+        InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10.sp),
+                  width: 40.w,
+                  height: 40.h,
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  child:Image.asset(image),
                 ),
-                child:Image.asset(image),
-              ),
-              SizedBox(width:13.w),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Color(0xff242424),
+                SizedBox(width:13.w),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff242424),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         if (!isLast) Divider(color: Color(0xffEDEDED), height: 1),

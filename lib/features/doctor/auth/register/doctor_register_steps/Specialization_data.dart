@@ -3,159 +3,137 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 
 class SpecializationData extends StatelessWidget {
+
   final String? selectedSpecialization;
   final Function(String?) onSpecializationChanged;
   final TextEditingController bioController;
   final TextEditingController experienceController;
 
-   SpecializationData({
+  const SpecializationData({
     super.key,
     required this.selectedSpecialization,
     required this.onSpecializationChanged,
     required this.bioController,
     required this.experienceController,
   });
-  final List<String> specializations = [
-    'طب أطفال',
-    'باطنة',
-    'جراحة',
-    'أسنان',
-    'نساء وتوليد',
+
+
+  final List<Map<String, String>> specializations = const [
+    {'display': 'طب أطفال', 'value': 'PEDIATRICS'},
+    {'display': 'باطنة', 'value': 'INTERNAL_MEDICINE'},
+    {'display': 'جراحة', 'value': 'SURGERY'},
+    {'display': 'أسنان', 'value': 'DENTISTRY'},
+    {'display': 'نساء وتوليد', 'value': 'OBSTETRICS'},
+    {'display': 'تغذية', 'value': 'NUTRITION'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
 
+          Row(
             children: [
               Text(
                 'موقعك الحالي',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 12.sp,
-                  color: Color.fromRGBO(108, 114, 120, 1),
+                  color: const Color(0xff6C7278),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+
+                },
                 child: Text(
                   'تغير الموقع',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 13.sp,
-                    color: Color.fromRGBO(40, 83, 175, 1),
+                    color: const Color(0xff2853AF),
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 5.h),
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-            child: Container(
-                width: 380.w,
-                height: 140.h,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 172, 160, 160),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Stack(children: [
-
-                  ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(12),
-                    child: Image.asset('assets/images/mapImage.png',
-                      height: 140.h,
-                      width: 380.w,
-
-                      fit: BoxFit.cover,),
-                  ),
-                  Align(
-                    alignment: AlignmentGeometry.center,
-                    child: Image.asset('assets/images/markOnMap.png',
-
-                    ),
-                  ),
-
-                ],)
+          Container(
+            width: double.infinity,
+            height: 140.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+              image: const DecorationImage(
+                image: AssetImage('assets/images/mapImage.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: Image.asset('assets/images/markOnMap.png', height: 40.h),
             ),
           ),
-          SizedBox(height: 15.h),
+
+          SizedBox(height: 20.h),
+
+
           Text(
             'مجال تخصصك',
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
-              color: Color.fromRGBO(108, 114, 120, 1),
-            ),
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
           ),
-
           SizedBox(height: 10.h),
           DropdownButtonFormField<String>(
             value: selectedSpecialization,
-            decoration: InputDecoration(enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color.fromRGBO(237, 241, 243, 1),
-                width: 2,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Color(0xffEDF1F3), width: 2),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-
-            )),
-            hint: Text('اختر تخصصك'),
-            items: specializations.map((specialization) {
+            ),
+            hint: const Text('اختر تخصصك'),
+            items: specializations.map((spec) {
               return DropdownMenuItem(
-                value: specialization,
-                child: Text(specialization),
+                value: spec['value'],
+                child: Text(spec['display']!),
               );
             }).toList(),
-            onChanged: (val) {
-              onSpecializationChanged(val);
-            },
+            onChanged: onSpecializationChanged,
           ),
 
-          SizedBox(height: 15.h),
+          SizedBox(height: 20.h),
+
+
           Text(
             'تكلم عن نفسك',
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 12.sp,
-              color: Color.fromRGBO(108, 114, 120, 1),
-            ),
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
           ),
-
-          SizedBox(height: 15.h),
+          SizedBox(height: 10.h),
           Defaulttextformfield(
-            maxLines: 5,
+            maxLines: 4,
             controller: bioController,
-
+            hintText: 'اكتب نبذة عنك...',
           ),
           Text(
             'أكتب ما لا يقل عن 25 كلمة',
-            style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 9.sp,
-                color: Color.fromRGBO(171, 175, 177, 1)
-            ),
+            style: TextStyle(fontSize: 9.sp, color: const Color(0xffABAFB1)),
           ),
 
-          SizedBox(height: 15.h,),
+          SizedBox(height: 20.h),
+
           Text(
             'خبراتك العملية',
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 12.sp,
-              color: Color.fromRGBO(108, 114, 120, 1),
-            ),
+            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
           ),
-          SizedBox(height: 15.h,),
+          SizedBox(height: 10.h),
           Defaulttextformfield(
             controller: experienceController,
-          )
-
+            hintText: 'مثال: مستشفى القصر العيني لمدة ٥ سنوات',
+          ),
+          SizedBox(height: 20.h),
         ],
       ),
     );

@@ -13,6 +13,9 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   static AuthCubit get(context) => BlocProvider.of(context);
+  String? syndicateCardPath;
+  String? dFirstName, dLastName, dEmail, dPassword, dPhone, dGender, dBirthDate, dSpecialization, dBio, dExperience;
+  double? dLat, dLng;
 
   String _translateError(String englishError) {
     if (englishError.contains('email or password is incorrect')) {
@@ -294,16 +297,11 @@ class AuthCubit extends Cubit<AuthState> {
     required String phone,
     required String gender,
     required String dateOfBirth,
-  //  required String profileImagePath,
-
     required String specialization,
     required String bio,
     required String practicalExperience,
     required double latitude,
     required double longitude,
-    required String syndicateCardPath,
-    required String syndicateCardBackPath,
-
   }) async {
     emit(RegisterLoadingState());
 
@@ -317,32 +315,25 @@ class AuthCubit extends Cubit<AuthState> {
         "gender": gender.toUpperCase(),
         "dateOfBirth": dateOfBirth,
         "role": "DOCTOR",
-
         "specialization": specialization,
         "bio": bio,
         "practicalExperience": practicalExperience,
         "latitude": latitude.toString(),
         "longitude": longitude.toString(),
 
-        // "profileImage": await MultipartFile.fromFile(
-        //   profileImagePath,
-        //   filename: profileImagePath.split('/').last,
-        // ),
-        "syndicateCard": await MultipartFile.fromFile(
-            syndicateCardPath,
-            filename: 'syndicate.jpg'
-        ),
+
+        if (syndicateCardPath != null)
+          "syndicateCard": await MultipartFile.fromFile(
+            syndicateCardPath!,
+            filename: 'syndicate_card.jpg',
+          ),
+
 
       });
 
       await DioHelper.dio.post(
         ApiConstants.register,
         data: formData,
-        options: Options(
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        ),
       );
 
       emit(RegisterSuccessState());
@@ -350,8 +341,6 @@ class AuthCubit extends Cubit<AuthState> {
       emit(RegisterErrorState(_handleDioError(error)));
     }
   }
-
-
 
   void verifyEmail({
     required String email,

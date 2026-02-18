@@ -468,21 +468,25 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: PhoneFormField(
-            countrySelectorNavigator:
-            const CountrySelectorNavigator.modalBottomSheet(),
+
+            initialValue: PhoneNumber.parse('+20'),
+            countrySelectorNavigator: const CountrySelectorNavigator.modalBottomSheet(),
             decoration: InputDecoration(
-              hintText: '0123456789',
+              hintText: '1012345678',
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 16.h,
-                horizontal: 10.w,
-              ),
+              contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 10.w),
             ),
-            countryButtonStyle: const CountryButtonStyle(showFlag: true),
+            countryButtonStyle: const CountryButtonStyle(
+              showFlag: true,
+              showDialCode: true,
+            ),
             onChanged: (phoneNumber) {
               if (phoneNumber != null) {
-                fullPhoneNumber = phoneNumber.international;
+
+                fullPhoneNumber = phoneNumber.international.replaceAll(' ', '');
+                AuthCubit.get(context).dPhone = fullPhoneNumber;
+                print("Phone sent to server: $fullPhoneNumber");
               }
             },
           ),
@@ -496,7 +500,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           child: AbsorbPointer(
             child: Defaulttextformfield(
               controller: birthDateController,
-              hintText: "01-03-2004",
+              hintText: "20-06-2004",
               suffixIcon: Icon(
                 Icons.calendar_today_rounded,
                 color: Colors.grey,
@@ -686,6 +690,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                   ],
 
                   if (isDoctor)
+
                     if (currentIndex == 0)
                       SizedBox(
                         height: 30.h,
@@ -776,8 +781,15 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       }
                       if (isDoctor) {
                         if (currentIndex == 0) {
-                          setState(() => currentIndex = 1);
+                          var cubit = AuthCubit.get(context);
+                          cubit.dPhone = fullPhoneNumber;
+
+
+                          print(" تم إرسال الرقم للكيوبت: ${cubit.dPhone}");
+
+                          setState(() { currentIndex = 1; });
                           return;
+
                         }
                         if (currentIndex == 1) {
                           if (selectedSpecialization == null ||

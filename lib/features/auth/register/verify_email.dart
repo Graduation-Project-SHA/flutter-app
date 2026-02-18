@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_care_project/shared/component/defaultTextButton/defaultTextButton.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
@@ -144,7 +143,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   onPressed: isVerifying
                       ? null
                       : () {
-                    if (enteredPinCode.length != 6 && !isVerifying) {   // انا حطيت هنا && !isVerifying فا هشوف لما ارن هتعمل مشاكل او  لا
+                    if (enteredPinCode.length != 6 && !isVerifying) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("الرجاء إدخال الرمز المكون من 6 أرقام"),

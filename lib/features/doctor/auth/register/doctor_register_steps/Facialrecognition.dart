@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/features/doctor/auth/register/doctor_register_steps/completeRegisterScreen.dart';
 import '../../../../auth/cubit/auth_cubit.dart';
 import '../../../../auth/cubit/auth_state.dart';
+import '../../../../auth/register/verify_email.dart';
 
 class Facialrecognition extends StatefulWidget {
   const Facialrecognition({super.key});
@@ -19,19 +19,22 @@ class _FacialrecognitionState extends State<Facialrecognition> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterSuccessState) {
-
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => BlocProvider.value(
-                value: AuthCubit.get(context),
-                child: const Completeregisterscreen(),
+              builder: (context) => VerifyEmailScreen(
+                email: AuthCubit.get(context).dEmail ?? "",
+                firstName: AuthCubit.get(context).dFirstName ?? "",
               ),
             ),
+                (route) => false,
           );
         } else if (state is RegisterErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+            SnackBar(
+              content: Text(state.error),
+              backgroundColor: Colors.red,
+            ),
           );
         }
       },
@@ -103,6 +106,7 @@ class _FacialrecognitionState extends State<Facialrecognition> {
                   Center(
                     child: GestureDetector(
                       onTap: isLoading ? null : () {
+                        print(" dPhone VALUE BEFORE REGISTER: ${cubit.dPhone}");
                         cubit.registerDoctor(
                           firstName: cubit.dFirstName ?? "",
                           lastName: cubit.dLastName ?? "",

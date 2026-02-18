@@ -36,60 +36,46 @@ class AuthCubit extends Cubit<AuthState> {
     if (englishError.contains('phone')) {
       return 'رقم الهاتف غير صالح.';
     }
+    if (englishError.contains('Email or phone number already registered')) {
+      return 'هذا البريد الإلكتروني أو رقم الهاتف مسجل بالفعل.';
+    }
     return 'فشل الاتصال بالخادم. حاول مجدداً.';
+
   }
 
   String _handleDioError(error) {
+    print(" SERVER ERROR DATA: ${error.response?.data}");
+
     String rawErrorMessage = "حدث خطأ غير متوقع.";
+
+
     if (error is DioException && error.response != null) {
       final responseData = error.response!.data;
 
       if (responseData is Map) {
-        if (responseData.containsKey('message')) {
-          rawErrorMessage = responseData['message'];
-        } else if (responseData.containsKey('error')) {
-          if (responseData['error'] is List && responseData['error'].isNotEmpty) {
-            rawErrorMessage = responseData['error'].first.toString();
-          } else {
-            rawErrorMessage = responseData['error'].toString();
-          }
-        }
-      }
-      else if (responseData is List && responseData.isNotEmpty) {
-        try {
-          if (responseData.first is Map && responseData.first.containsKey('message')) {
-            rawErrorMessage = responseData.first['message'];
-          } else {
-            rawErrorMessage = responseData.first.toString();
-          }
-        } catch (e) {
-          rawErrorMessage = responseData.first.toString();
-        }
-      }
-      else if (responseData is String) {
-        try {
-          final decoded = json.decode(responseData);
-          if (decoded is Map && decoded.containsKey('message')) {
-            rawErrorMessage = decoded['message'];
-          } else {
-            rawErrorMessage = responseData;
-          }
-        } catch (e) {
-          rawErrorMessage = responseData;
-        }
-      } else {
-        rawErrorMessage = "خطأ من السيرفر: ${error.response!.statusCode}";
-      }
 
-    } else if (error is DioException && error.error.toString().contains('SocketException')) {
-      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
-    } else if (error.toString().contains('SocketException')) {
-      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
+        if (responseData.containsKey('message')) {
+          var message = responseData['message'];
+          if (message is List) {
+            rawErrorMessage = message.join(', ');
+          } else {
+            rawErrorMessage = message.toString();
+          }
+        }
+
+        else if (responseData.containsKey('error')) {
+          var errorDetail = responseData['error'];
+          rawErrorMessage = errorDetail is List ? errorDetail.join(', ') : errorDetail.toString();
+        }
+      } else if (responseData is String) {
+        rawErrorMessage = responseData;
+      }
+    } else {
+      rawErrorMessage = "تأكد من اتصالك بالإنترنت.";
     }
 
     return _translateError(rawErrorMessage);
   }
-
   void registerUser({
     required String firstName,
     required String lastName,
@@ -318,8 +304,8 @@ class AuthCubit extends Cubit<AuthState> {
         "specialization": specialization,
         "bio": bio,
         "practicalExperience": practicalExperience,
-        "latitude": latitude.toString(),
-        "longitude": longitude.toString(),
+        "latitude": latitude,
+        "longitude": longitude,
 
 
         if (syndicateCardPath != null)
@@ -330,7 +316,7 @@ class AuthCubit extends Cubit<AuthState> {
 
 
       });
-
+      print("Phone sent to server: $phone");
       await DioHelper.dio.post(
         ApiConstants.register,
         data: formData,

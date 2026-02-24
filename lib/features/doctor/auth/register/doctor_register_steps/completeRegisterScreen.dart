@@ -4,6 +4,8 @@ import 'package:health_care_project/features/doctor/main_layout/doctor_main_layo
 import 'package:health_care_project/features/patient/main_layout/main_layout.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 
+import '../../../../auth/login/login_screen.dart';
+
 class Completeregisterscreen extends StatefulWidget {
   const Completeregisterscreen({super.key});
 
@@ -137,13 +139,10 @@ class _CompleteregisterscreenState extends State<Completeregisterscreen> {
               Spacer(),
               DefaultButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const DoctorMainLayout(selectedIndex: 0);
-                      },
-                    ),
+                    Loginscreen.routeName,
+                        (route) => false,
                   );
                 },
                 buttonText: "التالي",

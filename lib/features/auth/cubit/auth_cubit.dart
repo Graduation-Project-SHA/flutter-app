@@ -47,6 +47,10 @@ class AuthCubit extends Cubit<AuthState> {
     if (englishError.contains('Email or phone number already registered')) {
       return 'هذا البريد الإلكتروني أو رقم الهاتف مسجل بالفعل.';
     }
+    if (englishError.contains('Your account is pending admin approval')) {
+      return 'حسابك في انتظار موافقة المسؤول، سيتم إشعارك عند الموافقة.';
+    }
+
     return 'فشل الاتصال بالخادم. حاول مجدداً.';
 
   }

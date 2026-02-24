@@ -5,10 +5,12 @@ import 'package:health_care_project/shared/component/defaultTextButton/defaultTe
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 import 'package:hive/hive.dart';
+import '../../doctor/main_layout/doctor_main_layout.dart';
 import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../forgetpassword/forget_password_screen.dart';
+
 import '../register/register_user_screen.dart';
 
 class Loginscreen extends StatefulWidget {
@@ -72,18 +74,16 @@ class _LoginscreenState extends State<Loginscreen> {
                 );
 
                 if (role == "DOCTOR") {
-                  Navigator.pushReplacement(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainLayout(selectedIndex: 1),
-                    ),
+                    DoctorMainLayout.routeName,
+                        (route) => false,
                   );
                 } else {
-                  Navigator.pushReplacement(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const MainLayout(selectedIndex: 0),
-                    ),
+                    MainLayout.routeName,
+                        (route) => false,
                   );
                 }
 
@@ -138,14 +138,8 @@ class _LoginscreenState extends State<Loginscreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 15.h),
-                                Text(
-                                  "لوجو",
-                                  style: TextStyle(
-                                    fontSize: 32.sp,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color.fromRGBO(10, 69, 87, 1),
-                                  ),
-                                ),
+                                Image.asset("assets/images/logoo.png"),
+                                SizedBox(height: 15.h),
                                 Text(
                                   "أبدأ الان",
                                   style: TextStyle(

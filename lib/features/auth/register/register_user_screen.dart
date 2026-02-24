@@ -796,7 +796,10 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                               bioController.text.isEmpty ||
                               experienceController.text.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("من فضلك أكمل بيانات التخصص"), backgroundColor: Colors.redAccent),
+                              const SnackBar(
+                                content: Text("من فضلك أكمل بيانات التخصص"),
+                                backgroundColor: Colors.redAccent,
+                              ),
                             );
                             return;
                           }
@@ -817,7 +820,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Sendingthecard()
+                              builder: (context) => const Sendingthecard(),
                             ),
                           );
                           return;

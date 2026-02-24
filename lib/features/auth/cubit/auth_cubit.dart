@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/core/network/api_constants.dart';
@@ -16,6 +20,10 @@ class AuthCubit extends Cubit<AuthState> {
   String? syndicateCardPath;
   String? dFirstName, dLastName, dEmail, dPassword, dPhone, dGender, dBirthDate, dSpecialization, dBio, dExperience;
   double? dLat, dLng;
+  File? dProfileImageFile;
+  File? dSyndicateCardFront;
+  File? dSyndicateCardBack;
+  File? dSyndicatePdf;
 
   String _translateError(String englishError) {
     if (englishError.contains('email or password is incorrect')) {
@@ -308,11 +316,16 @@ class AuthCubit extends Cubit<AuthState> {
         "longitude": longitude,
 
 
-        if (syndicateCardPath != null)
-          "syndicateCard": await MultipartFile.fromFile(
-            syndicateCardPath!,
-            filename: 'syndicate_card.jpg',
-          ),
+        "profileImage": await MultipartFile.fromFile(
+          dProfileImageFile!.path,
+          filename: "profile.png",
+        ),
+
+        "syndicateCard": await MultipartFile.fromFile(
+          dSyndicatePdf!.path,
+          filename: "doctor_documents.pdf",
+        ),
+
 
 
       });
@@ -327,7 +340,69 @@ class AuthCubit extends Cubit<AuthState> {
       emit(RegisterErrorState(_handleDioError(error)));
     }
   }
+  Future<void> buildDoctorDocumentsPdf() async {
+    if (dProfileImageFile == null ||
+        dSyndicateCardFront == null ||
+        dSyndicateCardBack == null) {
+      throw Exception("Missing images to build PDF");
+    }
 
+    final pdf = pw.Document();
+
+    final profileBytes = await dProfileImageFile!.readAsBytes();
+    final frontBytes = await dSyndicateCardFront!.readAsBytes();
+    final backBytes = await dSyndicateCardBack!.readAsBytes();
+
+    final profileImg = pw.MemoryImage(profileBytes);
+    final frontImg = pw.MemoryImage(frontBytes);
+    final backImg = pw.MemoryImage(backBytes);
+
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Center(
+            child: pw.Text(
+              'Doctor Verification Document',
+              style: pw.TextStyle(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Profile Image:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(profileImg, height: 180)),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Syndicate Card - Front:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(frontImg, height: 180)),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Syndicate Card - Back:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(backImg, height: 180)),
+        ],
+      ),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File(
+      '${dir.path}/doctor_documents_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
+
+    await file.writeAsBytes(await pdf.save());
+
+    dSyndicatePdf = file;
+  }
   void verifyEmail({
     required String email,
     required String code,
@@ -346,6 +421,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(VerifyEmailErrorState(_handleDioError(error)));
     });
   }
+
 
 
 }

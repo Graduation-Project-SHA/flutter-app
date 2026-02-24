@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../shared/component/defaultbutton/defaultbutton.dart';
+import '../../doctor/auth/register/doctor_register_steps/completeRegisterScreen.dart';
 import '../login/login_screen.dart';
 
 class SuccessRegisterScreen extends StatelessWidget {
   static const String routeName = "SuccessRegisterScreen";
-
+  final bool isDoctor;
   final String firstName;
-  const SuccessRegisterScreen({super.key,required this.firstName});
+  const SuccessRegisterScreen({super.key,required this.firstName,this.isDoctor = false});
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,20 @@ class SuccessRegisterScreen extends StatelessWidget {
               DefaultButton(
                 buttonText: 'تسجيل الدخول',
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, Loginscreen.routeName, (route) => false,);
+                  if (isDoctor) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const Completeregisterscreen(),
+                      ),
+                    );
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Loginscreen.routeName,
+                          (route) => false,
+                    );
+                  }
                 },
               ),
             ],

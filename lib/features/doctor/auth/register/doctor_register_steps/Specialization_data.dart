@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 
 class SpecializationData extends StatelessWidget {
-
   final String? selectedSpecialization;
   final Function(String?) onSpecializationChanged;
   final TextEditingController bioController;
@@ -21,10 +20,24 @@ class SpecializationData extends StatelessWidget {
   final List<Map<String, String>> specializations = const [
     {'display': 'طب أطفال', 'value': 'PEDIATRICS'},
     {'display': 'باطنة', 'value': 'INTERNAL_MEDICINE'},
-    {'display': 'جراحة', 'value': 'SURGERY'},
+    {'display': 'قلب', 'value': 'CARDIOLOGY'},
+    {'display': 'جلدية', 'value': 'DERMATOLOGY'},
+    {'display': 'عظام', 'value': 'ORTHOPEDICS'},
+    {'display': 'جراحة عامة', 'value': 'GENERAL_SURGERY'},
     {'display': 'أسنان', 'value': 'DENTISTRY'},
-    {'display': 'نساء وتوليد', 'value': 'OBSTETRICS'},
+    {
+      'display': 'نساء وتوليد',
+      'value': 'GYNECOLOGY_AND_OBSTETRICS',
+    },
+    {'display': 'مخ وأعصاب', 'value': 'NEUROLOGY'},
+    {'display': 'نفسي', 'value': 'PSYCHIATRY'},
+    {'display': 'مسالك بولية', 'value': 'UROLOGY'},
+    {'display': 'علاج طبيعي', 'value': 'PHYSICAL_THERAPY'},
     {'display': 'تغذية', 'value': 'NUTRITION'},
+    {'display': 'أورام', 'value': 'ONCOLOGY'},
+    {'display': 'رمد', 'value': 'OPHTHALMOLOGY'},
+    {'display': 'أنف وأذن وحنجرة', 'value': 'EAR_NOSE_THROAT'},
+    {'display': 'أشعة', 'value': 'RADIOLOGY'},
   ];
 
   @override
@@ -33,7 +46,6 @@ class SpecializationData extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
               Text(
@@ -72,31 +84,40 @@ class SpecializationData extends StatelessWidget {
               ),
             ),
             child: Center(
-              child: Image.asset('assets/images/markOnMap.png', height: 40.h),
+              child: Image.asset(
+                'assets/images/markOnMap.png',
+                height: 40.h,
+              ),
             ),
           ),
 
           SizedBox(height: 20.h),
 
-
           Text(
             'مجال تخصصك',
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: const Color(0xff6C7278),
+            ),
           ),
           SizedBox(height: 10.h),
+
           DropdownButtonFormField<String>(
             value: selectedSpecialization,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Color(0xffEDF1F3), width: 2),
+                borderSide: const BorderSide(
+                  color: Color(0xffEDF1F3),
+                  width: 2,
+                ),
                 borderRadius: BorderRadius.circular(8.r),
               ),
             ),
             hint: const Text('اختر تخصصك'),
             items: specializations.map((spec) {
-              return DropdownMenuItem(
+              return DropdownMenuItem<String>(
                 value: spec['value'],
                 child: Text(spec['display']!),
               );
@@ -106,12 +127,15 @@ class SpecializationData extends StatelessWidget {
 
           SizedBox(height: 20.h),
 
-
           Text(
             'تكلم عن نفسك',
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: const Color(0xff6C7278),
+            ),
           ),
           SizedBox(height: 10.h),
+
           Defaulttextformfield(
             maxLines: 4,
             controller: bioController,
@@ -119,16 +143,23 @@ class SpecializationData extends StatelessWidget {
           ),
           Text(
             'أكتب ما لا يقل عن 25 كلمة',
-            style: TextStyle(fontSize: 9.sp, color: const Color(0xffABAFB1)),
+            style: TextStyle(
+              fontSize: 9.sp,
+              color: const Color(0xffABAFB1),
+            ),
           ),
 
           SizedBox(height: 20.h),
 
           Text(
             'خبراتك العملية',
-            style: TextStyle(fontSize: 12.sp, color: const Color(0xff6C7278)),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: const Color(0xff6C7278),
+            ),
           ),
           SizedBox(height: 10.h),
+
           Defaulttextformfield(
             controller: experienceController,
             hintText: 'مثال: مستشفى القصر العيني لمدة ٥ سنوات',

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -36,11 +35,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       listener: (context, state) {
 
         if (state is VerifyEmailSuccessState) {
+          bool isDoctor = AuthCubit.get(context).dSpecialization != null;
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) =>  SuccessRegisterScreen(
-                  firstName: widget.firstName,),
+              builder: (_) => SuccessRegisterScreen(
+                firstName: widget.firstName,
+                isDoctor: isDoctor,
+              ),
             ),
           );
         }

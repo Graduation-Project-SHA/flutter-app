@@ -18,6 +18,14 @@ class ApiConstants {
 
 
   static const String doctorAvailabilities = "$baseUrl/doctor/me/availabilities";
+
   static const String messages = "/doctor_messages";
 
+
+  static const String publicDoctors = "$baseUrl/doctors";
+  static String publicDoctorDetails(String id) => "$baseUrl/doctors/$id";
+
+ // static const String patientAppointments = "$baseUrl/patient/me/appointments";
+  //static const String slots = "$baseUrl/doctors/$doctorUserId/slots";
+//  static const String details = "$baseUrl/doctors/$id";
 }

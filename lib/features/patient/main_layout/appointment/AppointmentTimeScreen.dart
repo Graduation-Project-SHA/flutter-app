@@ -5,7 +5,14 @@ import 'Payment.dart';
 
 class AppointmentTimeScreen extends StatefulWidget {
   static const String routeName = "AppointmentTimeScreen";
-  const AppointmentTimeScreen({ super.key});
+
+  final String doctorId;
+
+
+  const AppointmentTimeScreen({
+    super.key,
+    required this.doctorId,
+  });
   
 
   @override

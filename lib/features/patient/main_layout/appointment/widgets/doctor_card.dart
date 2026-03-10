@@ -8,6 +8,7 @@ class DoctorCard extends StatelessWidget {
   final String specialty;
   final String price;
   final String image;
+  final bool isNetworkImage;
   final VoidCallback onBook;
   final VoidCallback onDetails;
 
@@ -17,11 +18,17 @@ class DoctorCard extends StatelessWidget {
     required this.specialty,
     required this.price,
     required this.image,
+    this.isNetworkImage = false,
     required this.onBook,
     required this.onDetails,
   });
 
-  static Widget specialtyIcon(String id, String iconPath, String label, String selectedId){
+  static Widget specialtyIcon(
+      String id,
+      String iconPath,
+      String label,
+      String selectedId,
+      ) {
     bool isSelected = id == selectedId;
     return Column(
       children: [
@@ -38,6 +45,13 @@ class DoctorCard extends StatelessWidget {
         Text(label, style: TextStyle(fontSize: 10.sp)),
       ],
     );
+  }
+
+  ImageProvider _buildImageProvider() {
+    if (isNetworkImage && image.isNotEmpty) {
+      return NetworkImage(image);
+    }
+    return AssetImage(image);
   }
 
   @override
@@ -59,33 +73,59 @@ class DoctorCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CircleAvatar(radius: 30.r, backgroundImage: AssetImage(image)),
+                    CircleAvatar(
+                      radius: 30.r,
+                      backgroundImage: _buildImageProvider(),
+                    ),
                     SizedBox(width: 16.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(name, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                          Text(specialty, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+                          Text(
+                            name,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            specialty,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
                           SizedBox(height: 8.h),
-                          Text(price, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                          Text(
+                            price,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height:28.h),
+                SizedBox(height: 28.h),
                 Row(
                   children: [
                     Expanded(
                       child: ElevatedButton(
                         onPressed: onBook,
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r))
+                          backgroundColor: AppColors.primary,
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
                         ),
-                        child: const Text("حجز موعد", style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          "حجز موعد",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     SizedBox(width: 16.w),
@@ -93,10 +133,17 @@ class DoctorCard extends StatelessWidget {
                       child: OutlinedButton(
                         onPressed: onDetails,
                         style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: AppColors.primary.withOpacity(0.5)),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r))
+                          side: BorderSide(
+                            color: AppColors.primary.withOpacity(0.5),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.r),
+                          ),
                         ),
-                        child: const Text("تفاصيل", style: TextStyle(color: AppColors.primary)),
+                        child: const Text(
+                          "تفاصيل",
+                          style: TextStyle(color: AppColors.primary),
+                        ),
                       ),
                     ),
                   ],
@@ -107,10 +154,22 @@ class DoctorCard extends StatelessWidget {
           Column(
             children: [
               Row(
-                children: [Text("4.5", style: TextStyle(fontSize: 12.sp, color: Colors.grey)), SizedBox(width: 4.w), Icon(Icons.star, color: Colors.amber, size: 20.sp)],
+                children: [
+                  Text(
+                    "4.5",
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                  ),
+                  SizedBox(width: 4.w),
+                  Icon(Icons.star, color: Colors.amber, size: 20.sp),
+                ],
               ),
               SizedBox(height: 16.h),
-              Image.asset("assets/images/message-icon.png", color: Color(0xff2B73F3), width: 24.w, height: 24.h),
+              Image.asset(
+                "assets/images/message-icon.png",
+                color: const Color(0xff2B73F3),
+                width: 24.w,
+                height: 24.h,
+              ),
             ],
           ),
         ],

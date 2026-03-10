@@ -15,11 +15,11 @@ import 'features/auth/reset_password/reset_password_screen.dart';
 import 'features/doctor/availabilities/availability_cubit.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
 import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
+import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
+import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
 import 'features/patient/main_layout/profile/medical_record_screen.dart';
 import 'features/patient/main_layout/profile/user_payment_methods_screen.dart';
 import 'features/doctor/main_layout/doctor_profile/doctor_personal_information_screen.dart';
-import 'features/patient/main_layout/appointment/AppointmentTimeScreen.dart';
-import 'features/patient/main_layout/appointment/DoctorDetailsScreen.dart';
 import 'features/patient/main_layout/main_layout.dart';
 import 'features/patient/main_layout/profile/user_personal_information_screen.dart';
 import 'features/patient/nearby_services/emergency_request_screen.dart';
@@ -44,6 +44,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => AvailabilityCubit(),),
+        BlocProvider(create: (context) => PatientDoctorsCubit()),
+        BlocProvider(create: (context) => DoctorDetailsCubit()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(412, 924),
@@ -66,7 +68,7 @@ class MyApp extends StatelessWidget {
               ],
               debugShowCheckedModeBanner: false,
               //initialRoute: OnboardingScreen.routeName,
-              initialRoute: DoctorMainLayout.routeName,
+              initialRoute: MainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;
@@ -81,8 +83,6 @@ class MyApp extends StatelessWidget {
                 Loginscreen.routeName: (context) => Loginscreen(),
                 RegisterUserScreen.routeName: (context) => RegisterUserScreen(),
                 MainLayout.routeName: (context) => MainLayout(),
-                AppointmentTimeScreen.routeName: (context) => AppointmentTimeScreen(),
-                DoctorDetailsScreen.routeName: (context) => DoctorDetailsScreen(),
                 ResetPasswordScreen.routeName: (context) => const ResetPasswordScreen(email: '', code: '',),
                 FindNearbyServicesScreen.routeName: (_) => FindNearbyServicesScreen(),
                 HospitalDetailsScreen.routeName: (_) => HospitalDetailsScreen(),
@@ -93,6 +93,7 @@ class MyApp extends StatelessWidget {
                 UserPaymentMethodsScreen.routeName: (_) => UserPaymentMethodsScreen(),
                 MedicalRecordScreen.routeName: (_) => MedicalRecordScreen(),
                 UserPersonalInformationScreen.routeName: (_) => UserPersonalInformationScreen(),
+
               },
             );
           }

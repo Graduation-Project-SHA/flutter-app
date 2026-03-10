@@ -11,10 +11,7 @@ class DoctorDetailsScreen extends StatefulWidget {
 
   final String doctorId;
 
-  const DoctorDetailsScreen({
-    super.key,
-    required this.doctorId,
-  });
+  const DoctorDetailsScreen({super.key, required this.doctorId});
 
   @override
   State<DoctorDetailsScreen> createState() => _DoctorDetailsScreenState();
@@ -27,6 +24,22 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       DoctorDetailsCubit.get(context).getDoctorDetails(widget.doctorId);
     });
+  }
+
+  Widget _wrapInContainer(Widget child) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: const [
+          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
+        ],
+      ),
+      child: child,
+    );
   }
 
   String _specializationLabel(String value) {
@@ -53,162 +66,263 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
     return map[value] ?? value;
   }
 
-  Widget _wrapInContainer(Widget child) {
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(bottom: 16.h),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 3)),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildContent(DoctorDetailsModel doctor) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        children: [
-          _wrapInContainer(
+  Widget _doctorHeader(DoctorDetailsModel doctor) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 35.r,
+              backgroundImage:
+              (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
+                  ? NetworkImage(doctor.profileImage!)
+                  : const AssetImage("assets/images/doctor.png")
+              as ImageProvider,
+            ),
+            SizedBox(width: 24.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    doctor.fullName,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    _specializationLabel(doctor.specialization),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "سعر الكشف: ${doctor.consultationFee?.toStringAsFixed(0) ?? "-"} جنيه",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 35.r,
-                      backgroundImage: (doctor.profileImage != null &&
-                          doctor.profileImage!.isNotEmpty)
-                          ? NetworkImage(doctor.profileImage!)
-                          : const AssetImage("assets/images/doctor.png")
-                      as ImageProvider,
+                    const Image(
+                      image: AssetImage("assets/images/time-fill.png"),
                     ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            doctor.fullName,
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4.h),
-                          Text(
-                            _specializationLabel(doctor.specialization),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            "سعر الكشف: ${doctor.consultationFee?.toStringAsFixed(0) ?? "-"} جنيه",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            "التقييم: ${doctor.rating?.toStringAsFixed(1) ?? "-"}",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "ساعات العمل",
+                      style: TextStyle(fontSize: 13.sp, color: Colors.black87),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          const Icon(Icons.location_on_outlined),
-                          SizedBox(height: 6.h),
-                          Text(
-                            doctor.city?.isNotEmpty == true ? doctor.city! : "غير محدد",
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          const Icon(Icons.local_hospital_outlined),
-                          SizedBox(height: 6.h),
-                          Text(
-                            doctor.clinicAddress?.isNotEmpty == true
-                                ? doctor.clinicAddress!
-                                : "العنوان غير متاح",
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                SizedBox(height: 4.h),
+                Text(
+                  "تحدد لاحقًا",
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
-          ),
-          _wrapInContainer(
+            Container(height: 40.h, width: 1.w, color: Colors.grey.shade300),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "السيرة الذاتية",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    const Image(
+                      image: AssetImage("assets/images/redhospital.png"),
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "المكان",
+                      style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 4.h),
                 Text(
-                  doctor.bio?.isNotEmpty == true
-                      ? doctor.bio!
-                      : "لا توجد سيرة ذاتية متاحة",
-                  style: TextStyle(fontSize: 13.sp),
+                  doctor.city?.isNotEmpty == true ? doctor.city! : "غير محدد",
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
             ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _bioSection(DoctorDetailsModel doctor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "سيرة ذاتية",
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          doctor.bio?.isNotEmpty == true
+              ? doctor.bio!
+              : "لا توجد سيرة ذاتية متاحة",
+          style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+          textAlign: TextAlign.right,
+        ),
+      ],
+    );
+  }
+
+  Widget _clinicLocation(DoctorDetailsModel doctor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "موقع العيادة",
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          doctor.city?.isNotEmpty == true ? doctor.city! : "العنوان غير متاح",
+          style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+          textAlign: TextAlign.right,
+        ),
+        Container(
+          height: 150.h,
+          margin: EdgeInsets.symmetric(vertical: 8.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.r),
+            color: Colors.white,
           ),
-          SizedBox(height: 12.h),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AppointmentTimeScreen(
-                      doctorId: doctor.id,
-                    ),
-                  ),
-                );
-              },
-              child: const Text("حجز موعد"),
+          child: const Center(
+            child: Image(
+              image: AssetImage("assets/images/Maps.png"),
+              fit: BoxFit.cover,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserReview(String name, String date, String review, String image) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(radius: 20.r, backgroundImage: AssetImage(image)),
+                SizedBox(width: 12.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Row(
+                      children: [
+                        Text(
+                          "4.5",
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.amber, size: 16.sp),
+                        Icon(Icons.star, color: Colors.grey.shade300, size: 16.sp),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 50.w,
+              child: Text(
+                date,
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.h),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Text(
+            review,
+            style: TextStyle(fontSize: 13.sp, color: Colors.black87),
+            textAlign: TextAlign.right,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _reviewsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "التقييمات",
+          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 12.h),
+        _buildUserReview(
+          "أحمد كريم",
+          "اليوم",
+          "قمة في الذوق والادب وخبرة في مجالها",
+          "assets/images/user.png",
+        ),
+        SizedBox(height: 12.h),
+        const Divider(color: Color(0xffF3F4F6)),
+        SizedBox(height: 12.h),
+        _buildUserReview(
+          "محمود ممدوح",
+          "اليوم",
+          "تجربة ممتازة والدكتور متعاون جدًا",
+          "assets/images/user.png",
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xff4786F5);
+
     return BlocConsumer<DoctorDetailsCubit, DoctorDetailsState>(
       listener: (context, state) {
         if (state is DoctorDetailsError) {
@@ -221,42 +335,122 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "تفاصيل الطبيب",
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            centerTitle: true,
-            actions: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.w),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: const Color.fromRGBO(205, 205, 205, 1),
-                    ),
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
-                  ),
+        if (state is DoctorDetailsLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (state is DoctorDetailsLoaded) {
+          final doctor = state.doctor;
+
+          return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text(
+                _specializationLabel(doctor.specialization),
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
               ),
-            ],
-            backgroundColor: Colors.white,
-            elevation: 0,
-          ),
-          body: state is DoctorDetailsLoading
-              ? const Center(child: CircularProgressIndicator())
-              : state is DoctorDetailsLoaded
-              ? _buildContent(state.doctor)
-              : const Center(child: Text("لا توجد بيانات")),
+              centerTitle: true,
+              actions: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 14.w),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color.fromRGBO(205, 205, 205, 1),
+                      ),
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+                    ),
+                  ),
+                ),
+              ],
+              backgroundColor: Colors.white,
+              elevation: 0,
+            ),
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _wrapInContainer(_doctorHeader(doctor)),
+                      _wrapInContainer(_bioSection(doctor)),
+                      _wrapInContainer(_clinicLocation(doctor)),
+                      _wrapInContainer(_reviewsSection()),
+                      SizedBox(height: 100.h),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Image(
+                            image: AssetImage("assets/images/message-icon.png"),
+                          ),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AppointmentTimeScreen(
+                                    doctorId: doctor.id,
+                                  ),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 13.5.h),
+                            ),
+                            child: Text(
+                              "حجز موعد",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return const Scaffold(
+          body: Center(child: Text("لا توجد بيانات")),
         );
       },
     );

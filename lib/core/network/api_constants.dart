@@ -17,7 +17,7 @@ class ApiConstants {
   static const String logOut = "$baseUrl/auth/logout";
 
 
-
+  static const String doctorAvailabilities = "$baseUrl/doctor/me/availabilities";
   static const String messages = "/doctor_messages";
 
 }

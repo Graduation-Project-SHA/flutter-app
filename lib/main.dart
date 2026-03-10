@@ -12,6 +12,7 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
+import 'features/doctor/availabilities/availability_cubit.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
 import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
 import 'features/patient/main_layout/profile/medical_record_screen.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => AvailabilityCubit(),),
       ],
       child: ScreenUtilInit(
           designSize: const Size(412, 924),
@@ -63,7 +65,8 @@ class MyApp extends StatelessWidget {
                 GlobalCupertinoLocalizations.delegate,
               ],
               debugShowCheckedModeBanner: false,
-              initialRoute: OnboardingScreen.routeName,
+              //initialRoute: OnboardingScreen.routeName,
+              initialRoute: DoctorMainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;

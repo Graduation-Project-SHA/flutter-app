@@ -2,15 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:hive/hive.dart';
 import 'api_constants.dart';
 
-
 class DioHelper {
   static late Dio dio;
   static bool isRefreshing = false;
 
-  static init() {
+  static void init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: ApiConstants.baseUrl ,
+        baseUrl: ApiConstants.baseUrl,
         receiveDataWhenStatusError: true,
         headers: {
           'Content-Type': 'application/json',
@@ -25,27 +24,59 @@ class DioHelper {
     final authBox = Hive.box('authBox');
     final accessToken = authBox.get('accessToken');
 
-    if (accessToken == null) return {};
+    if (accessToken == null || accessToken.toString().isEmpty) {
+      return {};
+    }
 
     return {
       'Authorization': 'Bearer $accessToken',
     };
   }
 
-
   static Future<Response> postData({
     required String url,
-    required Map<String, dynamic> data,
+    required dynamic data,
     Map<String, dynamic>? query,
   }) async {
-    final headers = await _getAuthHeaders();
-    return await dio.post(url, data: data, queryParameters: query, options: Options(headers: headers));
+    return await dio.post(
+      url,
+      data: data,
+      queryParameters: query,
+    );
   }
 
+  static Future<Response> fetchData({
+    required String url,
+    Map<String, dynamic>? query,
+  }) async {
+    return await dio.get(
+      url,
+      queryParameters: query,
+    );
+  }
 
-  static Future<Response> fetchData({required String url}) async {
-    final headers = await _getAuthHeaders();
-    return await dio.get(url, options: Options(headers: headers));
+  static Future<Response> patchData({
+    required String url,
+    required dynamic data,
+    Map<String, dynamic>? query,
+  }) async {
+    return await dio.patch(
+      url,
+      data: data,
+      queryParameters: query,
+    );
+  }
+
+  static Future<Response> deleteData({
+    required String url,
+    dynamic data,
+    Map<String, dynamic>? query,
+  }) async {
+    return await dio.delete(
+      url,
+      data: data,
+      queryParameters: query,
+    );
   }
 }
 
@@ -84,7 +115,20 @@ class AuthInterceptor extends Interceptor {
     }
   }
 
+  @override
+  void onRequest(
+      RequestOptions options,
+      RequestInterceptorHandler handler,
+      ) async {
+    final authBox = Hive.box('authBox');
+    final accessToken = authBox.get('accessToken');
 
+    if (accessToken != null && accessToken.toString().isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $accessToken';
+    }
+
+    handler.next(options);
+  }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {

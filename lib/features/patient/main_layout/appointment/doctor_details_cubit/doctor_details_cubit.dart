@@ -39,7 +39,7 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsState> {
           error.type == DioExceptionType.connectionTimeout ||
           error.type == DioExceptionType.receiveTimeout ||
           error.type == DioExceptionType.sendTimeout) {
-        return "تعذر الاتصال بالإنترنت، تأكدي من الشبكة وحاولي مرة أخرى";
+        return "تعذر الاتصال بالإنترنت، تأكد من الشبكة وحاول مرة أخرى";
       }
 
       final data = error.response?.data;

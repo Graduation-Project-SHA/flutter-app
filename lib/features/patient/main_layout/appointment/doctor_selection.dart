@@ -33,14 +33,26 @@ class _DoctorSelectionState extends State<DoctorSelection> {
 
   final List<String> filters = ["السعر", "ذكر أو أنثى", "متاح اليوم"];
 
+  late String currentSpecialization;
+
   @override
   void initState() {
     super.initState();
+    currentSpecialization = widget.specialization;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PatientDoctorsCubit.get(context).getDoctors(
-        specialization: widget.specialization,
-      );
+      _loadDoctors();
     });
+  }
+
+  void _loadDoctors() {
+    if (currentSpecialization.trim().isEmpty) {
+      PatientDoctorsCubit.get(context).getAllDoctors();
+    } else {
+      PatientDoctorsCubit.get(context).getDoctors(
+        specialization: currentSpecialization,
+      );
+    }
   }
 
   @override
@@ -51,9 +63,29 @@ class _DoctorSelectionState extends State<DoctorSelection> {
 
   void _searchDoctors() {
     PatientDoctorsCubit.get(context).getDoctors(
-      specialization: widget.specialization,
+      specialization: currentSpecialization,
       name: searchController.text.trim(),
     );
+  }
+
+  void _selectSpecialization(String specialization) {
+    setState(() {
+      currentSpecialization = specialization;
+      searchController.clear();
+    });
+
+    PatientDoctorsCubit.get(context).getDoctors(
+      specialization: specialization,
+    );
+  }
+
+  void _showAllDoctors() {
+    setState(() {
+      currentSpecialization = "";
+      searchController.clear();
+    });
+
+    PatientDoctorsCubit.get(context).getAllDoctors();
   }
 
   String _specializationLabel(String value) {
@@ -81,34 +113,39 @@ class _DoctorSelectionState extends State<DoctorSelection> {
   }
 
   Widget _specialtyIcon(String id, String image, String title) {
-    final isSelected = widget.specialization == id;
+    final isSelected = currentSpecialization == id;
 
-    return Column(
-      children: [
-        Container(
-          width: 60.w,
-          height: 60.h,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected ? const Color(0xffEAF2FF) : Colors.white,
-            border: Border.all(
-              color: isSelected ? const Color(0xff2B73F3) : const Color(0xffE5E7EB),
+    return GestureDetector(
+      onTap: () => _selectSpecialization(id),
+      child: Column(
+        children: [
+          Container(
+            width: 60.w,
+            height: 60.h,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isSelected ? const Color(0xffEAF2FF) : Colors.white,
+              border: Border.all(
+                color: isSelected
+                    ? const Color(0xff2B73F3)
+                    : const Color(0xffE5E7EB),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(14.w),
+              child: Image.asset(image),
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(14.w),
-            child: Image.asset(image),
+          SizedBox(height: 8.h),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: Colors.black87,
+            ),
           ),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: Colors.black87,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -128,7 +165,7 @@ class _DoctorSelectionState extends State<DoctorSelection> {
           context,
           MaterialPageRoute(
             builder: (_) => AppointmentTimeScreen(
-              doctorId: doctor.id,
+              doctorId: doctor.userId,
             ),
           ),
         );
@@ -137,7 +174,9 @@ class _DoctorSelectionState extends State<DoctorSelection> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DoctorDetailsScreen(doctorId: doctor.id),
+            builder: (_) => DoctorDetailsScreen(
+              doctorId: doctor.userId,
+            ),
           ),
         );
       },
@@ -225,6 +264,7 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                   ],
                 ),
                 SizedBox(height: 16.h),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -234,7 +274,26 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                     _specialtyIcon("EAR_NOSE_THROAT", "assets/images/ear.png", "أنف وأذن"),
                   ],
                 ),
-                SizedBox(height: 28.h),
+
+                SizedBox(height: 16.h),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton(
+                    onPressed: _showAllDoctors,
+                    child: Text(
+                      "عرض كل الأطباء",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: const Color(0xff2B73F3),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 12.h),
+
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -244,20 +303,31 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                   ),
                 ),
                 SizedBox(height: 32.h),
+
                 if (state is PatientDoctorsLoading)
                   const Center(child: CircularProgressIndicator())
                 else if (cubit.doctors.isEmpty)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(top: 100.h),
-                      child: Text(
-                        "لا يوجد أطباء متاحون",
-                        style: TextStyle(fontSize: 16.sp),
+                      child: Column(
+                        children: [
+                          Text(
+                            "لا يوجد أطباء متاحون",
+                            style: TextStyle(fontSize: 16.sp),
+                          ),
+                          SizedBox(height: 12.h),
+                          TextButton(
+                            onPressed: _showAllDoctors,
+                            child: const Text("عرض كل الأطباء بدون فلترة"),
+                          ),
+                        ],
                       ),
                     ),
                   )
                 else
                   ...cubit.doctors.map(_doctorItem).toList(),
+
                 SizedBox(height: 80.h),
               ],
             ),

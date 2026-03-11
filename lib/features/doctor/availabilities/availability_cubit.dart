@@ -20,6 +20,10 @@ class AvailabilityCubit extends Cubit<AvailabilityState> {
         url: ApiConstants.doctorAvailabilities,
       );
 
+
+      print(" FULL RESPONSE:");
+      print(response.data);
+
       final data = response.data['data'] as List;
 
       availabilities =

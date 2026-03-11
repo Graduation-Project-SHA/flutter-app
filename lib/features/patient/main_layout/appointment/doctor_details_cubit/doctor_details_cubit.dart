@@ -18,7 +18,15 @@ class DoctorDetailsCubit extends Cubit<DoctorDetailsState> {
         url: ApiConstants.publicDoctorDetails(doctorId),
       );
 
+      print("Doctor details response: ${response.data}");
+
       final data = response.data['data'];
+
+      if (data == null) {
+        emit(DoctorDetailsError("لا توجد بيانات"));
+        return;
+      }
+
       emit(DoctorDetailsLoaded(DoctorDetailsModel.fromJson(data)));
     } catch (e) {
       emit(DoctorDetailsError(_mapErrorMessage(e)));

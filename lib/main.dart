@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AvailabilityCubit(),),
         BlocProvider(create: (context) => PatientDoctorsCubit()),
         BlocProvider(create: (context) => DoctorDetailsCubit()),
+
       ],
       child: ScreenUtilInit(
           designSize: const Size(412, 924),

@@ -15,10 +15,6 @@ class PatientDoctorsCubit extends Cubit<PatientDoctorsState> {
   Future<void> getDoctors({
     String? specialization,
     String? name,
-    String? city,
-    String? minPrice,
-    String? maxPrice,
-    String? sort,
     int page = 1,
     int limit = 10,
   }) async {
@@ -30,23 +26,12 @@ class PatientDoctorsCubit extends Cubit<PatientDoctorsState> {
         "limit": limit,
       };
 
-      if (specialization != null && specialization.isNotEmpty) {
-        query["specialization"] = specialization;
+      if (specialization != null && specialization.trim().isNotEmpty) {
+        query["specialization"] = specialization.trim();
       }
-      if (name != null && name.isNotEmpty) {
-        query["name"] = name;
-      }
-      if (city != null && city.isNotEmpty) {
-        query["city"] = city;
-      }
-      if (minPrice != null && minPrice.isNotEmpty) {
-        query["minPrice"] = minPrice;
-      }
-      if (maxPrice != null && maxPrice.isNotEmpty) {
-        query["maxPrice"] = maxPrice;
-      }
-      if (sort != null && sort.isNotEmpty) {
-        query["sort"] = sort;
+
+      if (name != null && name.trim().isNotEmpty) {
+        query["name"] = name.trim();
       }
 
       final response = await DioHelper.fetchData(
@@ -54,7 +39,9 @@ class PatientDoctorsCubit extends Cubit<PatientDoctorsState> {
         query: query,
       );
 
-      final data = response.data['data'] as List;
+      print("Doctors response: ${response.data}");
+
+      final List data = response.data["data"] ?? [];
 
       doctors = data.map((e) => PatientDoctorModel.fromJson(e)).toList();
 
@@ -62,6 +49,10 @@ class PatientDoctorsCubit extends Cubit<PatientDoctorsState> {
     } catch (e) {
       emit(PatientDoctorsError(_mapErrorMessage(e)));
     }
+  }
+
+  Future<void> getAllDoctors() async {
+    await getDoctors();
   }
 
   String _mapErrorMessage(dynamic error) {
@@ -83,6 +74,6 @@ class PatientDoctorsCubit extends Cubit<PatientDoctorsState> {
       }
     }
 
-    return "حدث خطأ أثناء تحميل الدكاترة";
+    return "حدث خطأ أثناء تحميل الأطباء";
   }
 }

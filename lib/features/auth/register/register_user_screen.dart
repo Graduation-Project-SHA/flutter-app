@@ -9,6 +9,8 @@ import '../../../shared/component/defaultTextFormField/defaultTextFormField.dart
 import '../../../shared/component/defaultbutton/defaultbutton.dart';
 import '../../doctor/auth/register/doctor_register_steps/SendingtheCard.dart';
 import '../../doctor/auth/register/doctor_register_steps/Specialization_data.dart';
+import '../../doctor/main_layout/doctor_main_layout.dart';
+import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../login/login_screen.dart';

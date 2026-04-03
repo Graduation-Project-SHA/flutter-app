@@ -21,25 +21,25 @@ class SpecializationSelection extends StatelessWidget {
       "title": "أنف وأذن",
       "id": "EAR_NOSE_THROAT",
       "desc": "مجموعة من الأطباء الخبراء",
-      "icon": "assets/images/ear.png"
+      "icon": "assets/images/EAR_NOSE_THROAT.png"
     },
     {
       "title": "أسنان",
       "id": "DENTISTRY",
       "desc": "مجموعة من الأطباء الخبراء",
-      "icon": "assets/images/tooth.png"
+      "icon": "assets/images/DENTISTRY.png"
     },
     {
       "title": "عظام",
       "id": "ORTHOPEDICS",
       "desc": "مجموعة من الأطباء الخبراء",
-      "icon": "assets/images/bone.png"
+      "icon": "assets/images/ORTHOPEDICS.png"
     },
     {
       "title": "نفسي",
       "id": "PSYCHIATRY",
       "desc": "مجموعة من الأطباء الخبراء",
-      "icon": "assets/images/brain.png"
+      "icon": "assets/images/PSYCHIATRY.png"
     },
     {
       "title": "باطنة",
@@ -64,6 +64,60 @@ class SpecializationSelection extends StatelessWidget {
       "id": "CARDIOLOGY",
       "desc": "مجموعة من الأطباء الخبراء",
       "icon": "assets/images/cardiology.png"
+    },
+    {
+      "title": "نساء وتوليد",
+      "id": "GYNECOLOGY_AND_OBSTETRICS",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/gynecology.png"
+    },
+    {
+      "title": "عيون",
+      "id": "OPHTHALMOLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/eye.png"
+    },
+    {
+      "title": "مخ وأعصاب",
+      "id": "NEUROLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/neurology.png"
+    },
+    {
+      "title": "جراحة عامة",
+      "id": "GENERAL_SURGERY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/surgery.png"
+    },
+    {
+      "title": "مسالك بولية",
+      "id": "UROLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/urology.png"
+    },
+    {
+      "title": "علاج طبيعي",
+      "id": "PHYSICAL_THERAPY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/physiotherapy.png"
+    },
+    {
+      "title": "تغذية",
+      "id": "NUTRITION",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/nutrition.png"
+    },
+    {
+      "title": "أورام",
+      "id": "ONCOLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/oncology.png"
+    },
+    {
+      "title": "أشعة",
+      "id": "RADIOLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/radiology.png"
     },
   ];
 

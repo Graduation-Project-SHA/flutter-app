@@ -14,7 +14,9 @@ import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
 import 'features/doctor/availabilities/availability_cubit.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
+import 'features/doctor/main_layout/doctor_profile/doctor_me_cubit/doctor_me_cubit.dart';
 import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
+import 'features/doctor/main_layout/doctor_profile/update_doctor_profile_cubit/update_doctor_profile_cubit.dart';
 import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
 import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
 import 'features/patient/main_layout/profile/medical_record_screen.dart';
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => AvailabilityCubit(),),
         BlocProvider(create: (context) => PatientDoctorsCubit()),
         BlocProvider(create: (context) => DoctorDetailsCubit()),
+        BlocProvider(create: (context) => DoctorMeCubit()),
+        BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
 
       ],
       child: ScreenUtilInit(
@@ -68,8 +72,8 @@ class MyApp extends StatelessWidget {
                 GlobalCupertinoLocalizations.delegate,
               ],
               debugShowCheckedModeBanner: false,
-              //initialRoute: OnboardingScreen.routeName,
-              initialRoute: MainLayout.routeName,
+             // initialRoute: OnboardingScreen.routeName,
+             initialRoute: MainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;

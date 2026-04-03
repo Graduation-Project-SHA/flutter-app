@@ -31,20 +31,57 @@ class SpecialtyCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(Icons.keyboard_arrow_right, size: 24.sp, color: isSelected ? Colors.white : AppColors.primary),
+            Icon(Icons.keyboard_arrow_right,
+                size: 24.sp,
+                color: isSelected ? Colors.white : AppColors.primary),
+
             SizedBox(width: 12.w),
-            CircleAvatar(backgroundColor: Colors.white, child: Image.asset(iconPath, width: 30.w, height: 30.h)),
+
+            Container(
+              width: 60.w,
+              height: 60.h,
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(100.r),
+                border: Border.all(
+                  color: isSelected
+                      ? Colors.white
+                      : Color.fromRGBO(205, 205, 205, 1),
+                  width: 1.5,
+                ),
+              ),
+              child: Image.asset(
+                iconPath,
+                fit: BoxFit.contain,
+              ),
+            ),
+
             SizedBox(width: 12.w),
+
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : Colors.black)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : Colors.black,
+                  ),
+                ),
                 SizedBox(height: 4.h),
-                Text(description, style: TextStyle(fontSize: 12.sp, color: isSelected ? Colors.white70 : Colors.grey[700])),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: isSelected ? Colors.white70 : Colors.grey[700],
+                  ),
+                ),
               ],
             ),
           ],
-        ),
+        )
       ),
     );
   }

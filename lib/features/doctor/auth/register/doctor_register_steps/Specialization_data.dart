@@ -35,7 +35,7 @@ class SpecializationData extends StatelessWidget {
     {'display': 'علاج طبيعي', 'value': 'PHYSICAL_THERAPY'},
     {'display': 'تغذية', 'value': 'NUTRITION'},
     {'display': 'أورام', 'value': 'ONCOLOGY'},
-    {'display': 'رمد', 'value': 'OPHTHALMOLOGY'},
+    {'display': 'عيون', 'value': 'OPHTHALMOLOGY'},
     {'display': 'أنف وأذن وحنجرة', 'value': 'EAR_NOSE_THROAT'},
     {'display': 'أشعة', 'value': 'RADIOLOGY'},
   ];

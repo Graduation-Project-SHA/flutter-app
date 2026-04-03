@@ -183,8 +183,23 @@ flutter:
     - assets/images/paypal_logo.png
     - assets/images/applepay_logo.png
     - assets/images/mastercard_logo2.png
-
-
+    - assets/images/internal_medicine.png
+    - assets/images/pediatrics.png
+    - assets/images/dermatology.png
+    - assets/images/cardiology.png
+    - assets/images/radiology.png
+    - assets/images/oncology.png
+    - assets/images/nutrition.png
+    - assets/images/physiotherapy.png
+    - assets/images/urology.png
+    - assets/images/surgery.png
+    - assets/images/neurology.png
+    - assets/images/eye.png
+    - assets/images/gynecology.png
+    - assets/images/EAR_NOSE_THROAT.png
+    - assets/images/DENTISTRY.png
+    - assets/images/ORTHOPEDICS.png
+    - assets/images/PSYCHIATRY.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -216,14 +231,15 @@ flutter:
         
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-
+assets/images/urology:
+  png:
 flutter_native_splash:
   color: "#4786F5"
-  image: assets/images/splash.png
+  image: assets/images/logoo.png
   android: true
   ios: true
   android_gravity: center
   ios_content_mode: scaleAspectFill
   android_12:
     color: "#4786F5"
-    image: assets/images/splash.png
+    image: assets/images/logoo.png

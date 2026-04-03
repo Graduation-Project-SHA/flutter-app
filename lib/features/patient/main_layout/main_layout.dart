@@ -58,86 +58,86 @@ class _MainLayoutState extends State<MainLayout> {
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: ValueListenableBuilder(
-            valueListenable: authBox.listenable(),
-            builder: (context, box, widget) {
-              String? imagePath = box.get('profile_image_path');
-              return BottomNavigationBar(
-                currentIndex: currentIndex,
-                onTap: changeSelectedIndex,
-                backgroundColor: Colors.white,
-                type: BottomNavigationBarType.fixed,
-                selectedItemColor: Colors.blueAccent,
-                unselectedItemColor: const Color.fromRGBO(51, 51, 51, 1),
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        "assets/images/home_icon.svg",
-                        height: 24,
-                        width: 24,
-                        color: currentIndex == 0 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1),
-                      ),
-                      label: '',
-                    ),
-
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        "assets/images/message-text_icon.svg",
-                        height: 24,
-                        width: 24,
-                        color: currentIndex == 1 ? Colors.blueAccent :Color.fromRGBO(51, 51, 51, 1)
-                      ),
-                      label: '',
-                    ),
-
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        "assets/images/calendar_icon.svg",
-                        height: 24,
-                        width: 24,
-                        color: currentIndex == 2 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
-                      ),
-                      label: '',
-                    ),
-
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        "assets/images/settings_icon.svg",
-                        height: 24,
-                        width: 24,
-                        color: currentIndex == 3 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
-                      ),
-                      label: '',
-                    ),
-
-                    BottomNavigationBarItem(
-                      label: '',
-                      icon: CircleAvatar(
-                        radius: 14,
-                        backgroundColor: Colors.grey.shade200,
-                        backgroundImage: imagePath != null
-                            ? FileImage(File(imagePath))
-                            : const AssetImage("assets/images/person_image.png") as ImageProvider,
-                      ),
-                      activeIcon: Container(
-                        width: 30,
-                        height: 30,
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.blueAccent, width: 2),
+                valueListenable: authBox.listenable(),
+                builder: (context, box, widget) {
+                  String? imagePath = box.get('profile_image_path');
+                  return BottomNavigationBar(
+                      currentIndex: currentIndex,
+                      onTap: changeSelectedIndex,
+                      backgroundColor: Colors.white,
+                      type: BottomNavigationBarType.fixed,
+                      selectedItemColor: Colors.blueAccent,
+                      unselectedItemColor: const Color.fromRGBO(51, 51, 51, 1),
+                      showSelectedLabels: false,
+                      showUnselectedLabels: false,
+                      items: [
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                            "assets/images/home_icon.svg",
+                            height: 24,
+                            width: 24,
+                            color: currentIndex == 0 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1),
+                          ),
+                          label: '',
                         ),
-                        child: CircleAvatar(
-                          backgroundImage: imagePath != null
-                              ? FileImage(File(imagePath))
-                              : const AssetImage("assets/images/person_image.png") as ImageProvider,
+
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                              "assets/images/message-text_icon.svg",
+                              height: 24,
+                              width: 24,
+                              color: currentIndex == 1 ? Colors.blueAccent :Color.fromRGBO(51, 51, 51, 1)
+                          ),
+                          label: '',
                         ),
-                      ),
-                    ),
-                  ]
-              );
-              }
+
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                              "assets/images/calendar_icon.svg",
+                              height: 24,
+                              width: 24,
+                              color: currentIndex == 2 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
+                          ),
+                          label: '',
+                        ),
+
+                        BottomNavigationBarItem(
+                          icon: SvgPicture.asset(
+                              "assets/images/settings_icon.svg",
+                              height: 24,
+                              width: 24,
+                              color: currentIndex == 3 ? Colors.blueAccent : Color.fromRGBO(51, 51, 51, 1)
+                          ),
+                          label: '',
+                        ),
+
+                        BottomNavigationBarItem(
+                          label: '',
+                          icon: CircleAvatar(
+                            radius: 14,
+                            backgroundColor: Colors.grey.shade200,
+                            backgroundImage: imagePath != null
+                                ? FileImage(File(imagePath))
+                                : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                          ),
+                          activeIcon: Container(
+                            width: 30,
+                            height: 30,
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.blueAccent, width: 2),
+                            ),
+                            child: CircleAvatar(
+                              backgroundImage: imagePath != null
+                                  ? FileImage(File(imagePath))
+                                  : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                            ),
+                          ),
+                        ),
+                      ]
+                  );
+                }
             ),
           ),
         ),

@@ -1,6 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/features/doctor/auth/register/doctor_register_steps/completeRegisterScreen.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../../auth/cubit/auth_cubit.dart';
+import '../../../../auth/cubit/auth_state.dart';
+import '../../../../auth/register/verify_email.dart';
 
 class Facialrecognition extends StatefulWidget {
   const Facialrecognition({super.key});
@@ -10,122 +15,216 @@ class Facialrecognition extends StatefulWidget {
 }
 
 class _FacialrecognitionState extends State<Facialrecognition> {
+  final ImagePicker _picker = ImagePicker();
+  File? _profileImageFile;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: Text(
-          "التعرف علي الوجه",
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w700,
-            fontSize: 24.sp,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromRGBO(205, 205, 205, 1)),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is RegisterSuccessState) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerifyEmailScreen(
+                email: AuthCubit.get(context).dEmail ?? "",
+                firstName: AuthCubit.get(context).dFirstName ?? "",
               ),
             ),
-          ),
-        ],
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(
-            horizontal: 12.w,
-            vertical: 20.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+                (route) => false,
+          );
+        } else if (state is RegisterErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        var cubit = AuthCubit.get(context);
+        bool isLoading = state is RegisterLoadingState;
 
-            children: [
-              SizedBox(height: 16.h),
-              Text(
-                'التأكد من ملكية الكارنيه',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(30, 30, 30, 1),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Text(
-                'إذا كان هناك اي بيانات غير صحيحة قم بإعادة تصوير الكارنيه',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Color.fromRGBO(117, 117, 117, 1),
-                ),
-              ),
-              SizedBox(height: 30.h),
+        return Scaffold(
+          appBar: AppBar(
+            actions: [
               Padding(
-                padding: EdgeInsetsGeometry.symmetric(
-                  horizontal: 16.w,
-                  vertical: 20.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
                 child: Container(
-                  height: 400.h,
-                  width: 400.w,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/FaceId.png'),
+                    border: Border.all(
+                      color: const Color.fromRGBO(205, 205, 205, 1),
                     ),
-                    borderRadius: BorderRadius.circular(850),
-                    color: Color.fromRGBO(30, 108, 245, 1),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
-                ),
-              ),
-              SizedBox(height: 110.h),
-              Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 150.w),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Completeregisterscreen();
-                        },
-                      ),
-                    );
-                  },
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 38,
-                        backgroundColor: Color.fromRGBO(13, 91, 227, 1),
-                        child: CircleAvatar(
-                          radius: 33,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 31,
-                            backgroundColor: Color.fromRGBO(13, 91, 227, 1),
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: IconButton(
+                    onPressed: () {
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
                   ),
                 ),
               ),
             ],
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            automaticallyImplyLeading: false,
+            title: Text(
+              "التعرف علي الوجه",
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 24.sp,
+              ),
+            ),
           ),
-        ),
-      ),
+          body: SizedBox(
+            height: double.infinity,
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16.h),
+                  Text(
+                    'التأكد من ملكية الكارنيه',
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'إذا كان هناك أي بيانات غير صحيحة قم بإعادة تصوير الكارنيه',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: const Color.fromRGBO(117, 117, 117, 1),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+
+                  Center(
+                    child: Container(
+                      height: 300.h,
+                      width: 300.w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(150.r),
+                        color: const Color.fromRGBO(30, 108, 245, 1),
+                        image: _profileImageFile != null
+                            ? DecorationImage(
+                          fit: BoxFit.cover,
+                          image: FileImage(_profileImageFile!),
+                        )
+                            : const DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/images/FaceId.png'),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+
+                  Center(
+                    child: GestureDetector(
+                      onTap: isLoading
+                          ? null
+                          : () async {
+
+                        final picked = await _picker.pickImage(
+                          source: ImageSource.camera,
+                          imageQuality: 60,
+                        );
+
+                        if (picked == null) {
+
+                          return;
+                        }
+
+                        final file = File(picked.path);
+
+                        setState(() {
+                          _profileImageFile = file;
+                        });
+
+
+                        cubit.dProfileImageFile = file;
+
+                        try {
+
+                          await cubit.buildDoctorDocumentsPdf();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "من فضلك التقط صور الكارنيه الأمامي والخلفي أولاً",
+                              ),
+                              backgroundColor: Colors.redAccent,
+                            ),
+                          );
+                          return;
+                        }
+
+
+                        print(
+                            " dPhone VALUE BEFORE REGISTER: ${cubit.dPhone}");
+                        cubit.registerDoctor(
+                          firstName: cubit.dFirstName ?? "",
+                          lastName: cubit.dLastName ?? "",
+                          email: cubit.dEmail ?? "",
+                          password: cubit.dPassword ?? "",
+                          phone: cubit.dPhone ?? "",
+                          gender: cubit.dGender ?? "",
+                          dateOfBirth: cubit.dBirthDate ?? "",
+                          specialization: cubit.dSpecialization ?? "",
+                          bio: cubit.dBio ?? "",
+                          practicalExperience: cubit.dExperience ?? "",
+                          latitude: cubit.dLat ?? 30.0,
+                          longitude: cubit.dLng ?? 31.0,
+                        );
+                      },
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                        color: Color(0xff0D5BE3),
+                      )
+                          : Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 38.r,
+                            backgroundColor: const Color(0xff0D5BE3),
+                            child: CircleAvatar(
+                              radius: 33.r,
+                              backgroundColor: Colors.white,
+                              child: CircleAvatar(
+                                radius: 31.r,
+                                backgroundColor:
+                                const Color(0xff0D5BE3),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 30.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 50.h),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

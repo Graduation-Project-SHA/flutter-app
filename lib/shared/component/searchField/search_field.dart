@@ -4,16 +4,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SearchField extends StatelessWidget {
   final String hint;
   final void Function(String)? onChanged;
+  final TextEditingController? controller;
 
   const SearchField({
     super.key,
     this.hint = "البحث...",
     this.onChanged,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       textAlign: TextAlign.right,
       onChanged: onChanged,
       decoration: InputDecoration(

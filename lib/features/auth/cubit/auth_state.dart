@@ -35,7 +35,7 @@ class ResetPasswordErrorState extends AuthState {
   final String error;
   ResetPasswordErrorState(this.error);
 }
-
+//otp دول بتوع بتاعت ريسيت الباسورد
 class VerifyCodeLoadingState extends AuthState {}
 
 class VerifyCodeSuccessState extends AuthState {
@@ -45,4 +45,23 @@ class VerifyCodeSuccessState extends AuthState {
 class VerifyCodeErrorState extends AuthState {
   final String error;
   VerifyCodeErrorState(this.error);
+}
+
+
+
+
+class VerifyEmailLoadingState extends AuthState {}
+
+class VerifyEmailSuccessState extends AuthState {}
+
+class VerifyEmailErrorState extends AuthState {
+  final String error;
+  VerifyEmailErrorState(this.error);
+}
+
+class LogoutLoadingState extends AuthState {}
+class LogoutSuccessState extends AuthState {}
+class LogoutErrorState extends AuthState {
+  final String error;
+  LogoutErrorState(this.error);
 }

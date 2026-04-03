@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:health_care_project/core/network/api_constants.dart';
@@ -6,11 +10,20 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../../../core/network/dio.dart';
 import 'auth_state.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   static AuthCubit get(context) => BlocProvider.of(context);
+  String? syndicateCardPath;
+  String? dFirstName, dLastName, dEmail, dPassword, dPhone, dGender, dBirthDate, dSpecialization, dBio, dExperience;
+  double? dLat, dLng;
+  File? dProfileImageFile;
+  File? dSyndicateCardFront;
+  File? dSyndicateCardBack;
+  File? dSyndicatePdf;
 
   String _translateError(String englishError) {
     if (englishError.contains('email or password is incorrect')) {
@@ -31,121 +44,149 @@ class AuthCubit extends Cubit<AuthState> {
     if (englishError.contains('phone')) {
       return 'رقم الهاتف غير صالح.';
     }
+    if (englishError.contains('Email or phone number already registered')) {
+      return 'هذا البريد الإلكتروني أو رقم الهاتف مسجل بالفعل.';
+    }
+    if (englishError.contains('Your account is pending admin approval')) {
+      return 'حسابك في انتظار موافقة المسؤول، سيتم إشعارك عند الموافقة.';
+    }
+
     return 'فشل الاتصال بالخادم. حاول مجدداً.';
+
   }
 
   String _handleDioError(error) {
+    print(" SERVER ERROR DATA: ${error.response?.data}");
+
     String rawErrorMessage = "حدث خطأ غير متوقع.";
+
+
     if (error is DioException && error.response != null) {
       final responseData = error.response!.data;
 
       if (responseData is Map) {
-        if (responseData.containsKey('message')) {
-          rawErrorMessage = responseData['message'];
-        } else if (responseData.containsKey('error')) {
-          if (responseData['error'] is List && responseData['error'].isNotEmpty) {
-            rawErrorMessage = responseData['error'].first.toString();
-          } else {
-            rawErrorMessage = responseData['error'].toString();
-          }
-        }
-      }
-      else if (responseData is List && responseData.isNotEmpty) {
-        try {
-          if (responseData.first is Map && responseData.first.containsKey('message')) {
-            rawErrorMessage = responseData.first['message'];
-          } else {
-            rawErrorMessage = responseData.first.toString();
-          }
-        } catch (e) {
-          rawErrorMessage = responseData.first.toString();
-        }
-      }
-      else if (responseData is String) {
-        try {
-          final decoded = json.decode(responseData);
-          if (decoded is Map && decoded.containsKey('message')) {
-            rawErrorMessage = decoded['message'];
-          } else {
-            rawErrorMessage = responseData;
-          }
-        } catch (e) {
-          rawErrorMessage = responseData;
-        }
-      } else {
-        rawErrorMessage = "خطأ من السيرفر: ${error.response!.statusCode}";
-      }
 
-    } else if (error is DioException && error.error.toString().contains('SocketException')) {
-      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
-    } else if (error.toString().contains('SocketException')) {
-      rawErrorMessage = "خطأ في الاتصال بالشبكة. تأكد من الإنترنت.";
+        if (responseData.containsKey('message')) {
+          var message = responseData['message'];
+          if (message is List) {
+            rawErrorMessage = message.join(', ');
+          } else {
+            rawErrorMessage = message.toString();
+          }
+        }
+
+        else if (responseData.containsKey('error')) {
+          var errorDetail = responseData['error'];
+          rawErrorMessage = errorDetail is List ? errorDetail.join(', ') : errorDetail.toString();
+        }
+      } else if (responseData is String) {
+        rawErrorMessage = responseData;
+      }
+    } else {
+      rawErrorMessage = "تأكد من اتصالك بالإنترنت.";
     }
 
     return _translateError(rawErrorMessage);
   }
-
-  void userRegister({
-    required String name,
+  void registerUser({
+    required String firstName,
+    required String lastName,
     required String email,
     required String password,
-    required String role,
-    required String gender,
-    required String dob,
     required String phone,
-  }) {
+    required String gender,
+    required String dateOfBirth,
+   // required String profileImagePath,
+  }) async {
     emit(RegisterLoadingState());
 
-    DioHelper.postData(
-      url: ApiConstants.register,
-      data: {
+    try {
+      FormData formData = FormData.fromMap({
+        "firstName": firstName,
+        "lastName": lastName,
         "email": email,
-        "name": name,
         "password": password,
-        "role": role,
-        "gender": gender.toUpperCase(),
-        "dob": dob,
         "phone": phone,
-      },
-    ).then((value) {
-      print(value.data);
+        "gender": gender.toUpperCase(),
+        "dateOfBirth": dateOfBirth,
+        "role": "USER",
+        // "profileImage": await MultipartFile.fromFile(
+        //   profileImagePath,
+        //   filename: profileImagePath.split('/').last,
+        // ),
+      });
+
+      final response = await DioHelper.dio.post(
+        ApiConstants.register,
+        data: formData,
+        options: Options(
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        ),
+      );
+
       emit(RegisterSuccessState());
-    }).catchError((error) {
-      print(error.toString());
+    } catch (error) {
       emit(RegisterErrorState(_handleDioError(error)));
-    });
+    }
   }
 
-  void _saveAuthData(Map<String, dynamic> data) async {
+
+
+
+  Future<void> _saveAuthData(Map<String, dynamic> data) async {
     final authBox = Hive.box('authBox');
 
-    await authBox.put('accessToken', data['tokens']['accessToken']);
-    await authBox.put('refreshToken', data['tokens']['refreshToken']);
+    final accessToken = data['data']['access_token'];
+    final refreshToken = data['data']['refresh_token'];
 
-    await authBox.put('userId', data['date']['payload']['id']);
-    await authBox.put('userName', data['date']['payload']['name']);
-    await authBox.put('userRole', data['date']['payload']['role']);
+    await authBox.put('accessToken', accessToken);
+    await authBox.put('refreshToken', refreshToken);
+
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
+
+    await authBox.put('userId', decodedToken['sub']);
+    await authBox.put('userEmail', decodedToken['email']);
+    await authBox.put('userRole', decodedToken['role']);
+
+    print("ROLE SAVED: ${decodedToken['role']}");
   }
 
-  void userLogin({
-    required String email,
-    required String password,
-  }) {
-    emit(LoginLoadingState());
 
-    DioHelper.postData(
-      url: ApiConstants.login,
-      data: {
-        "email": email,
-        "password": password,
-      },
-    ).then((value) {
-      _saveAuthData(value.data);
-      emit(LoginSuccessState(value.data));
-    }).catchError((error) {
-      print(error.toString());
+  void userLogin({required String email, required String password}) async {
+    emit(LoginLoadingState());
+    try {
+      final response = await DioHelper.postData(
+        url: ApiConstants.login,
+        data: {'email': email, 'password': password},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var authBox = Hive.box('authBox');
+
+        String accessToken = response.data['data']['access_token'];
+        String refreshToken = response.data['data']['refresh_token'];
+
+        await authBox.put('accessToken', accessToken);
+        await authBox.put('refreshToken', refreshToken);
+
+        var userData = response.data['data']['user'];
+        await authBox.put('userId', userData['id']);
+        await authBox.put('firstName', userData['firstName']);
+        await authBox.put('lastName', userData['lastName']);
+        await authBox.put('email', userData['email']);
+        await authBox.put('phone', userData['phone']);
+        await authBox.put('gender', userData['gender']);
+        await authBox.put('dateOfBirth', userData['dateOfBirth']);
+        await authBox.put('profileImage', userData['profileImage']);
+        await authBox.put('userRole', userData['role']);
+
+        emit(LoginSuccessState(response.data));
+      }
+    } catch (error) {
       emit(LoginErrorState(_handleDioError(error)));
-    });
+    }
   }
 
   Future<void> checkLoggedInUser() async {
@@ -183,8 +224,9 @@ class AuthCubit extends Cubit<AuthState> {
     DioHelper.postData(
       url: ApiConstants.resetPassword,
       data: {
-        "resetToken": code,
-        "password": newPassword,
+        "email": email,
+        "otp": code,
+        "newPassword": newPassword,
       },
     ).then((value) {
       print(value.data);
@@ -205,7 +247,7 @@ class AuthCubit extends Cubit<AuthState> {
       url: ApiConstants.verifyResetCode,
       data: {
         "email": email,
-        "code": code,
+        "otp": code,
       },
     ).then((value) {
       print(value.data);
@@ -216,9 +258,174 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  void userLogout() async {
-    final authBox = Hive.box('authBox');
-    await authBox.clear();
-    emit(AuthInitial());
+  Future<void> userLogout() async {
+    emit(LogoutLoadingState());
+
+    try {
+      final authBox = Hive.box('authBox');
+      final String? token = authBox.get('accessToken');
+
+
+      await DioHelper.dio.post(
+        ApiConstants.logOut,
+        data: {},
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      await authBox.clear();
+
+      emit(AuthInitial());
+      emit(LogoutSuccessState());
+    } catch (error) {
+      await Hive.box('authBox').clear();
+      emit(LogoutSuccessState());
+    }
   }
+
+
+  void registerDoctor({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required String phone,
+    required String gender,
+    required String dateOfBirth,
+    required String specialization,
+    required String bio,
+    required String practicalExperience,
+    required double latitude,
+    required double longitude,
+  }) async {
+    emit(RegisterLoadingState());
+
+    try {
+      FormData formData = FormData.fromMap({
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "password": password,
+        "phone": phone,
+        "gender": gender.toUpperCase(),
+        "dateOfBirth": dateOfBirth,
+        "role": "DOCTOR",
+        "specialization": specialization,
+        "bio": bio,
+        "practicalExperience": practicalExperience,
+        "latitude": latitude,
+        "longitude": longitude,
+
+
+        "profileImage": await MultipartFile.fromFile(
+          dProfileImageFile!.path,
+          filename: "profile.png",
+        ),
+
+        "syndicateCard": await MultipartFile.fromFile(
+          dSyndicatePdf!.path,
+          filename: "doctor_documents.pdf",
+        ),
+
+
+
+      });
+      print("Phone sent to server: $phone");
+      await DioHelper.dio.post(
+        ApiConstants.register,
+        data: formData,
+      );
+
+      emit(RegisterSuccessState());
+    } catch (error) {
+      emit(RegisterErrorState(_handleDioError(error)));
+    }
+  }
+  Future<void> buildDoctorDocumentsPdf() async {
+    if (dProfileImageFile == null ||
+        dSyndicateCardFront == null ||
+        dSyndicateCardBack == null) {
+      throw Exception("Missing images to build PDF");
+    }
+
+    final pdf = pw.Document();
+
+    final profileBytes = await dProfileImageFile!.readAsBytes();
+    final frontBytes = await dSyndicateCardFront!.readAsBytes();
+    final backBytes = await dSyndicateCardBack!.readAsBytes();
+
+    final profileImg = pw.MemoryImage(profileBytes);
+    final frontImg = pw.MemoryImage(frontBytes);
+    final backImg = pw.MemoryImage(backBytes);
+
+    pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Center(
+            child: pw.Text(
+              'Doctor Verification Document',
+              style: pw.TextStyle(
+                fontSize: 24,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Profile Image:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(profileImg, height: 180)),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Syndicate Card - Front:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(frontImg, height: 180)),
+          pw.SizedBox(height: 20),
+          pw.Text(
+            'Syndicate Card - Back:',
+            style: pw.TextStyle(fontSize: 16),
+          ),
+          pw.SizedBox(height: 8),
+          pw.Center(child: pw.Image(backImg, height: 180)),
+        ],
+      ),
+    );
+
+    final dir = await getTemporaryDirectory();
+    final file = File(
+      '${dir.path}/doctor_documents_${DateTime.now().millisecondsSinceEpoch}.pdf',
+    );
+
+    await file.writeAsBytes(await pdf.save());
+
+    dSyndicatePdf = file;
+  }
+  void verifyEmail({
+    required String email,
+    required String code,
+  }) {
+    emit(VerifyEmailLoadingState());
+
+    DioHelper.postData(
+      url: ApiConstants.verifyEmail,
+      data: {
+        "email": email,
+        "code": code,
+      },
+    ).then((value) {
+      emit(VerifyEmailSuccessState());
+    }).catchError((error) {
+      emit(VerifyEmailErrorState(_handleDioError(error)));
+    });
+  }
+
+
+
 }

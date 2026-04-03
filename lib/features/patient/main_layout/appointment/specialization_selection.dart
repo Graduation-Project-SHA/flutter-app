@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/widgets/doctor_card.dart';
 import 'package:health_care_project/features/patient/main_layout/appointment/widgets/specialty_card.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
@@ -10,17 +11,60 @@ class SpecializationSelection extends StatelessWidget {
   final void Function({String? specialty, String? title, String? icon}) onSelectSpecialization;
   final VoidCallback onBack;
 
-  const SpecializationSelection({
+   SpecializationSelection({
     required this.selectedSpecialty,
     required this.onSelectSpecialization,
     required this.onBack,
   });
-
-  final List<Map<String,String>> specialties = const [
-    {"id":"ent","title":"أنف وأذن وحنجرة","desc":"مجموعة من الأطباء الخبراء","icon":"assets/images/ear.png"},
-    {"id":"psych","title":"معالج نفسي","desc":"مجموعة من الأطباء الخبراء","icon":"assets/images/brain.png"},
-    {"id":"teeth","title":"أسنان","desc":"مجموعة من الأطباء الخبراء","icon":"assets/images/tooth.png"},
-    {"id":"bones","title":"عظام","desc":"مجموعة من الأطباء الخبراء","icon":"assets/images/bone.png"},
+  final specialties = [
+    {
+      "title": "أنف وأذن",
+      "id": "EAR_NOSE_THROAT",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/ear.png"
+    },
+    {
+      "title": "أسنان",
+      "id": "DENTISTRY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/tooth.png"
+    },
+    {
+      "title": "عظام",
+      "id": "ORTHOPEDICS",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/bone.png"
+    },
+    {
+      "title": "نفسي",
+      "id": "PSYCHIATRY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/brain.png"
+    },
+    {
+      "title": "باطنة",
+      "id": "INTERNAL_MEDICINE",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/internal_medicine.png"
+    },
+    {
+      "title": "أطفال",
+      "id": "PEDIATRICS",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/pediatrics.png"
+    },
+    {
+      "title": "جلدية",
+      "id": "DERMATOLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/dermatology.png"
+    },
+    {
+      "title": "قلب",
+      "id": "CARDIOLOGY",
+      "desc": "مجموعة من الأطباء الخبراء",
+      "icon": "assets/images/cardiology.png"
+    },
   ];
 
   @override
@@ -38,9 +82,7 @@ class SpecializationSelection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: () {
-                 // Navigator.pop(context);
-                },
+                onPressed: onBack,
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),

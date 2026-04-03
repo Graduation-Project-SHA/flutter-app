@@ -2,157 +2,169 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 
-class SpecializationData extends StatefulWidget {
-  const SpecializationData({super.key});
+class SpecializationData extends StatelessWidget {
+  final String? selectedSpecialization;
+  final Function(String?) onSpecializationChanged;
+  final TextEditingController bioController;
+  final TextEditingController experienceController;
 
-  @override
-  State<SpecializationData> createState() => _SpecializationDataState();
-}
+  const SpecializationData({
+    super.key,
+    required this.selectedSpecialization,
+    required this.onSpecializationChanged,
+    required this.bioController,
+    required this.experienceController,
+  });
 
-class _SpecializationDataState extends State<SpecializationData> {
-  String? selectedSpecialization;
 
-  final List<String> specializations = [
-    'طب أطفال',
-    'باطنة',
-    'جراحة',
-    'أسنان',
-    'نساء وتوليد',
+  final List<Map<String, String>> specializations = const [
+    {'display': 'طب أطفال', 'value': 'PEDIATRICS'},
+    {'display': 'باطنة', 'value': 'INTERNAL_MEDICINE'},
+    {'display': 'قلب', 'value': 'CARDIOLOGY'},
+    {'display': 'جلدية', 'value': 'DERMATOLOGY'},
+    {'display': 'عظام', 'value': 'ORTHOPEDICS'},
+    {'display': 'جراحة عامة', 'value': 'GENERAL_SURGERY'},
+    {'display': 'أسنان', 'value': 'DENTISTRY'},
+    {
+      'display': 'نساء وتوليد',
+      'value': 'GYNECOLOGY_AND_OBSTETRICS',
+    },
+    {'display': 'مخ وأعصاب', 'value': 'NEUROLOGY'},
+    {'display': 'نفسي', 'value': 'PSYCHIATRY'},
+    {'display': 'مسالك بولية', 'value': 'UROLOGY'},
+    {'display': 'علاج طبيعي', 'value': 'PHYSICAL_THERAPY'},
+    {'display': 'تغذية', 'value': 'NUTRITION'},
+    {'display': 'أورام', 'value': 'ONCOLOGY'},
+    {'display': 'رمد', 'value': 'OPHTHALMOLOGY'},
+    {'display': 'أنف وأذن وحنجرة', 'value': 'EAR_NOSE_THROAT'},
+    {'display': 'أشعة', 'value': 'RADIOLOGY'},
   ];
-  TextEditingController? talkAboutYourSelfControler;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-
             children: [
               Text(
                 'موقعك الحالي',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 12.sp,
-                  color: Color.fromRGBO(108, 114, 120, 1),
+                  color: const Color(0xff6C7278),
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+
+                },
                 child: Text(
                   'تغير الموقع',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 13.sp,
-                    color: Color.fromRGBO(40, 83, 175, 1),
+                    color: const Color(0xff2853AF),
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 5.h),
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-            child: Container(
-                width: 380.w,
-                height: 140.h,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 172, 160, 160),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Stack(children: [
-
-                  ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(12),
-                    child: Image.asset('assets/images/mapImage.png',
-                      height: 140.h,
-                      width: 380.w,
-
-                      fit: BoxFit.cover,),
-                  ),
-                  Align(
-                    alignment: AlignmentGeometry.center,
-                    child: Image.asset('assets/images/markOnMap.png',
-
-                    ),
-                  ),
-
-                ],)
+          Container(
+            width: double.infinity,
+            height: 140.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.r),
+              image: const DecorationImage(
+                image: AssetImage('assets/images/mapImage.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: Image.asset(
+                'assets/images/markOnMap.png',
+                height: 40.h,
+              ),
             ),
           ),
-          SizedBox(height: 15.h),
+
+          SizedBox(height: 20.h),
+
           Text(
             'مجال تخصصك',
             style: TextStyle(
               fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
-              color: Color.fromRGBO(108, 114, 120, 1),
+              color: const Color(0xff6C7278),
             ),
           ),
           SizedBox(height: 10.h),
+
           DropdownButtonFormField<String>(
             value: selectedSpecialization,
-            decoration: InputDecoration(enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: Color.fromRGBO(237, 241, 243, 1),
-                width: 2,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  color: Color(0xffEDF1F3),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-
-            )),
-            hint: Text('اختر تخصصك'),
-            items: specializations.map((specialization) {
-              return DropdownMenuItem(
-                value: specialization,
-                child: Text(specialization),
+            ),
+            hint: const Text('اختر تخصصك'),
+            items: specializations.map((spec) {
+              return DropdownMenuItem<String>(
+                value: spec['value'],
+                child: Text(spec['display']!),
               );
             }).toList(),
-            onChanged: (val) {
-              setState(() {
-                selectedSpecialization = val;
-              });
-            },
+            onChanged: onSpecializationChanged,
           ),
 
-          SizedBox(height: 15.h),
+          SizedBox(height: 20.h),
+
           Text(
             'تكلم عن نفسك',
             style: TextStyle(
-              fontWeight: FontWeight.w400,
               fontSize: 12.sp,
-              color: Color.fromRGBO(108, 114, 120, 1),
+              color: const Color(0xff6C7278),
             ),
           ),
+          SizedBox(height: 10.h),
 
-          SizedBox(height: 15.h),
           Defaulttextformfield(
-            maxLines: 5,
-            controller: talkAboutYourSelfControler,
-
+            maxLines: 4,
+            controller: bioController,
+            hintText: 'اكتب نبذة عنك...',
           ),
           Text(
             'أكتب ما لا يقل عن 25 كلمة',
             style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 9.sp,
-                color: Color.fromRGBO(171, 175, 177, 1)
+              fontSize: 9.sp,
+              color: const Color(0xffABAFB1),
             ),
           ),
 
-          SizedBox(height: 15.h,),
+          SizedBox(height: 20.h),
+
           Text(
             'خبراتك العملية',
             style: TextStyle(
-              fontWeight: FontWeight.w400,
               fontSize: 12.sp,
-              color: Color.fromRGBO(108, 114, 120, 1),
+              color: const Color(0xff6C7278),
             ),
           ),
-          SizedBox(height: 15.h,),
-          Defaulttextformfield()
+          SizedBox(height: 10.h),
 
+          Defaulttextformfield(
+            controller: experienceController,
+            hintText: 'مثال: مستشفى القصر العيني لمدة ٥ سنوات',
+          ),
+          SizedBox(height: 20.h),
         ],
       ),
     );

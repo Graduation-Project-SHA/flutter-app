@@ -15,11 +15,12 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  var box = Hive.box('authBox');
-
   late Box authBox;
+
   String name = "";
   String email = "";
+  String phone = "";
+
   File? _selectedImage;
 
   @override
@@ -32,9 +33,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   void _loadData() {
     setState(() {
-      name = authBox.get('doctor_name', defaultValue: "د.ريم حسام");
-      email = authBox.get('doctor_email', defaultValue: "email@gmail.com");
 
+      String firstName = authBox.get('firstName', defaultValue: "");
+      String lastName = authBox.get('lastName', defaultValue: "");
+
+      name = "$firstName $lastName";
+      email = authBox.get('email', defaultValue: "");
+      phone = authBox.get('phone', defaultValue: "");
 
       String? imagePath = authBox.get('profile_image_path');
       if (imagePath != null) {
@@ -42,7 +47,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       }
     });
   }
-
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -53,7 +57,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         _selectedImage = File(image.path);
       });
 
-      box.put('profile_image_path', image.path);
+      authBox.put('profile_image_path', image.path);
 
     }
   }
@@ -61,7 +65,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _loadData();
+
     return Scaffold(
       backgroundColor: const Color(0xff247CFF),
       body: SafeArea(
@@ -117,7 +121,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       children: [
                         SizedBox(height: 60.h),
                         Text(
-                          "د.ريم حسام",
+                          name,
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
@@ -126,7 +130,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "email@gmail.com",
+                          email,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey,
@@ -196,8 +200,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           image:"assets/images/personalcard.png",
                           color: Colors.blue,
                           title: "معلومات شخصية",
-                          onTap: (){
-                            Navigator.pushNamed(context, "UserPersonalInformationScreen");
+                          onTap: () {
+                            Navigator.pushNamed(context, "UserPersonalInformationScreen").then((_) {
+                              _loadData();
+                            });
                           },
                         ),
                         _buildOptionItem(

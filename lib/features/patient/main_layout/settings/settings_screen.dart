@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/auth/login/login_screen.dart';
 import 'package:health_care_project/features/doctor/main_layout/doctor_settings/FAQScreen/FAQScreen.dart';
 import 'package:health_care_project/features/doctor/main_layout/doctor_settings/Security%20Screen/SecurityScreen.dart';
 import 'package:health_care_project/features/doctor/main_layout/doctor_settings/notification/NotificationScreen.dart';
+
+import '../../../auth/cubit/auth_cubit.dart';
+import '../../../auth/cubit/auth_state.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -46,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+
                 },
                 icon: Icon(
                   Icons.arrow_forward_ios,
@@ -122,7 +126,8 @@ class SettingsScreen extends StatelessWidget {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  AuthCubit.get(context).userLogout();
+                                  Navigator.pushNamed(context, Loginscreen.routeName);
                                 },
                                 child: Text(
                                   'تسجيل الخروج',

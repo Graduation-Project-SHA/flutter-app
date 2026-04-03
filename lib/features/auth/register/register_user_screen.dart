@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_care_project/features/auth/success_register/success_register_screen.dart';
+import 'package:health_care_project/features/auth/register/verify_email.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,6 +49,19 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   bool hasSymbol = false;
   bool hasMinLength = false;
   int currentStep = 0;
+  String profileImagePath = "assets/images/default_user.png";
+
+
+  String? selectedSpecialization;
+
+  final TextEditingController bioController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
+
+  double currentLat = 30.0444;
+  double currentLng = 31.2357;
+
+  String? syndicateCardFrontPath;
+  String? syndicateCardBackPath;
 
   void _navigateToLogin() {
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -457,21 +470,25 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: PhoneFormField(
-            countrySelectorNavigator:
-            const CountrySelectorNavigator.modalBottomSheet(),
+
+            initialValue: PhoneNumber.parse('+20'),
+            countrySelectorNavigator: const CountrySelectorNavigator.modalBottomSheet(),
             decoration: InputDecoration(
-              hintText: '0123456789',
+              hintText: '1012345678',
               focusedBorder: InputBorder.none,
               enabledBorder: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 16.h,
-                horizontal: 10.w,
-              ),
+              contentPadding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 10.w),
             ),
-            countryButtonStyle: const CountryButtonStyle(showFlag: true),
+            countryButtonStyle: const CountryButtonStyle(
+              showFlag: true,
+              showDialCode: true,
+            ),
             onChanged: (phoneNumber) {
               if (phoneNumber != null) {
-                fullPhoneNumber = phoneNumber.international;
+
+                fullPhoneNumber = phoneNumber.international.replaceAll(' ', '');
+                AuthCubit.get(context).dPhone = fullPhoneNumber;
+                print("Phone sent to server: $fullPhoneNumber");
               }
             },
           ),
@@ -485,7 +502,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
           child: AbsorbPointer(
             child: Defaulttextformfield(
               controller: birthDateController,
-              hintText: "01-03-2004",
+              hintText: "20-06-2004",
               suffixIcon: Icon(
                 Icons.calendar_today_rounded,
                 color: Colors.grey,
@@ -578,255 +595,262 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthCubit(),
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: (isDoctor && currentIndex == 1 || isDoctor && currentIndex == 2)
+          ? AppBar(
         backgroundColor: Colors.white,
-        appBar: (isDoctor && currentIndex == 1 || isDoctor && currentIndex == 2)
-            ? AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          automaticallyImplyLeading: false,
-          title: Text(
-            currentIndex == 1
-                ? 'بيانات التخصص'
-                : currentIndex == 2
-                ? "إرسال كارنيه النقابة"
-                : "",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontSize: 24.sp,
-            ),
+        surfaceTintColor: Colors.white,
+        automaticallyImplyLeading: false,
+        title: Text(
+          currentIndex == 1
+              ? 'بيانات التخصص'
+              : currentIndex == 2
+              ? "إرسال كارنيه النقابة"
+              : "",
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w700,
+            fontSize: 24.sp,
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color.fromRGBO(205, 205, 205, 1),
-                  ),
-                  borderRadius: BorderRadius.circular(14.r),
+        ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Color.fromRGBO(205, 205, 205, 1),
                 ),
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      currentIndex -= 1;
-                    });
-                  },
-                  icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
-                ),
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    currentIndex -= 1;
+                  });
+                },
+                icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),
-          ],
-        )
-            : null,
-        body: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
-            if (state is RegisterSuccessState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("تم إنشاء الحساب بنجاح"),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SuccessRegisterScreen(
+          ),
+        ],
+      )
+          : null,
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is RegisterSuccessState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("تم إنشاء الحساب بنجاح"),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            var cubit = AuthCubit.get(context);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlocProvider.value(
+                  value: cubit,
+                  child: VerifyEmailScreen(
+                    email: emailController.text,
                     firstName: firstNameController.text,
                   ),
                 ),
-              );
-            } else if (state is RegisterErrorState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("فشل التسجيل. يرجى مراجعة البيانات."),
-                  backgroundColor: Colors.redAccent,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            bool isLoading = state is RegisterLoadingState;
-
-            return SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 15.h),
-
-                    if (isDoctor && (currentIndex == 0 || currentIndex == 1) ||
-                        !isDoctor) ...[
-                      _buildUserTypeSelector(),
-                      SizedBox(height: 25.h),
-                      _buildAuthTabBar(),
-                      SizedBox(height: 25.h),
-                    ],
-
-                    if (isDoctor)
-                      if (currentIndex == 0)
-                        SizedBox(
-                          height: 30.h,
-                          width: 380.w,
-                          child: Image.asset('assets/images/progress_bar1.png'),
-                        )
-                      else if (currentIndex == 1)
-                        SizedBox(
-                          height: 30.h,
-                          width: 380.w,
-                          child: Image.asset('assets/images/progress_bar2.png'),
-                        )
-                      else
-                        SizedBox(
-                          height: 30.h,
-                          width: 380.w,
-                          child: Image.asset('assets/images/progress_bar3.png'),
-                        ),
-                    if (!isDoctor)
-                      firstForm()
-                    else if (isDoctor && currentIndex == 0)
-                      firstForm()
-                    else if (isDoctor && currentIndex == 1)
-                        SpecializationData(),
-
-                    SizedBox(height: 25.h),
-
-
-
-                    DefaultButton(
-                      buttonText: isDoctor ? "التالي" : "إنشاء حساب",
-                      onPressed: () {
-                        setState(() {
-                          isSubmitted = true;
-                        });
-                        if (!isDoctor) {
-                          AuthCubit.get(context).userRegister(
-                            name: "${firstNameController.text} ${lastNameController.text}",
-                            email: emailController.text,
-                            password: passwordController.text,
-                            role: 'Patient',
-                            gender: selectedGender,
-                            dob: birthDateController.text,
-                            phone: fullPhoneNumber,
-                          );
-
-                          Navigator.pushReplacementNamed(context, MainLayout.routeName);
-                          return;
-                        }
-
-                        if (isDoctor) {
-                          if (currentIndex == 0) {
-                            setState(() {
-                              currentIndex = 1;
-                            });
-                          } else if (currentIndex == 1) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => Sendingthecard()),
-                            );
-                          } else if (currentIndex == 2) {
-
-                            AuthCubit.get(context).userRegister(
-                              name: "${firstNameController.text} ${lastNameController.text}",
-                              email: emailController.text,
-                              password: passwordController.text,
-                              role: 'Doctor',
-                              gender: selectedGender,
-                              dob: birthDateController.text,
-                              phone: fullPhoneNumber,
-                            );
-
-                            Navigator.pushReplacementNamed(context, DoctorMainLayout.routeName);
-                          }
-                        }
-                      },
-                    ),
-
-
-                    // DefaultButton(
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       if (currentIndex < 1) {
-                    //         currentIndex++;
-                    //       } else if (currentIndex == 1) {
-                    //         Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //             builder: (context) {
-                    //               return Sendingthecard();
-                    //             },
-                    //           ),
-                    //         );
-                    //       }
-                    //     });
-                    //   },
-                    //   buttonText: isDoctor ? "التالي" : "إنشاء حساب",
-
-
-
-                      // buttonText: isLoading
-                      //     ? "جاري الإنشاء..."
-                      //     : (isDoctor ? "التالي" : "إنشاء حساب"),
-                      // onPressed: isLoading
-                      //     ? null
-                      //     : () {
-                      //   setState(() {
-                      //     isSubmitted = true;
-                      //   });
-                      //
-                      //   if (firstNameController.text.isEmpty ||
-                      //       lastNameController.text.isEmpty ||
-                      //       emailController.text.isEmpty ||
-                      //       fullPhoneNumber.isEmpty ||
-                      //       birthDateController.text.isEmpty ||
-                      //       passwordController.text.isEmpty ||
-                      //       confirmPasswordController.text.isEmpty ||
-                      //       selectedGender.isEmpty) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //         content: Text(
-                      //           "من فضلك املأ كل الحقول المطلوبة ",
-                      //         ),
-                      //         backgroundColor: Colors.redAccent,
-                      //       ),
-                      //     );
-                      //     return;
-                      //   }
-                      //   if (!isPasswordMatched || !isPasswordValid) {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //         content: Text(
-                      //           "تأكد من صحة كلمة المرور ومطابقتها للمعايير",
-                      //         ),
-                      //         backgroundColor: Colors.redAccent,
-                      //       ),
-                      //     );
-                      //     return;
-                      //   }
-                      //
-                      //   AuthCubit.get(context).userRegister(
-                      //     name:
-                      //     "${firstNameController.text} ${lastNameController.text}",
-                      //     email: emailController.text,
-                      //     password: passwordController.text,
-                      //     role: isDoctor ? 'Doctor' : 'Patient',
-                      //     gender: selectedGender,
-                      //     dob: birthDateController.text,
-                      //     phone: fullPhoneNumber,
-                      //   );
-                      // },
-                   // ),
-                  ],
-                ),
               ),
             );
-          },
-        ),
+          } else if (state is RegisterErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.error),
+                backgroundColor: Colors.redAccent,
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          bool isLoading = state is RegisterLoadingState;
+
+          return SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15.h),
+
+                  if (isDoctor && (currentIndex == 0 || currentIndex == 1) ||
+                      !isDoctor) ...[
+                    _buildUserTypeSelector(),
+                    SizedBox(height: 25.h),
+                    _buildAuthTabBar(),
+                    SizedBox(height: 25.h),
+                  ],
+
+                  if (isDoctor)
+
+                    if (currentIndex == 0)
+                      SizedBox(
+                        height: 30.h,
+                        width: 380.w,
+                        child: Image.asset('assets/images/progress_bar1.png'),
+                      )
+                    else if (currentIndex == 1)
+                      SizedBox(
+                        height: 30.h,
+                        width: 380.w,
+                        child: Image.asset('assets/images/progress_bar2.png'),
+                      )
+                    else
+                      SizedBox(
+                        height: 30.h,
+                        width: 380.w,
+                        child: Image.asset('assets/images/progress_bar3.png'),
+                      ),
+                  if (!isDoctor)
+                    firstForm()
+                  else if (isDoctor && currentIndex == 0)
+                    firstForm()
+                  else if (isDoctor && currentIndex == 1)
+                     SpecializationData(
+                        selectedSpecialization: selectedSpecialization,
+                        onSpecializationChanged: (val) {
+                          setState(() {
+                            selectedSpecialization = val;
+                          });
+                        },
+                        bioController: bioController,
+                        experienceController: experienceController,
+                      )
+                    else if (isDoctor && currentIndex == 2)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'لماذا ارسل كارنيه النقابة؟',
+                                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(height: 10.h),
+
+
+                            ],
+                          ),
+                  SizedBox(height: 25.h),
+                  DefaultButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                      setState(() {
+                        isSubmitted = true;
+                      });
+
+                      if (firstNameController.text.isEmpty ||
+                          lastNameController.text.isEmpty ||
+                          emailController.text.isEmpty ||
+                          fullPhoneNumber.isEmpty ||
+                          birthDateController.text.isEmpty ||
+                          passwordController.text.isEmpty ||
+                          confirmPasswordController.text.isEmpty ||
+                          selectedGender.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("من فضلك املأ كل الحقول المطلوبة"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (!isPasswordMatched || !isPasswordValid) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("تأكد من صحة كلمة المرور"),
+                            backgroundColor: Colors.redAccent,
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (selectedGender.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("من فضلك اختر النوع (ذكر/أنثى)")),
+                        );
+                        return;
+                      }
+                      if (isDoctor) {
+                        if (currentIndex == 0) {
+                          var cubit = AuthCubit.get(context);
+                          cubit.dPhone = fullPhoneNumber;
+
+
+                          print(" تم إرسال الرقم للكيوبت: ${cubit.dPhone}");
+
+                          setState(() { currentIndex = 1; });
+                          return;
+
+                        }
+                        if (currentIndex == 1) {
+                          if (selectedSpecialization == null ||
+                              bioController.text.isEmpty ||
+                              experienceController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("من فضلك أكمل بيانات التخصص"),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
+                            return;
+                          }
+
+                          var cubit = AuthCubit.get(context);
+                          cubit.dFirstName = firstNameController.text;
+                          cubit.dLastName = lastNameController.text;
+                          cubit.dEmail = emailController.text;
+                          cubit.dPassword = passwordController.text;
+                          cubit.dPhone = fullPhoneNumber;
+                          cubit.dGender = selectedGender;
+                          cubit.dBirthDate = birthDateController.text;
+                          cubit.dSpecialization = selectedSpecialization;
+                          cubit.dBio = bioController.text;
+                          cubit.dExperience = experienceController.text;
+                          cubit.dLat = currentLat;
+                          cubit.dLng = currentLng;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Sendingthecard(),
+                            ),
+                          );
+                          return;
+                        }
+                      }
+                      else {
+                        AuthCubit.get(context).registerUser(
+                          firstName: firstNameController.text,
+                          lastName: lastNameController.text,
+                          email: emailController.text,
+                          password: passwordController.text,
+                          phone: fullPhoneNumber,
+                          gender: selectedGender,
+                          dateOfBirth: birthDateController.text,
+                        );
+                      }
+                    },
+
+                    buttonText: isDoctor
+                        ? (currentIndex == 2 ? "إنهاء التسجيل" : "التالي")
+                        : "إنشاء حساب",
+                  ),
+
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

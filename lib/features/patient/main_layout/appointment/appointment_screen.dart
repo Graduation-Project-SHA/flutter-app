@@ -46,9 +46,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             onBack: _previousStep,
           ),
           DoctorSelection(
-            selectedSpecialty: _selectedTitle,
-            selectedIcon: _selectedSpecialtyIcon,
-            selectedSpecialtyId: _selectedSpecialty,
+            specialization: _selectedSpecialty,
+            title: _selectedTitle,
             onBack: _previousStep,
           ),
         ],

@@ -4,6 +4,9 @@ import 'package:health_care_project/features/doctor/main_layout/doctor_settings/
 import 'package:health_care_project/features/doctor/main_layout/doctor_settings/Security%20Screen/SecurityScreen.dart';
 import 'package:health_care_project/features/doctor/main_layout/doctor_settings/notification/NotificationScreen.dart';
 
+import '../../../auth/cubit/auth_cubit.dart';
+import '../../../auth/login/login_screen.dart';
+
 class DoctorSettingsScreen extends StatelessWidget {
   const DoctorSettingsScreen({super.key});
 
@@ -90,52 +93,53 @@ class DoctorSettingsScreen extends StatelessWidget {
                         );
                       if (index == 3) {
                         showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      title: 
-      Text(
-        'تسجيل الخروج',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18.sp,
-        ),
-      ),
-      content: Text(
-        'ستحتاج إلى إدخال اسم المستخدم الخاص بك وكلمة المرور في المرة القادمة تريد تسجيل الدخول',
-        style: TextStyle(fontSize: 14.sp),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            'إلغاء',
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            'تسجيل الخروج',
-            style: TextStyle(
-              color: Colors.red,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+                          context: context,
+                          builder: (context) => AlertDialog(
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
+                            title:
+                            Text(
+                              'تسجيل الخروج',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.sp,
+                              ),
+                            ),
+                            content: Text(
+                              'ستحتاج إلى إدخال اسم المستخدم الخاص بك وكلمة المرور في المرة القادمة تريد تسجيل الدخول',
+                              style: TextStyle(fontSize: 14.sp),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text(
+                                  'إلغاء',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  AuthCubit.get(context).userLogout();
+                                  Navigator.pushNamed(context, Loginscreen.routeName);
+                                },
+                                child: Text(
+                                  'تسجيل الخروج',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       }
                     },
                     title: Row(

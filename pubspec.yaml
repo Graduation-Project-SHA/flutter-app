@@ -48,10 +48,11 @@ dependencies:
   json_annotation: ^4.9.0
   flutter_bloc: ^9.1.1
   hive: ^2.2.3
-  path_provider: ^2.1.5
+  path_provider: ^2.1.1
   hive_generator: ^2.0.1
   hive_flutter: ^1.1.0
   flutter_map: ^4.0.0
+  connectivity_plus: ^6.0.3
 
   latlong2: ^0.8.1
 
@@ -62,6 +63,11 @@ dependencies:
   flutter_svg: ^2.0.9
   image_picker: ^1.2.1
   camera: ^0.11.3
+  jwt_decoder: ^2.0.1
+  pdf: ^3.11.0
+
+
+
 
 
 dev_dependencies:
@@ -166,17 +172,18 @@ flutter:
     - assets/images/markOnMap.png
     - assets/images/ID_Logo.png
     - assets/images/camerarotate.png
-    - assets/images/FaceId.png    
-    - assets/images/completeRegister.png    
+    - assets/images/FaceId.png
+    - assets/images/completeRegister.png
     - assets/images/Loader.png
     - assets/images/notificationLogo.png
     - assets/images/message-question.png
     - assets/images/logout.png
     - assets/images/lock.png
-
+    - assets/images/logoo.png
     - assets/images/paypal_logo.png
     - assets/images/applepay_logo.png
     - assets/images/mastercard_logo2.png
+
 
 
 

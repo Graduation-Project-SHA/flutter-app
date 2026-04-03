@@ -31,17 +31,20 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
 
   void _loadData() {
-    setState(() {
-      name = authBox.get('doctor_name', defaultValue: "د.ريم حسام");
-      email = authBox.get('doctor_email', defaultValue: "email@gmail.com");
+    String firstName = authBox.get('firstName', defaultValue: "");
+    String lastName = authBox.get('lastName', defaultValue: "");
 
+    name = "د. $firstName $lastName";
+    email = authBox.get('email', defaultValue: "");
 
-      String? imagePath = authBox.get('profile_image_path');
-      if (imagePath != null) {
-        _selectedImage = File(imagePath);
-      }
-    });
+    String? imagePath = authBox.get('profile_image_path');
+    if (imagePath != null) {
+      _selectedImage = File(imagePath);
+    }
+
+    setState(() {});
   }
+
 
 
   Future<void> _pickImage() async {
@@ -116,7 +119,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                       children: [
                         SizedBox(height: 60.h),
                         Text(
-                          "د.ريم حسام",
+                          name.isEmpty ? "دكتور" : name,
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
@@ -125,7 +128,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          "email@gmail.com",
+                          email.isEmpty ? "No Email" : email,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey,

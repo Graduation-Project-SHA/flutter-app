@@ -32,16 +32,22 @@ class _UserPersonalInformationScreenState extends State<UserPersonalInformationS
   }
 
 
+
   void _loadData() {
-    nameController.text = authBox.get('doctor_name', defaultValue: "د.ريم حسام");
-    emailController.text = authBox.get('doctor_email', defaultValue: "email@gmail.com");
-    phoneController.text = authBox.get('doctor_phone', defaultValue: "+20123456789");
+    String firstName = authBox.get('firstName', defaultValue: "");
+    String lastName = authBox.get('lastName', defaultValue: "");
+
+    nameController.text = "$firstName $lastName";
+    emailController.text = authBox.get('email', defaultValue: "");
+    phoneController.text = authBox.get('phone', defaultValue: "");
     passController.text = "********";
 
     String? savedImage = authBox.get('profile_image_path');
     if (savedImage != null) {
       _selectedImage = File(savedImage);
     }
+
+    setState(() {});
   }
 
 
@@ -126,11 +132,26 @@ class _UserPersonalInformationScreenState extends State<UserPersonalInformationS
                     borderRadius: BorderRadius.circular(16.r)),
               ),
               onPressed: () {
-                authBox.put('doctor_name', nameController.text);
-                authBox.put('doctor_email', emailController.text);
-                authBox.put('doctor_phone', phoneController.text);
+                FocusScope.of(context).unfocus();
+
+                List<String> nameParts = nameController.text.trim().split(" ");
+
+                String firstName = nameParts.isNotEmpty ? nameParts.first : "";
+                String lastName =
+                nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
+
+                authBox.put('firstName', firstName);
+                authBox.put('lastName', lastName);
+                authBox.put('email', emailController.text);
+                authBox.put('phone', phoneController.text);
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("تم حفظ التعديلات بنجاح")),
+                );
+
                 Navigator.pop(context);
               },
+
               child: Text("حفظ", style: TextStyle(fontSize: 16.sp)),
             ),
 

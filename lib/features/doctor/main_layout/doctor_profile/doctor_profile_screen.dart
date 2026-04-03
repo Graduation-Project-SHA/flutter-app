@@ -63,6 +63,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _loadData();
     return Scaffold(
       backgroundColor: const Color(0xff247CFF),
       body: SafeArea(

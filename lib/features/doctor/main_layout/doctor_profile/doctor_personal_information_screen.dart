@@ -1,10 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/customAppbarButton/custom_app_bar_button.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'doctor_me_cubit/doctor_me_cubit.dart';
+import 'doctor_me_cubit/doctor_me_state.dart';
+import 'update_doctor_profile_cubit/update_doctor_profile_cubit.dart';
+import 'update_doctor_profile_cubit/update_doctor_profile_state.dart';
 
 class DoctorPersonalInformationScreen extends StatefulWidget {
   static const String routeName = "DoctorPersonalInformationScreen";
@@ -16,7 +22,6 @@ class DoctorPersonalInformationScreen extends StatefulWidget {
 }
 
 class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformationScreen> {
-
   late Box authBox;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -28,11 +33,14 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
   void initState() {
     super.initState();
     authBox = Hive.box('authBox');
-    _loadData();
+    _loadLocalData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DoctorMeCubit.get(context).getDoctorMe();
+    });
   }
 
-
-  void _loadData() {
+  void _loadLocalData() {
     String firstName = authBox.get('firstName', defaultValue: "");
     String lastName = authBox.get('lastName', defaultValue: "");
 
@@ -45,9 +53,27 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
     if (savedImage != null) {
       _selectedImage = File(savedImage);
     }
+
+    setState(() {});
   }
 
+  void _fillFromBackend(dynamic doctor) {
+    nameController.text = "د. ${doctor.firstName} ${doctor.lastName}";
+    emailController.text = doctor.email;
+    phoneController.text = doctor.phone ?? "";
+    passController.text = "********";
 
+    authBox.put('firstName', doctor.firstName);
+    authBox.put('lastName', doctor.lastName);
+    authBox.put('email', doctor.email);
+    if (doctor.phone != null) {
+      authBox.put('phone', doctor.phone);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -62,84 +88,131 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<DoctorMeCubit, DoctorMeState>(
+          listener: (context, state) {
+            if (state is DoctorMeLoaded) {
+              _fillFromBackend(state.doctor);
+            }
+          },
+        ),
+        BlocListener<UpdateDoctorProfileCubit, UpdateDoctorProfileState>(
+          listener: (context, state) {
+            if (state is UpdateDoctorProfileSuccess) {
+              final fullName = nameController.text.replaceFirst("د. ", "");
+              final nameParts = fullName.split(" ");
+
+              authBox.put('firstName', nameParts.isNotEmpty ? nameParts[0] : "");
+              authBox.put('lastName', nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "");
+              authBox.put('email', emailController.text);
+              authBox.put('phone', phoneController.text);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("تم حفظ التعديلات بنجاح")),
+              );
+
+              Navigator.pop(context);
+            }
+
+            if (state is UpdateDoctorProfileError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
         backgroundColor: Colors.white,
-        actions: [CustomAppBarBtn(
-        )],
-        automaticallyImplyLeading: false,
-        title: Text("معلومات شخصية",
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600,color: Colors.black)),
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Column(
-          children: [
-            SizedBox(height: 48.h,),
-            Stack(
-              children:[
-                GestureDetector(
-                  onTap: pickImage,
-                  child: CircleAvatar(
-                    radius: 55.r,
-                    backgroundImage: _selectedImage != null
-                        ? FileImage(_selectedImage!)
-                        : const AssetImage("assets/images/person_image.png") as ImageProvider,
-                    child: _selectedImage == null ? Icon(Icons.add_a_photo, size: 30.sp) : null,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 15.r,
-                    backgroundColor: Color(0xffF2F4F7),
-                    child: Icon(Icons.edit, size: 16.sp, color: Colors.blueAccent),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 51.h),
-            _buildInput("الاسم", nameController),
-            SizedBox(height: 24.h),
-            _buildInput("البريد الإلكتروني", emailController),
-            SizedBox(height: 24.h),
-            _buildInput("رقم الهاتف", phoneController),
-            SizedBox(height: 24.h),
-            _buildInput("كلمة المرور", passController),
-            SizedBox(height: 24.h),
-            Text("عندما تقوم بإعداد إعدادات المعلومات الشخصية الخاصة بك، يجب عليك الحرص على تقديم معلومات دقيقة.",style: TextStyle(color: Color(0xff757575)),),
-            SizedBox(height: 24.h),
-
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff247CFF),
-                minimumSize: Size(double.infinity, 52.h),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r)),
-              ),
-              onPressed: () {
-
-                final fullName = nameController.text.replaceFirst("د. ", "");
-                final nameParts = fullName.split(" ");
-                authBox.put('firstName', nameParts.isNotEmpty ? nameParts[0] : "");
-                authBox.put('lastName', nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "");
-
-                authBox.put('email', emailController.text);
-                authBox.put('phone', phoneController.text);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("تم حفظ التعديلات بنجاح")),
-                );
-                Navigator.pop(context);
-              },
-              child: Text("حفظ", style: TextStyle(fontSize: 16.sp)),
-            ),
-
-            SizedBox(height: 20.h),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          actions: [
+            CustomAppBarBtn(),
           ],
+          automaticallyImplyLeading: false,
+          title: Text(
+            "معلومات شخصية",
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Column(
+            children: [
+              SizedBox(height: 48.h),
+              Stack(
+                children: [
+                  GestureDetector(
+                    onTap: pickImage,
+                    child: CircleAvatar(
+                      radius: 55.r,
+                      backgroundImage: _selectedImage != null
+                          ? FileImage(_selectedImage!)
+                          : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                      child: _selectedImage == null ? Icon(Icons.add_a_photo, size: 30.sp) : null,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: CircleAvatar(
+                      radius: 15.r,
+                      backgroundColor: Color(0xffF2F4F7),
+                      child: Icon(Icons.edit, size: 16.sp, color: Colors.blueAccent),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 51.h),
+              _buildInput("الاسم", nameController),
+              SizedBox(height: 24.h),
+              _buildInput("البريد الإلكتروني", emailController),
+              SizedBox(height: 24.h),
+              _buildInput("رقم الهاتف", phoneController),
+              SizedBox(height: 24.h),
+              _buildInput("كلمة المرور", passController),
+              SizedBox(height: 24.h),
+              Text(
+                "عندما تقوم بإعداد إعدادات المعلومات الشخصية الخاصة بك، يجب عليك الحرص على تقديم معلومات دقيقة.",
+                style: TextStyle(color: Color(0xff757575)),
+              ),
+              SizedBox(height: 24.h),
+              BlocBuilder<UpdateDoctorProfileCubit, UpdateDoctorProfileState>(
+                builder: (context, state) {
+                  return ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff247CFF),
+                      minimumSize: Size(double.infinity, 52.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                    ),
+                    onPressed: state is UpdateDoctorProfileLoading
+                        ? null
+                        : () {
+                      UpdateDoctorProfileCubit.get(context).updateDoctorProfile(
+                        bio: authBox.get('bio', defaultValue: ""),
+                        clinicAddress: authBox.get('clinicAddress', defaultValue: ""),
+                        latitude: authBox.get('latitude'),
+                        longitude: authBox.get('longitude'),
+                      );
+                    },
+                    child: Text(
+                      state is UpdateDoctorProfileLoading ? "جاري الحفظ..." : "حفظ",
+                      style: TextStyle(fontSize: 16.sp),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
       ),
     );
@@ -149,12 +222,13 @@ class _DoctorPersonalInformationScreenState extends State<DoctorPersonalInformat
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        fillColor:Color(0xffEDEDED) ,
+        fillColor: Color(0xffEDEDED),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color:Color(0xffEDEDED),),
+          borderSide: BorderSide(
+            color: Color(0xffEDEDED),
+          ),
           borderRadius: BorderRadius.circular(12.r),
         ),
-
         labelText: label,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),

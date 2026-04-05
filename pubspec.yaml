@@ -200,6 +200,9 @@ flutter:
     - assets/images/DENTISTRY.png
     - assets/images/ORTHOPEDICS.png
     - assets/images/PSYCHIATRY.png
+    - assets/images/nurse_ahmed.png
+    - assets/images/nurse_fatma.png
+    - assets/images/nurse_sara.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

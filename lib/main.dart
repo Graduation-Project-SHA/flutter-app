@@ -17,6 +17,9 @@ import 'features/doctor/main_layout/doctor_main_layout.dart';
 import 'features/doctor/main_layout/doctor_profile/doctor_me_cubit/doctor_me_cubit.dart';
 import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
 import 'features/doctor/main_layout/doctor_profile/update_doctor_profile_cubit/update_doctor_profile_cubit.dart';
+import 'features/patient/care/care_map_screen.dart';
+import 'features/patient/care/care_screen.dart';
+import 'features/patient/care/nurses_list_screen.dart';
 import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
 import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
 import 'features/patient/main_layout/profile/medical_record_screen.dart';
@@ -98,6 +101,9 @@ class MyApp extends StatelessWidget {
                 UserPaymentMethodsScreen.routeName: (_) => UserPaymentMethodsScreen(),
                 MedicalRecordScreen.routeName: (_) => MedicalRecordScreen(),
                 UserPersonalInformationScreen.routeName: (_) => UserPersonalInformationScreen(),
+                CareScreen.routeName: (_) => CareScreen(),
+                CareMapScreen.routeName: (_) => CareMapScreen(),
+                NursesListScreen.routeName: (_) => NursesListScreen(),
 
               },
             );

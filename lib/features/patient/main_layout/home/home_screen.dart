@@ -7,6 +7,7 @@ import 'package:health_care_project/core/%20theme/app_colors.dart';
 import 'package:hive/hive.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
+import '../../care/care_screen.dart';
 import '../../nearby_services/find_nearby_services_screen.dart';
 import '../main_layout.dart';
 
@@ -192,7 +193,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildServiceCard("assets/images/Home_care.png","رعاية منزلية"),
+                  _buildServiceCard(
+                  "assets/images/Home_care.png", "رعاية منزلية",
+                  onTap: () {
+                    Navigator.pushNamed(context, CareScreen.routeName);
+                  },
+                ),
                     _buildServiceCard("assets/images/Medicine.png","أدوية"),
                     _buildServiceCard("assets/images/Nurse.png", "ممرضة"),
                     _buildServiceCard("assets/images/donors.png", "متبرعون"),
@@ -281,24 +287,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceCard(String imagePath, String title) {
-    return Container(
-      width: 74.25.w,
-      height: 78.75.h,
-      margin: EdgeInsets.only(right: 16.w),
-      padding: EdgeInsets.symmetric(vertical: 7.5.h, horizontal: 5.w),
-      decoration: BoxDecoration(
-        color: const Color(0xffFFFFFF),
-        borderRadius: BorderRadius.circular(7.5.r),
-        border: Border.all(color: const Color(0xffEDF1F3), width: 0.75),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(imagePath, height: 45.h, width: 45.w),
-          SizedBox(height: 5.h),
-          Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ],
+  Widget _buildServiceCard(String imagePath, String title, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 74.25.w,
+        height: 78.75.h,
+        margin: EdgeInsets.only(right: 16.w),
+        padding: EdgeInsets.symmetric(vertical: 7.5.h, horizontal: 5.w),
+        decoration: BoxDecoration(
+          color: const Color(0xffFFFFFF),
+          borderRadius: BorderRadius.circular(7.5.r),
+          border: Border.all(color: const Color(0xffEDF1F3), width: 0.75),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(imagePath, height: 45.h, width: 45.w),
+            SizedBox(height: 5.h),
+            Text(title,
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center),
+          ],
+        ),
       ),
     );
   }

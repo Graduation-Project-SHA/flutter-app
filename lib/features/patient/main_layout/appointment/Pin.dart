@@ -233,7 +233,7 @@ class _PinState extends State<Pin> {
             child: ElevatedButton(
               onPressed: submitPin,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(0xFF2B73F3),
                 padding: EdgeInsets.symmetric(
                   horizontal: 100.w,
                   vertical: 15.h,

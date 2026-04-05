@@ -63,111 +63,113 @@ class _InstaPayState extends State<InstaPay> {
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    insta_pay_button_isClicked = !insta_pay_button_isClicked;
-                    if (insta_pay_button_isClicked) {
-                      insta_pay_button_color = Color.fromRGBO(
-                        43,
-                        115,
-                        243,
-                        0.1,
-                      );
-                      insta_pay_button_border_color = Color.fromRGBO(
-                        43,
-                        115,
-                        243,
-                        1,
-                      );
-                    } else {
-                      insta_pay_button_color = Colors.white;
-                      insta_pay_button_border_color = Color.fromRGBO(
-                        220,
-                        220,
-                        220,
-                        1,
-                      );
-                    }
-                  });
-                },
-                child: Container(
-                  height: 50,
-                  width: 100,
-
-                  decoration: BoxDecoration(
-                    color: insta_pay_button_color,
-                    border: BoxBorder.all(color: insta_pay_button_border_color),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: ConditionalBuilder(
-                    condition: insta_pay_button_isClicked == false,
-                    builder: (context) {
-                      return Container(
-                        padding: EdgeInsets.all(8.h),
-                        child: Image.asset(
-                          'assets/images/instapay_bigLogo.png',
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                    fallback: (context) {
-                      return Stack(
-                        clipBehavior: Clip.none,
-
-                        children: [
-                          Positioned(
-                            top: -4,
-                            right: -4,
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Color.fromRGBO(43, 115, 243, 1),
-                              size: 24.sp,
-                            ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      insta_pay_button_isClicked = !insta_pay_button_isClicked;
+                      if (insta_pay_button_isClicked) {
+                        insta_pay_button_color = Color.fromRGBO(
+                          43,
+                          115,
+                          243,
+                          0.1,
+                        );
+                        insta_pay_button_border_color = Color.fromRGBO(
+                          43,
+                          115,
+                          243,
+                          1,
+                        );
+                      } else {
+                        insta_pay_button_color = Colors.white;
+                        insta_pay_button_border_color = Color.fromRGBO(
+                          220,
+                          220,
+                          220,
+                          1,
+                        );
+                      }
+                    });
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+            
+                    decoration: BoxDecoration(
+                      color: insta_pay_button_color,
+                      border: BoxBorder.all(color: insta_pay_button_border_color),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: ConditionalBuilder(
+                      condition: insta_pay_button_isClicked == false,
+                      builder: (context) {
+                        return Container(
+                          padding: EdgeInsets.all(8.h),
+                          child: Image.asset(
+                            'assets/images/instapay_bigLogo.png',
+                            fit: BoxFit.cover,
                           ),
-                          Container(
-                            padding: EdgeInsets.all(8.h),
-                            height: 50,
-                            width: 100,
-                            child: Image.asset(
-                              'assets/images/instapay_bigLogo.png',
-                              fit: BoxFit.cover,
+                        );
+                      },
+                      fallback: (context) {
+                        return Stack(
+                          clipBehavior: Clip.none,
+            
+                          children: [
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Icon(
+                                Icons.check_circle,
+                                color: Color.fromRGBO(43, 115, 243, 1),
+                                size: 24.sp,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                            Container(
+                              padding: EdgeInsets.all(8.h),
+                              height: 50,
+                              width: 100,
+                              child: Image.asset(
+                                'assets/images/instapay_bigLogo.png',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                'اسم المستخدم',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8.h),
-              Defaulttextformfield(
-                hintText: 'Example@instapay.com',
-                hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'رقم الهاتف',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8.h),
-              Defaulttextformfield(hintText: 'رقم الهاتف الخاص بالحساب'),
-              SizedBox(height: 16.h),
-              Text("""
+                SizedBox(height: 24.h),
+                Text(
+                  'اسم المستخدم',
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8.h),
+                Defaulttextformfield(
+                  hintText: 'Example@instapay.com',
+                  hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'رقم الهاتف',
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8.h),
+                Defaulttextformfield(hintText: 'رقم الهاتف الخاص بالحساب'),
+                SizedBox(height: 16.h),
+                Text("""
          الخطوات
         1. اتمم ملئ البيانات بشكل صحيح
         2. اضغط علي طلب الدفع
         3. افتح تطبيق انستا باي واقبل الطلب
          """, style: TextStyle(color: Color.fromRGBO(43, 115, 243, 1))),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -228,8 +230,11 @@ class _InstaPayState extends State<InstaPay> {
                   ),
                 ],
               ),
-              Text(
-                '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10.h),
+                height: 1,
+                width: double.infinity,
+                color: Colors.grey.shade400,
               ),
           
               SizedBox(height: 15.h),

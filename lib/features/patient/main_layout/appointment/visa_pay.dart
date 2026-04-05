@@ -65,171 +65,173 @@ class _VisaPayState extends State<VisaPay> {
       ),
       body: Padding(
         padding: EdgeInsets.all(25.0.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(logos.length, (index) {
-                bool isSelected = selectedIndex == index;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  child: Container(
-                    height: 50.h,
-                    width: 100.w,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? Color.fromRGBO(43, 115, 243, 0.1)
-                          : Colors.white,
-                      border: Border.all(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(logos.length, (index) {
+                  bool isSelected = selectedIndex == index;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                    },
+                    child: Container(
+                      height: 50.h,
+                      width: 100.w,
+                      decoration: BoxDecoration(
                         color: isSelected
-                            ? Color.fromRGBO(43, 115, 243, 1)
-                            : Color.fromRGBO(220, 220, 220, 1),
-                      ),
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(8.h),
-                          child: Container(
-                            height: 40.h,
-                            width: 84.w,
-                            child: Image.asset(logos[index], fit: BoxFit.cover),
-                          ),
+                            ? Color.fromRGBO(43, 115, 243, 0.1)
+                            : Colors.white,
+                        border: Border.all(
+                          color: isSelected
+                              ? Color.fromRGBO(43, 115, 243, 1)
+                              : Color.fromRGBO(220, 220, 220, 1),
                         ),
-                        if (isSelected)
-                          Positioned(
-                            top: -4,
-                            right: -4,
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Color.fromRGBO(43, 115, 243, 1),
-                              size: 24.sp,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(8.h),
+                            child: Container(
+                              height: 40.h,
+                              width: 84.w,
+                              child: Image.asset(logos[index], fit: BoxFit.cover),
                             ),
                           ),
+                          if (isSelected)
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Icon(
+                                Icons.check_circle,
+                                color: Color.fromRGBO(43, 115, 243, 1),
+                                size: 24.sp,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              SizedBox(height: 30.h),
+              Text(
+                'اسم حامل البطاقة',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 10.h),
+              Defaulttextformfield(
+                hintText: 'ادخل اسم حامل البطاقة',
+                borderColor: Color.fromRGBO(220, 220, 220, 1),
+              ),
+              SizedBox(height: 20.h),
+              Text(
+                'رقم البطاقة',
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 10.h),
+              Defaulttextformfield(
+                hintText: 'ادخل رقم البطاقة',
+                borderColor: Color.fromRGBO(220, 220, 220, 1),
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'تاريخ الانتهاء',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Defaulttextformfield(
+                          readOnly: true,
+                          controller: expiryController,
+                          onTap: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            );
+          
+                            if (pickedDate != null) {
+                              String formattedDate =
+                                  '${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year.toString().substring(2)}';
+                              setState(() {
+                                expiryController.text = formattedDate;
+                              });
+                            }
+                          },
+                          suffixIcon: Icon(
+                            Icons.calendar_month_outlined,
+                            size: 20.sp,
+                            color: Color.fromRGBO(43, 115, 243, 1),
+                          ),
+                          hintText: 'MM/YY',
+                          borderColor: Color.fromRGBO(220, 220, 220, 1),
+                        ),
                       ],
                     ),
                   ),
-                );
-              }),
-            ),
-            SizedBox(height: 30.h),
-            Text(
-              'اسم حامل البطاقة',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 10.h),
-            Defaulttextformfield(
-              hintText: 'ادخل اسم حامل البطاقة',
-              borderColor: Color.fromRGBO(220, 220, 220, 1),
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              'رقم البطاقة',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 10.h),
-            Defaulttextformfield(
-              hintText: 'ادخل رقم البطاقة',
-              borderColor: Color.fromRGBO(220, 220, 220, 1),
-            ),
-            SizedBox(height: 20.h),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'تاريخ الانتهاء',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w700,
+                  SizedBox(width: 20.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'رمز التحقق',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Defaulttextformfield(
-                        readOnly: true,
-                        controller: expiryController,
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2101),
-                          );
-
-                          if (pickedDate != null) {
-                            String formattedDate =
-                                '${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year.toString().substring(2)}';
-                            setState(() {
-                              expiryController.text = formattedDate;
-                            });
-                          }
-                        },
-                        suffixIcon: Icon(
-                          Icons.calendar_month_outlined,
-                          size: 20.sp,
-                          color: Color.fromRGBO(43, 115, 243, 1),
+                        SizedBox(height: 10.h),
+                        Defaulttextformfield(
+                          hintText: 'CVV',
+                          borderColor: Color.fromRGBO(220, 220, 220, 1),
                         ),
-                        hintText: 'MM/YY',
-                        borderColor: Color.fromRGBO(220, 220, 220, 1),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 20.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'رمز التحقق',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Defaulttextformfield(
-                        hintText: 'CVV',
-                        borderColor: Color.fromRGBO(220, 220, 220, 1),
-                      ),
-                    ],
+                ],
+              ),
+              SizedBox(height: 30.h),
+              Row(
+                children: [
+                  Text(
+                    'احفظ بيانات البطاقة',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.h),
-            Row(
-              children: [
-                Text(
-                  'احفظ بيانات البطاقة',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
+                  Spacer(),
+                  Switch(
+                    value: saveVisaCardDetails,
+                    onChanged: (value) {
+                      setState(() {
+                        saveVisaCardDetails = value;
+                      });
+                    },
+                    activeColor: Colors.white,
+                    activeTrackColor: Colors.blue,
                   ),
-                ),
-                Spacer(),
-                Switch(
-                  value: saveVisaCardDetails,
-                  onChanged: (value) {
-                    setState(() {
-                      saveVisaCardDetails = value;
-                    });
-                  },
-                  activeColor: Colors.white,
-                  activeTrackColor: Colors.blue,
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Container(
@@ -290,8 +292,11 @@ class _VisaPayState extends State<VisaPay> {
                   ),
                 ],
               ),
-              Text(
-                '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10.h),
+                height: 1,
+                width: double.infinity,
+                color: Colors.grey.shade400,
               ),
           
               SizedBox(height: 15.h),

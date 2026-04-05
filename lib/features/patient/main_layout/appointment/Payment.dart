@@ -163,7 +163,7 @@ class _PaymentState extends State<Payment> {
                                   borderRadius: BorderRadius.circular(30.r),
                                   image: DecorationImage(
                                     image: AssetImage(
-                                      'assets/images/doctor_appointment.png',
+                                      'assets/images/appointment.png',
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -372,7 +372,7 @@ class _PaymentState extends State<Payment> {
             ),
             Spacer(),
             Container(
-              height: 50.h,
+              height: 70.h,
               width: 160.w,
               child: DefaultButton(
                 onPressed: () {

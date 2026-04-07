@@ -4,6 +4,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/auth/cubit/auth_cubit.dart';
 import 'package:health_care_project/features/onboarding/pages/onboarding_screen.dart';
+import 'package:health_care_project/features/patient/donation/views/donation_screen.dart';
+import 'package:health_care_project/features/patient/donation/views/request_blood.dart';
+import 'package:health_care_project/features/patient/donation/views/request_donation.dart';
+import 'package:health_care_project/features/patient/donation/views/request_machine.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -104,6 +108,10 @@ class MyApp extends StatelessWidget {
                 CareScreen.routeName: (_) => CareScreen(),
                 CareMapScreen.routeName: (_) => CareMapScreen(),
                 NursesListScreen.routeName: (_) => NursesListScreen(),
+                DonationScreen.routeName: (_) => DonationScreen(),
+                RequestDonation.routeName: (_) => RequestDonation(),
+                RequestBlood.routeName: (_) => RequestBlood(),
+                RequestMachine.routeName: (_) => RequestMachine(),
 
               },
             );

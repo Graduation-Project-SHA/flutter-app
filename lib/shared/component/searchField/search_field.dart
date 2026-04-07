@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchField extends StatelessWidget {
   final String hint;
@@ -24,7 +25,10 @@ class SearchField extends StatelessWidget {
         fillColor: Colors.white,
         hintText: hint,
         hintStyle: TextStyle(fontSize: 14.sp, color: Colors.grey),
-        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SvgPicture.asset("assets/images/svgs/search_icon.svg"),
+        ),
         contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 15.w),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.r),

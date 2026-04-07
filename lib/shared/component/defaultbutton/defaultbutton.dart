@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DefaultButton extends StatelessWidget {
   DefaultButton({
@@ -35,14 +36,14 @@ class DefaultButton extends StatelessWidget {
         foregroundColor: foregroundColor??Colors.white,
         elevation: elevation,
         shape: shape??RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(6)
+          borderRadius: BorderRadiusGeometry.circular(8.r)
         ),
       ),
       child: Ink(
         width: double.infinity,
         decoration: BoxDecoration(
           color: backgroundColor,
-            borderRadius:  BorderRadiusGeometry.circular(6),
+            borderRadius:  BorderRadiusGeometry.circular(8.r),
           gradient: backgroundColor==null? LinearGradient(colors: [
             Color.fromRGBO(27, 106, 243, 1),
             Color.fromRGBO(27, 106, 243, 1),

@@ -203,6 +203,11 @@ flutter:
     - assets/images/nurse_ahmed.png
     - assets/images/nurse_fatma.png
     - assets/images/nurse_sara.png
+    - assets/images/help_icon.png
+    - assets/images/girl_photo.png
+    - assets/images/blood.png
+    - assets/images/medical_machine.png
+    - assets/images/svgs/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

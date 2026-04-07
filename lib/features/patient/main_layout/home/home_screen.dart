@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
+import 'package:health_care_project/features/patient/donation/views/donation_screen.dart';
 import 'package:hive/hive.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
@@ -201,7 +202,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                     _buildServiceCard("assets/images/Medicine.png","أدوية"),
                     _buildServiceCard("assets/images/Nurse.png", "ممرضة"),
-                    _buildServiceCard("assets/images/donors.png", "متبرعون"),
+                    _buildServiceCard("assets/images/donors.png", "متبرعون",
+                      onTap: () {
+                        Navigator.pushNamed(context, DonationScreen.routeName);
+                      },
+                    ),
                     _buildServiceCard("assets/images/doctor_logo.png", "طبيب"),
                   ],
                 ),

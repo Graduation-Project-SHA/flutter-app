@@ -2,6 +2,9 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
+import 'package:hive/hive.dart';
+
+import '../../../chat/presentation/screens/chat_details_screen.dart';
 
 class Appointment extends StatefulWidget {
   const Appointment({super.key});
@@ -403,7 +406,19 @@ class _AppointmentState extends State<Appointment> {
                                   SizedBox(width: 12.w),
                                   Expanded(
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        final String myId = Hive.box('authBox').get('userId').toString();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => ChatDetailsScreen(
+                                              myId: myId,
+                                              targetUserId: "ID_DOCTOR_HERE",
+                                              conversationId: "",
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Color.fromRGBO(
                                           43,

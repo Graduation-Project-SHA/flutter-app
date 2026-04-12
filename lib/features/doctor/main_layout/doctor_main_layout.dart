@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../chat/presentation/screens/messages_screen.dart';
 import 'doctor_appointment/doctor_appointment_screen.dart';
 import 'doctor_home/doctor_home_screen.dart';
-import 'doctor_messages/doctor_messages_screen.dart';
+
 import 'doctor_profile/doctor_profile_screen.dart';
 import 'doctor_settings/doctor_settings_screen.dart';
 
@@ -21,13 +22,7 @@ class DoctorMainLayout extends StatefulWidget {
 class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   late int currentIndex;
 
-  final List<Widget> tabs = [
-    const DoctorHomeScreen(),
-    const DoctorMessagesScreen(),
-    const DoctorAppointmentScreen(),
-    const DoctorSettingsScreen(),
-    const DoctorProfileScreen(),
-  ];
+
 
   @override
   void initState() {
@@ -44,6 +39,17 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   @override
   Widget build(BuildContext context) {
     var authBox = Hive.box('authBox');
+
+    final String doctorId = authBox.get('userId').toString();
+
+
+    final List<Widget> tabs = [
+      const DoctorHomeScreen(),
+      MessagesScreen(myId: doctorId),
+      const DoctorAppointmentScreen(),
+      const DoctorSettingsScreen(),
+      const DoctorProfileScreen(),
+    ];
 
     return Scaffold(
       body: tabs[currentIndex],

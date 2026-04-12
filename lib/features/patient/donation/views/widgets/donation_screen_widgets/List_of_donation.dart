@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:health_care_project/features/patient/main_layout/messages/chat_details_screen.dart';
+
+import '../../../../../chat/presentation/screens/chat_details_screen.dart';
 
 class ListOfDonation extends StatelessWidget {
   const ListOfDonation({super.key});
@@ -86,7 +87,7 @@ class ListOfDonation extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatDetailsScreen(),
+                      builder: (context) => ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '',),
                     ),
                   );
                 },

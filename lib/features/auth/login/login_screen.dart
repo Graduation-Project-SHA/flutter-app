@@ -5,6 +5,8 @@ import 'package:health_care_project/shared/component/defaultTextButton/defaultTe
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
 import 'package:hive/hive.dart';
+import '../../chat/cubit/chat_cubit.dart';
+import '../../chat/services/socket_service.dart';
 import '../../doctor/main_layout/doctor_main_layout.dart';
 import '../../patient/main_layout/main_layout.dart';
 import '../cubit/auth_cubit.dart';
@@ -62,9 +64,11 @@ class _LoginscreenState extends State<Loginscreen> {
               if (state is LoginSuccessState) {
 
                 final authBox = Hive.box('authBox');
-                final role = authBox.get('userRole');
 
-                print("ROLE FROM HIVE: $role");
+                final String userId = authBox.get('userId').toString();
+                final String role = authBox.get('userRole');
+
+                print("SUCCESS LOGIN - ID: $userId, ROLE: $role");
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

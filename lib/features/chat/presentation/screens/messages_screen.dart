@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../shared/component/searchField/search_field.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
+import '../data/models/conversation_model.dart';
 import 'chat_details_screen.dart';
 
 class MessagesScreen extends StatefulWidget {
@@ -17,6 +18,10 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
+
+  final TextEditingController searchController = TextEditingController();
+  List<Conversation> filteredConversations = [];
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +31,20 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   }
 
+  void _filterConversations(String query, List<Conversation> allConversations) {
+    setState(() {
+      filteredConversations = allConversations
+          .where((conv) => conv.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
@@ -42,7 +60,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final conversations = state.conversations;
+          final allConversations = state.conversations;
+
+
+          if (searchController.text.isEmpty) {
+            filteredConversations = allConversations;
+          }
 
           return CustomScrollView(
             physics: const BouncingScrollPhysics(),
@@ -92,9 +115,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
-                              child: const Center(
+                              child: Center(
                                 child: SearchField(
                                   hint: "بحث",
+                                  controller: searchController,
+                                  onChanged: (value) {
+                                    _filterConversations(value, allConversations);
+                                  },
                                 ),
                               ),
                             ),
@@ -125,7 +152,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   child: ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: conversations.length,
+                    itemCount: filteredConversations.length,
                     separatorBuilder: (context, index) => Divider(
                       color: Colors.grey.shade100,
                       indent: 80.w,
@@ -133,7 +160,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       height: 1,
                     ),
                     itemBuilder: (context, index) {
-                      final conv = conversations[index];
+                      final conv = filteredConversations[index];
 
                       bool isOnline = cubit.onlineUsers
                           .contains(conv.targetUserId);

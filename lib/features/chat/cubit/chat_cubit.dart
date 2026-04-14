@@ -41,6 +41,9 @@ class ChatCubit extends Cubit<ChatState> {
 
       case "receive_message":
         final msg = Message.fromJson(data);
+
+        messages.removeWhere((m) => m.id.startsWith("temp_") && m.text == msg.text);
+
         if (!messages.any((m) => m.id == msg.id)) {
           messages.add(msg);
           messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
@@ -136,6 +139,17 @@ class ChatCubit extends Cubit<ChatState> {
         currentConversationId = convId;
       }
 
+      final tempMsg = Message(
+        id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+        senderId: senderId,
+        text: text,
+        conversationId: convId,
+        createdAt: DateTime.now()
+      );
+
+      messages.add(tempMsg);
+      emit(ChatUpdated(List.from(messages)));
+
       socketService.sendMessage(
         event: "send_message",
         data: {
@@ -147,16 +161,6 @@ class ChatCubit extends Cubit<ChatState> {
         },
       );
 
-      // final tempMsg = Message(
-      //   id: "temp_${DateTime.now().millisecondsSinceEpoch}",
-      //   senderId: senderId,
-      //   text: text,
-      //   conversationId: convId,
-      //   createdAt: DateTime.now(),
-      // );
-      //
-      // messages.add(tempMsg);
-      // emit(ChatUpdated(List.from(messages)));
     } catch (e) {
       print("Error sending: $e");
     }

@@ -19,7 +19,9 @@ class Message {
       senderId: (json['senderId'] ?? json['sender'] ?? '').toString(),
       text: json['text'] ?? '',
       conversationId: json['conversationId'] ?? '',
-      createdAt: DateTime.tryParse(json['createdAt'] ?? '') ?? DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt']).toLocal()
+          : DateTime.now(),
     );
   }
 }

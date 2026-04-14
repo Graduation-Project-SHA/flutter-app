@@ -16,7 +16,7 @@ class Conversation {
   });
 
   factory Conversation.fromJson(Map<String, dynamic> json) {
-    final baseUrl = "http://api.wiqaya.duckdns.org";
+    const baseUrl = "http://api.wiqaya.duckdns.org";
     String? rawImage = json['otherUser']?['profileImage'];
 
     return Conversation(

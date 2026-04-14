@@ -35,11 +35,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   void initState() {
     super.initState();
-
-    final cubit = context.read<ChatCubit>();
-
-    cubit.loadMessages(widget.conversationId, widget.myId);
-
+    context
+        .read<ChatCubit>()
+        .loadMessages(widget.conversationId, widget.myId);
   }
 
   @override
@@ -99,37 +97,94 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       ),
     );
   }
+  void _showAttachmentOptions() {
+    if (isEmojiVisible) {
+      setState(() {
+        isEmojiVisible = false;
+        focusNode.requestFocus();
+      });
+    }
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.r),
+          topRight: Radius.circular(20.r),
+        ),
+      ),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(16.w),
+          height: 280.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                "اختر نوع المرفق",
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              _AttachmentOption(
+                icon: Icons.camera_alt,
+                label: "كاميرا",
+                onTap: () => Navigator.pop(context),
+              ),
+
+              _AttachmentOption(
+                icon: Icons.photo_library,
+                label: "صور/فيديو",
+                onTap: () => Navigator.pop(context),
+              ),
+
+              _AttachmentOption(
+                icon: Icons.folder,
+                label: "مستند",
+                onTap: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Widget _myMessage(Message message) {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
         margin: EdgeInsets.only(bottom: 8.h),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.65,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xff2B73F3),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16.r),
-                  topRight: Radius.circular(16.r),
-                  bottomLeft: Radius.circular(16.r),
-                  bottomRight: Radius.circular(4.r),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.65,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xff2B73F3),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16.r),
+                    topRight: Radius.circular(16.r),
+                    bottomLeft: Radius.circular(16.r),
+                    bottomRight: Radius.circular(4.r),
+                  ),
+                ),
+                child: Text(
+                  message.text,
+                  style: const TextStyle(color: Colors.white),
+                  textAlign: TextAlign.right,
                 ),
               ),
-              child: Text(
-                message.text,
-                style: const TextStyle(color: Colors.white),
-                textAlign: TextAlign.right,
-              ),
-            ),
-            _buildTime(message, true),
-          ],
+              _buildTime(message, true),
+            ],
+          ),
         ),
       ),
     );
@@ -142,8 +197,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
         margin: EdgeInsets.only(bottom: 8.h),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.65,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -172,13 +231,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             CircleAvatar(
               radius: 16.r,
               backgroundColor: Colors.grey.shade200,
-              child: ClipOval(
-                child: Image.network(
-                  "",
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Icon(Icons.person, color: Colors.grey, size: 16.r),
-                ),
-              ),
+              child: Icon(Icons.person, color: Colors.grey, size: 20.r),
             ),
           ],
         ),
@@ -193,7 +246,15 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       backgroundColor: const Color(0xfff7f7f7),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text("Chat", style: TextStyle(color: Colors.black)),
+        elevation: 1,
+        leading: IconButton(
+          icon: const Icon(Icons.phone, color: Color(0xff2B73F3)),
+          onPressed: () {},
+        ),
+        title: const Text(
+          "Chat",
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -212,14 +273,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     Expanded(
                       child: ListView.builder(
                         controller: _scrollController,
-
-
                         padding: EdgeInsets.all(16),
                         itemCount: messages.length,
-
                         itemBuilder: (context, index) {
                           final message = messages[index];
-
                           final isMe = message.senderId == widget.myId;
 
                           return isMe
@@ -228,10 +285,9 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                         },
                       ),
                     ),
-
                     if (state is ChatTypingState && state.isTyping)
-                      Padding(
-                        padding: const EdgeInsets.all(8),
+                      const Padding(
+                        padding: EdgeInsets.all(8),
                         child: Text(
                           "Typing...",
                           style: TextStyle(color: Colors.grey),
@@ -243,27 +299,68 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             ),
           ),
 
+
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            padding:
+            EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
             color: Colors.white,
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.send, color: Color(0xff2B73F3)),
-                  onPressed: _sendMessage,
+                Container(
+                  width: 48.w,
+                  height: 48.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2B73F3),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    onPressed: _sendMessage,
+                  ),
                 ),
+                SizedBox(width: 8.w),
                 Expanded(
                   child: TextField(
                     controller: messageController,
                     focusNode: focusNode,
+                    textAlign: TextAlign.right,
+                    onTap: () {
+                      if (isEmojiVisible) {
+                        setState(() => isEmojiVisible = false);
+                      }
+                    },
                     onChanged: (value) {
                       context
                           .read<ChatCubit>()
                           .sendTyping(widget.conversationId);
                     },
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: "اكتب رسالة",
-                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                          color: const Color(0xffC7C7CC),
+                          fontSize: 14.sp),
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: InkWell(
+                        onTap: toggleEmojiKeyboard,
+                        child: const Icon(Icons.emoji_emotions,
+                            color: Color(0xffC7C7CC)),
+                      ),
+                      suffixIcon: InkWell(
+                        onTap: _showAttachmentOptions,
+                        child: const Icon(Icons.attach_file,
+                            color: Color(0xffC7C7CC)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                        borderSide: const BorderSide(
+                            color: Color(0xffC7C7CC)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                        borderSide: const BorderSide(
+                            color: Color(0xffC7C7CC)),
+                      ),
                     ),
                   ),
                 ),
@@ -274,7 +371,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           Offstage(
             offstage: !isEmojiVisible,
             child: SizedBox(
-              height: 250,
+              height: 250.h,
               child: EmojiPicker(
                 textEditingController: messageController,
                 config: Config(
@@ -290,6 +387,37 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+
+}
+
+class _AttachmentOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  const _AttachmentOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+        child: Row(
+          children: [
+            Icon(icon, color: const Color(0xff2B73F3)),
+            SizedBox(width: 12.w),
+            Text(label, style: TextStyle(fontSize: 16.sp)),
+          ],
+        ),
       ),
     );
   }

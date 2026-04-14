@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import '../../chat/cubit/chat_cubit.dart';
 import '../../chat/presentation/screens/messages_screen.dart';
 import 'appointment/appointment_screen.dart';
 import 'home/home_screen.dart';
@@ -29,6 +31,7 @@ class _MainLayoutState extends State<MainLayout> {
   void initState() {
     super.initState();
     currentIndex = widget.selectedIndex;
+    context.read<ChatCubit>().initSocket();
   }
 
   void changeSelectedIndex(int selectedIndex) {

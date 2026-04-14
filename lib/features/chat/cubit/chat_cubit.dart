@@ -20,9 +20,17 @@ class ChatCubit extends Cubit<ChatState> {
   List<Conversation> conversations = [];
   List<String> onlineUsers = [];
 
+  void initSocket() {
+    if (!socketService.isConnected) {
+      socketService.connect();
+    }
+  }
+
   void _handleSocketEvent(String event, dynamic data) {
     if (event == "socket_ready") {
-      Future.delayed(const Duration(milliseconds: 500), () => _sendJoinAndSeen());
+      if (currentConversationId != null && currentConversationId!.isNotEmpty) {
+        _sendJoinAndSeen();
+      }
       return;
     }
 
@@ -44,11 +52,11 @@ class ChatCubit extends Cubit<ChatState> {
         print("Server confirmed: Message Sent");
         break;
 
+
       case "update_inbox":
-        print("Refreshing list...");
+        print("📥 New Message Received! Refreshing Inbox...");
         loadConversations();
         break;
-
 
     }
   }
@@ -62,21 +70,37 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+
+
+
   Future<void> loadConversations() async {
     emit(ChatLoading());
+
+
+    socketService.connect();
+
     try {
       conversations = await repository.getConversations();
       emit(ChatConversationsLoaded(conversations));
+      for (var conv in conversations) {
+        socketService.sendMessage(
+          event: "join_chat",
+          data: {"conversationId": conv.id},
+        );
+      }
     } catch (e) {
-      print("Error: $e");
+      print("Error loading conversations: $e");
     }
   }
+
 
   void loadMessages(String conversationId, String userId) async {
     currentConversationId = conversationId;
     currentUserId = userId;
 
-    socketService.connect(userId);
+    if (!socketService.isConnected) {
+      socketService.connect();
+    }
 
     if (conversationId.isEmpty) {
       messages = [];
@@ -93,7 +117,7 @@ class ChatCubit extends Cubit<ChatState> {
         _sendJoinAndSeen();
       }
     } catch (e) {
-      print("Error: $e");
+      print("Error loading messages: $e");
     }
   }
 
@@ -123,16 +147,16 @@ class ChatCubit extends Cubit<ChatState> {
         },
       );
 
-      final tempMsg = Message(
-        id: "temp_${DateTime.now().millisecondsSinceEpoch}",
-        senderId: senderId,
-        text: text,
-        conversationId: convId,
-        createdAt: DateTime.now(),
-      );
-
-      messages.add(tempMsg);
-      emit(ChatUpdated(List.from(messages)));
+      // final tempMsg = Message(
+      //   id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+      //   senderId: senderId,
+      //   text: text,
+      //   conversationId: convId,
+      //   createdAt: DateTime.now(),
+      // );
+      //
+      // messages.add(tempMsg);
+      // emit(ChatUpdated(List.from(messages)));
     } catch (e) {
       print("Error sending: $e");
     }

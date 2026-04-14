@@ -79,9 +79,19 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           children: [
             CircleAvatar(
               radius: 35.r,
-              backgroundImage: (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
-                  ? NetworkImage("$imageBaseUrl${doctor.profileImage}")
-                  : const AssetImage("assets/images/doctor.png") as ImageProvider,
+              backgroundColor: Colors.grey.shade100,
+              child: ClipOval(
+                child: (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
+                    ? Image.network(
+                  "$imageBaseUrl${doctor.profileImage}",
+                  fit: BoxFit.cover,
+                  width: 70.r,
+                  height: 70.r,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.person, color: Colors.grey, size: 35.r),
+                )
+                    : Icon(Icons.person, color: Colors.grey, size: 35.r),
+              ),
             ),
             SizedBox(width: 24.w),
             Expanded(
@@ -415,7 +425,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                               MaterialPageRoute(
                                 builder: (_) => ChatDetailsScreen(
                                   myId: myId,
-                                  targetUserId: doctor.id,
+                                  targetUserId: doctor.userId,
                                   conversationId: "",
                                 ),
                               ),

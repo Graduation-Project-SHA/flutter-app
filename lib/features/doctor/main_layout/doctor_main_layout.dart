@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../chat/cubit/chat_cubit.dart';
 import '../../chat/presentation/screens/messages_screen.dart';
 import 'doctor_appointment/doctor_appointment_screen.dart';
 import 'doctor_home/doctor_home_screen.dart';
@@ -28,6 +30,9 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   void initState() {
     super.initState();
     currentIndex = widget.selectedIndex;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ChatCubit>().loadConversations();
+    });
   }
 
   void changeSelectedIndex(int selectedIndex) {

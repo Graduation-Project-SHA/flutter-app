@@ -1,7 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:hive/hive.dart';
 
 class SocketService {
@@ -9,115 +6,103 @@ class SocketService {
   factory SocketService() => _instance;
   SocketService._internal();
 
-  WebSocketChannel? _channel;
+  IO.Socket? _socket;
   bool isConnected = false;
-  Timer? _pingTimer;
-  Timer? _reconnectTimer;
 
   Function(String event, dynamic data)? onEventReceived;
 
-  String? _userId;
-
-  void connect(String userId) {
-    _userId = userId;
-
+  void connect() {
     if (isConnected) return;
 
     final authBox = Hive.box('authBox');
     final token = authBox.get('accessToken');
+    print("🔑 Connecting with token: ${token?.substring(0,10)}...");
+    const url = "http://api.wiqaya.duckdns.org";
 
-    final url = Uri.parse(
-      "ws://api.wiqaya.duckdns.org/socket.io/?EIO=4&transport=websocket&userId=$userId&token=$token",
+    _socket?.dispose();
+
+    _socket = IO.io(
+      url,
+      IO.OptionBuilder()
+          .setTransports(['websocket', 'polling'])
+          .disableAutoConnect()
+          .setPath('/socket.io/')
+          .enableReconnection()
+          .setReconnectionDelay(3000)
+          .setReconnectionAttempts(10)
+          .setExtraHeaders({
+        if (token != null) 'Authorization': 'Bearer $token',
+      })
+          .build(),
     );
 
     try {
-      _channel = WebSocketChannel.connect(url);
-      print(" SOCKET CONNECTING...");
+      print("🔌 SOCKET CONNECTING...");
 
-      _channel!.stream.listen(
-            (rawMessage) => _handleIncomingMessage(rawMessage),
-        onError: (error) {
-          print(" SOCKET ERROR: $error");
-          _handleDisconnect();
-        },
-        onDone: () {
-          print(" SOCKET CLOSED");
-          _handleDisconnect();
-        },
-      );
+      _socket!.onConnect((_) {
+        isConnected = true;
+        print("✅ SOCKET CONNECTED");
+        onEventReceived?.call("socket_ready", null);
+      });
+
+      _socket!.onDisconnect((_) {
+        isConnected = false;
+        print("🛑 SOCKET DISCONNECTED");
+      });
+
+      _socket!.onConnectError((error) {
+        print("❌ SOCKET CONNECT ERROR: $error");
+      });
+
+      _socket!.onError((error) {
+        print("❗ SOCKET ERROR: $error");
+      });
+
+      _socket!.onReconnect((_) {
+        print("🔄 SOCKET RECONNECTED SUCCESSFULLY");
+        onEventReceived?.call("socket_ready", null);
+      });
+
+      _bindForwardedEvents();
+      _socket!.connect();
+
     } catch (e) {
-      print(" CONNECTION ERROR: $e");
-      _handleDisconnect();
+      print("⚠️ CONNECTION EXCEPTION: $e");
     }
   }
 
-  void _handleDisconnect() {
-    isConnected = false;
-    _stopHeartbeat();
+  void _bindForwardedEvents() {
+    const events = [
+      'join_chat_success',
+      'receive_message',
+      'message_sent',
+      'update_inbox',
+    ];
 
-
-    _reconnectTimer?.cancel();
-    _reconnectTimer = Timer(const Duration(seconds: 3), () {
-      if (_userId != null) {
-        print(" RECONNECTING...");
-        connect(_userId!);
-      }
-    });
+    for (final event in events) {
+      _socket!.on(event, (data) {
+        onEventReceived?.call(event, data);
+      });
+    }
   }
 
-  void _handleIncomingMessage(dynamic rawMessage) {
-    String msg = rawMessage.toString();
-    print(" $msg");
-
-    if (msg.startsWith('0')) {
-      _channel!.sink.add("40");
-      _startHeartbeat();
-    } else if (msg.startsWith('40')) {
-      isConnected = true;
-      print("SOCKET CONNECTED");
-      onEventReceived?.call("socket_ready", null);
-    } else if (msg.startsWith('42')) {
-      try {
-        final decoded = jsonDecode(msg.substring(2));
-        final eventName = decoded[0];
-        final eventData = decoded[1];
-
-        onEventReceived?.call(eventName, eventData);
-      } catch (e) {
-        print(" Decode Error: $e");
-      }
-    } else if (msg == "2") {
-      _channel!.sink.add("3");
+  void emitEvent({required String event, required dynamic data}) {
+    if (_socket != null && isConnected) {
+      _socket!.emit(event, data);
+      print("📤 EMIT: $event => $data");
+    } else {
+      print("⚠️ SOCKET NOT CONNECTED - CANNOT EMIT");
     }
   }
 
   void sendMessage({required String event, required dynamic data}) {
-    if (_channel != null && isConnected) {
-      final payload = '42["$event", ${jsonEncode(data)}]';
-      _channel!.sink.add(payload);
-      print(" $payload");
-    } else {
-      print(" SOCKET NOT CONNECTED");
-    }
-  }
-
-  void _startHeartbeat() {
-    _pingTimer?.cancel();
-    _pingTimer = Timer.periodic(const Duration(seconds: 20), (_) {
-      if (isConnected) {
-        _channel!.sink.add("2");
-      }
-    });
-  }
-
-  void _stopHeartbeat() {
-    _pingTimer?.cancel();
+    emitEvent(event: event, data: data);
   }
 
   void disconnect() {
-    _reconnectTimer?.cancel();
-    _stopHeartbeat();
-    _channel?.sink.close(status.goingAway);
+    _socket?.disconnect();
+    _socket?.dispose();
+    _socket = null;
     isConnected = false;
   }
 }

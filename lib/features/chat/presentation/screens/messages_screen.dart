@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import '../../../../shared/component/searchField/search_field.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 import 'chat_details_screen.dart';
@@ -20,11 +21,12 @@ class _MessagesScreenState extends State<MessagesScreen> {
   void initState() {
     super.initState();
 
-    final cubit = context.read<ChatCubit>();
-    cubit.loadConversations();
+    context.read<ChatCubit>().loadConversations();
+
 
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     final double topPadding = MediaQuery.of(context).padding.top;
@@ -58,22 +60,48 @@ class _MessagesScreenState extends State<MessagesScreen> {
                         colors: [
                           Color(0xff4786F5),
                           Color(0xff2B73F3),
+                          Color(0xff3077F3),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.only(top: topPadding + 20.h),
-                      child: Center(
-                        child: Text(
-                          "الرسائل",
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                      padding: EdgeInsets.only(top: topPadding + 10.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Center(
+                            child: Text(
+                              "الرسائل",
+                              style: TextStyle(
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          SizedBox(height: 20.h),
+
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 18.w),
+                            child: Container(
+                              height: 50.h,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: const Center(
+                                child: SearchField(
+                                  hint: "بحث",
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 25.h),
+
+                        ],
                       ),
                     ),
                   ),
@@ -128,22 +156,21 @@ class _MessagesScreenState extends State<MessagesScreen> {
                               horizontal: 18.w, vertical: 12.h),
                           child: Row(
                             children: [
-
                               Column(
                                 children: [
-
                                   Text(
                                     conv.lastMessageAt != null
-                                        ? DateFormat('hh:mm a').format(conv.lastMessageAt!)
+                                        ? DateFormat('hh:mm a')
+                                        .format(conv.lastMessageAt!)
                                         : "_",
-                                    style: TextStyle(fontSize: 12.sp, color: const Color(0xff8A8A8E)),
+                                    style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: const Color(0xff8A8A8E)),
                                   ),
                                   SizedBox(height: 5.h),
                                 ],
                               ),
-
                               SizedBox(width: 12.w),
-
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment:
@@ -170,10 +197,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                       overflow:
                                       TextOverflow.ellipsis,
                                     ),
-
                                     SizedBox(height: 4.h),
-
-
                                     Text(
                                       isOnline
                                           ? "Online🟢 "
@@ -184,42 +208,21 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                   ],
                                 ),
                               ),
-
                               SizedBox(width: 16.w),
-                              Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 28.r,
-                                    backgroundColor: Colors.grey.shade200,
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        (conv.image != null && conv.image!.isNotEmpty)
-                                            ? "http://api.wiqaya.duckdns.org${conv.image!.startsWith('/') ? '' : '/'}${conv.image}"
-                                            : "",
-                                        fit: BoxFit.cover,
-                                        width: 56.r,
-                                        height: 56.r,
-                                        errorBuilder: (context, error, stackTrace) => Icon(Icons.person, color: Colors.grey, size: 28.r),
-                                      ),
-                                    ),
+                              CircleAvatar(
+                                radius: 28.r,
+                                backgroundColor: Colors.grey.shade200,
+                                child: ClipOval(
+                                  child: Image.network(
+                                    (conv.image != null && conv.image!.isNotEmpty)
+                                        ? "http://api.wiqaya.duckdns.org${conv.image!.startsWith('/') ? '' : '/'}${conv.image}"
+                                        : "",
+                                    fit: BoxFit.cover,
+                                    width: 56.r,
+                                    height: 56.r,
+                                    errorBuilder: (context, error, stackTrace) => Icon(Icons.person, color: Colors.grey, size: 28.r),
                                   ),
-                                  if (isOnline)
-                                    Positioned(
-                                      right: 2,
-                                      bottom: 2,
-                                      child: Container(
-                                        width: 14,
-                                        height: 14,
-                                        decoration:
-                                        BoxDecoration(
-                                          color: Colors.green,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    )
-                                ],
+                                ),
                               ),
                             ],
                           ),

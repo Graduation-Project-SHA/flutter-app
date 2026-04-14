@@ -42,9 +42,12 @@ class _HomeScreenState extends State<DoctorHomeScreen> {
                     children: [
                       CircleAvatar(
                         radius: 24.r,
-                        backgroundImage: userImage != null
+                        backgroundImage: (userImage != null && userImage.toString().startsWith('http'))
                             ? NetworkImage(userImage)
                             : const AssetImage("assets/images/doctor.png") as ImageProvider,
+                        onBackgroundImageError: (exception, stackTrace) {
+                          print("Error loading image");
+                        },
                       ),
                       SizedBox(width: 24.w),
                       Column(

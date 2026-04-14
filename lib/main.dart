@@ -16,6 +16,9 @@ import 'core/network/dio.dart';
 import 'features/auth/login/login_screen.dart';
 import 'features/auth/register/register_user_screen.dart';
 import 'features/auth/reset_password/reset_password_screen.dart';
+import 'features/chat/cubit/chat_cubit.dart';
+import 'features/chat/presentation/data/repository/chat_repository.dart';
+import 'features/chat/services/socket_service.dart';
 import 'features/doctor/availabilities/availability_cubit.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
 import 'features/doctor/main_layout/doctor_profile/doctor_me_cubit/doctor_me_cubit.dart';
@@ -41,6 +44,7 @@ Future<void> main() async {
   await Hive.initFlutter(appDocumentDirectory.path);
   await Hive.openBox('authBox');
   DioHelper.init();
+
   runApp(const MyApp());
 }
 
@@ -57,7 +61,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorDetailsCubit()),
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
-
+        BlocProvider(
+          lazy: false,
+          create: (context) => ChatCubit(
+            SocketService(),
+            ChatRepository(DioHelper.dio),
+          ),
+        ),
       ],
       child: ScreenUtilInit(
           designSize: const Size(412, 924),
@@ -79,8 +89,8 @@ class MyApp extends StatelessWidget {
                 GlobalCupertinoLocalizations.delegate,
               ],
               debugShowCheckedModeBanner: false,
-             // initialRoute: OnboardingScreen.routeName,
-             initialRoute: MainLayout.routeName,
+              initialRoute: OnboardingScreen.routeName,
+          //   initialRoute: MainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;

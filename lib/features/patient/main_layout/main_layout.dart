@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import '../../chat/cubit/chat_cubit.dart';
+import '../../chat/presentation/screens/messages_screen.dart';
 import 'appointment/appointment_screen.dart';
 import 'home/home_screen.dart';
-import 'messages/messages_screen.dart';
+
 import 'profile/user_profile_screen.dart';
 import 'settings/settings_screen.dart';
 
@@ -22,18 +25,13 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   late int currentIndex;
 
-  final List<Widget> tabs = [
-    const HomeScreen(),
-    const MessagesScreen(),
-    const AppointmentScreen(),
-    const SettingsScreen(),
-    const UserProfileScreen(),
-  ];
+
 
   @override
   void initState() {
     super.initState();
     currentIndex = widget.selectedIndex;
+    context.read<ChatCubit>().initSocket();
   }
 
   void changeSelectedIndex(int selectedIndex) {
@@ -45,6 +43,16 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     var authBox = Hive.box('authBox');
+    final String patientId = authBox.get('userId').toString();
+
+
+    final List<Widget> tabs = [
+      const HomeScreen(),
+      MessagesScreen(myId: patientId,),
+      const AppointmentScreen(),
+      const SettingsScreen(),
+      const UserProfileScreen(),
+    ];
 
     return Scaffold(
       body: tabs[currentIndex],

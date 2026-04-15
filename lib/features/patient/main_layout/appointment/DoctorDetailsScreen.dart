@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/core/network/api_constants.dart';
+import 'package:hive/hive.dart';
+import '../../../chat/presentation/screens/chat_details_screen.dart';
 import 'doctor_details_cubit/doctor_details_cubit.dart';
 import 'doctor_details_cubit/doctor_details_state.dart';
 import 'doctor_details_model/doctor_details_model.dart';
@@ -25,6 +28,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       DoctorDetailsCubit.get(context).getDoctorDetails(widget.doctorId);
     });
   }
+   String imageBaseUrl =ApiConstants.baseUrl;
 
   Widget _wrapInContainer(Widget child) {
     return Container(
@@ -75,11 +79,19 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           children: [
             CircleAvatar(
               radius: 35.r,
-              backgroundImage:
-              (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
-                  ? NetworkImage(doctor.profileImage!)
-                  : const AssetImage("assets/images/doctor.png")
-              as ImageProvider,
+              backgroundColor: Colors.grey.shade100,
+              child: ClipOval(
+                child: (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
+                    ? Image.network(
+                  "$imageBaseUrl${doctor.profileImage}",
+                  fit: BoxFit.cover,
+                  width: 70.r,
+                  height: 70.r,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Icon(Icons.person, color: Colors.grey, size: 35.r),
+                )
+                    : Icon(Icons.person, color: Colors.grey, size: 35.r),
+              ),
             ),
             SizedBox(width: 24.w),
             Expanded(
@@ -321,6 +333,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String myId = Hive.box('authBox').get('userId').toString();
     const Color primaryColor = Color(0xff4786F5);
 
     return BlocConsumer<DoctorDetailsCubit, DoctorDetailsState>(
@@ -406,7 +419,18 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                     child: Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ChatDetailsScreen(
+                                  myId: myId,
+                                  targetUserId: doctor.userId,
+                                  conversationId: "",
+                                ),
+                              ),
+                            );
+                          },
                           icon: const Image(
                             image: AssetImage("assets/images/message-icon.png"),
                           ),

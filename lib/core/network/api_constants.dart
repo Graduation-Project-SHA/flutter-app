@@ -19,11 +19,17 @@ class ApiConstants {
 
   static const String doctorAvailabilities = "$baseUrl/doctor/me/availabilities";
 
-  static const String messages = "/doctor_messages";
-
 
   static const String publicDoctors = "$baseUrl/doctors";
   static String publicDoctorDetails(String id) => "$baseUrl/doctors/$id";
+
+  static const String messages = "$baseUrl/doctor_messages";
+
+  static const String getConversations = "$baseUrl/api/conversations";
+
+  static String getChatMessages(String conversationId) =>
+      "$baseUrl/api/conversations/$conversationId/messages";
+
 
  // static const String patientAppointments = "$baseUrl/patient/me/appointments";
   //static const String slots = "$baseUrl/doctors/$doctorUserId/slots";

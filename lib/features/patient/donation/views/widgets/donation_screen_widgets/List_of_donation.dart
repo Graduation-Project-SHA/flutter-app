@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_states.dart';
-import 'package:health_care_project/features/patient/main_layout/messages/chat_details_screen.dart';
+import 'package:flutter_svg/svg.dart';
+
+import '../../../../../chat/presentation/screens/chat_details_screen.dart';
 
 class ListOfDonation extends StatelessWidget {
   const ListOfDonation({super.key});
@@ -133,7 +135,7 @@ class ListOfDonation extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChatDetailsScreen(),
+                        builder: (context) => const ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '',),
                       ),
                     );
                   },
@@ -148,6 +150,8 @@ class ListOfDonation extends StatelessWidget {
           );
         },
       );
+    
+        
       },
     );
   }

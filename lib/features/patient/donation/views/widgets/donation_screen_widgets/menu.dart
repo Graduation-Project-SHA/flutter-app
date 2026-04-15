@@ -14,7 +14,7 @@ class Menu extends StatelessWidget {
         final cubit = DonationCubit.get(context);
 
         if (value == "ALL") {
-          cubit.getDonationData();
+           cubit.getDonationData(type: null);
         } else if (value == "BLOOD") {
           cubit.getDonationData(type: "BLOOD");
         } else if (value == "DEVICE") {

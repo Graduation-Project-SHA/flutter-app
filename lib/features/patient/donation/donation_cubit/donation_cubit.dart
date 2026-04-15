@@ -17,27 +17,29 @@ class DonationCubit extends Cubit<DonationState> {
   String? selectedValueOfBlood;
   String? selectedValueOfMachine;
 
-  void getDonationData({String? search,String? type}) {
-    emit(GetDonationDataLoadingState());
+  void getDonationData({String? search, String? type}) {
+  emit(GetDonationDataLoadingState());
 
-    DioHelper.fetchData(url: '/donations',
+  DioHelper.fetchData(
+    url: '/donations',
     query: {
       if (search != null && search.isNotEmpty)
         "search": search,
-        "type" : type,
-    },)
-        .then((response) {
-          final List data = response.data['data'];
 
-          donations = data.map((e) => DonationModel.fromJson(e)).toList();
+      if (type != null && type.isNotEmpty)
+        "type": type,
+    },
+  ).then((response) {
+    final List data = response.data['data'];
 
-          emit(GetDonationDataSuccessState());
-        })
-        .catchError((error) {
-          emit(GetDonationDataErrorState());
-          log(error.toString());
-        });
-  }
+    donations = data.map((e) => DonationModel.fromJson(e)).toList();
+
+    emit(GetDonationDataSuccessState());
+  }).catchError((error) {
+    emit(GetDonationDataErrorState());
+    log(error.toString());
+  });
+}
 
   void requestBlood() {
   final location = locationControllerOfBlood.text.trim();

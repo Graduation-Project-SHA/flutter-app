@@ -5,26 +5,30 @@ class DefaultButton extends StatelessWidget {
   DefaultButton({
     this.backgroundColor,
     this.shape,
-    this.elevation=3,
+    this.elevation = 3,
     this.foregroundColor,
     required this.onPressed,
-    required this.buttonText,
+    this.buttonText,
+    this.child,
     super.key,
     this.buttonTextSize,
     this.buttonTextWeight,
     this.buttonTextColor,
     this.boderColor,
   });
-  void Function()? onPressed;
-  String buttonText;
-  Color? backgroundColor;
-  Color? foregroundColor;
-  double? elevation;
-  OutlinedBorder? shape;
-  double? buttonTextSize;
-  FontWeight? buttonTextWeight;
-  Color? buttonTextColor;
-  Color? boderColor;
+
+  final void Function()? onPressed;
+  final String? buttonText;
+  final Widget? child;
+
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? elevation;
+  final OutlinedBorder? shape;
+  final double? buttonTextSize;
+  final FontWeight? buttonTextWeight;
+  final Color? buttonTextColor;
+  final Color? boderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -33,43 +37,45 @@ class DefaultButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
-        foregroundColor: foregroundColor??Colors.white,
+        foregroundColor: foregroundColor ?? Colors.white,
         elevation: elevation,
-        shape: shape??RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(8.r)
-        ),
+        shape: shape ??
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.r),
+            ),
       ),
       child: Ink(
         width: double.infinity,
         decoration: BoxDecoration(
           color: backgroundColor,
-            borderRadius:  BorderRadiusGeometry.circular(8.r),
-          gradient: backgroundColor==null? LinearGradient(colors: [
-            Color.fromRGBO(27, 106, 243, 1),
-            Color.fromRGBO(27, 106, 243, 1),
-            Color.fromRGBO(27, 106, 243, 1)
-          ]):LinearGradient(colors: [
-            ?backgroundColor,
-            ?backgroundColor
-          ]),
-          border: BoxBorder.all(
+          borderRadius: BorderRadius.circular(8.r),
+          gradient: backgroundColor == null
+              ? const LinearGradient(
+                  colors: [
+                    Color.fromRGBO(27, 106, 243, 1),
+                    Color.fromRGBO(27, 106, 243, 1),
+                  ],
+                )
+              : LinearGradient(
+                  colors: [backgroundColor!, backgroundColor!],
+                ),
+          border: Border.all(
             width: 1,
-            color: boderColor??Color.fromRGBO(255, 255, 255, .5)
-            
-          )
-    
+            color: boderColor ?? const Color.fromRGBO(255, 255, 255, .5),
+          ),
         ),
         child: Container(
           alignment: Alignment.center,
-          padding: EdgeInsets.all(14),
-          child: Text(
-            buttonText,
-            style: TextStyle(
-              fontSize: buttonTextSize,
-              fontWeight: buttonTextWeight,
-              color: buttonTextColor??Colors.white,
-            ),
-          ),
+          padding: const EdgeInsets.all(14),
+          child: child ??
+              Text(
+                buttonText ?? "",
+                style: TextStyle(
+                  fontSize: buttonTextSize,
+                  fontWeight: buttonTextWeight,
+                  color: buttonTextColor ?? Colors.white,
+                ),
+              ),
         ),
       ),
     );

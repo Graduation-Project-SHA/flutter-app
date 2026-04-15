@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = "http://wiqaya.duckdns.org:3000";
+  static const String baseUrl = "http://api.wiqaya.duckdns.org";
 
   static const String register = "$baseUrl/auth/sign-up";
   static const String login = "$baseUrl/auth/local-login";

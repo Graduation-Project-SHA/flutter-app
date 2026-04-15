@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/auth/cubit/auth_cubit.dart';
 import 'package:health_care_project/features/onboarding/pages/onboarding_screen.dart';
+import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 import 'package:health_care_project/features/patient/donation/views/donation_screen.dart';
 import 'package:health_care_project/features/patient/donation/views/request_blood.dart';
 import 'package:health_care_project/features/patient/donation/views/request_donation.dart';
@@ -57,6 +58,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorDetailsCubit()),
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
+        BlocProvider(create: (context) => DonationCubit()..getDonationData()),
 
       ],
       child: ScreenUtilInit(

@@ -97,12 +97,24 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
 
-  void loadMessages(String conversationId, String userId) async {
+  void loadMessages(String conversationId, String userId, {String? targetUserId}) async {
     currentConversationId = conversationId;
     currentUserId = userId;
 
     if (!socketService.isConnected) {
       socketService.connect();
+    }
+
+    if (conversationId.isEmpty && targetUserId != null) {
+      try {
+        final existingConv = conversations.firstWhere(
+              (conv) => conv.targetUserId == targetUserId,
+        );
+        conversationId = existingConv.id;
+        currentConversationId = conversationId;
+      } catch (e) {
+        print("No existing conversation found for this doctor.");
+      }
     }
 
     if (conversationId.isEmpty) {
@@ -121,6 +133,7 @@ class ChatCubit extends Cubit<ChatState> {
       }
     } catch (e) {
       print("Error loading messages: $e");
+      emit(ChatError("فشل تحميل الرسائل"));
     }
   }
 

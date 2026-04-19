@@ -174,6 +174,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                 myId: widget.myId,
                                 conversationId: conv.id,
                                 targetUserId: conv.targetUserId,
+                                targetUserName: conv.name,
                               ),
                             ),
                           );

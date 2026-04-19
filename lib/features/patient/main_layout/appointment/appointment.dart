@@ -415,6 +415,7 @@ class _AppointmentState extends State<Appointment> {
                                               myId: myId,
                                               targetUserId: "ID_DOCTOR_HERE",
                                               conversationId: "",
+                                              targetUserName: '',
                                             ),
                                           ),
                                         );

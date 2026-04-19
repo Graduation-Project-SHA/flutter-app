@@ -87,7 +87,7 @@ class ListOfDonation extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '',),
+                      builder: (context) => ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '', targetUserName: '',),
                     ),
                   );
                 },

@@ -426,6 +426,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                 builder: (_) => ChatDetailsScreen(
                                   myId: myId,
                                   targetUserId: doctor.userId,
+                                  targetUserName: doctor.fullName,
                                   conversationId: "",
                                 ),
                               ),

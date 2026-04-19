@@ -31,6 +31,10 @@ class ApiConstants {
       "$baseUrl/api/conversations/$conversationId/messages";
 
 
+  static const String getMyProfile = "$baseUrl/patient/me";
+  static const String medicalProfile = "$baseUrl/patient/me/medical-profile";
+  static const String updateProfile = "$baseUrl/patient/me/profile";
+
  // static const String patientAppointments = "$baseUrl/patient/me/appointments";
   //static const String slots = "$baseUrl/doctors/$doctorUserId/slots";
 //  static const String details = "$baseUrl/doctors/$id";

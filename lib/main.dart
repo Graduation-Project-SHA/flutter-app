@@ -29,7 +29,8 @@ import 'features/patient/care/care_screen.dart';
 import 'features/patient/care/nurses_list_screen.dart';
 import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
 import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
-import 'features/patient/main_layout/profile/medical_record_screen.dart';
+import 'features/patient/main_layout/profile/medical_profile/medical_profile_cubit.dart';
+import 'features/patient/main_layout/profile/medical_profile/medical_record_screen.dart';
 import 'features/patient/main_layout/profile/user_payment_methods_screen.dart';
 import 'features/doctor/main_layout/doctor_profile/doctor_personal_information_screen.dart';
 import 'features/patient/main_layout/main_layout.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
             ChatRepository(DioHelper.dio),
           ),
         ),
+        BlocProvider(create: (context) => MedicalProfileCubit()),
       ],
       child: ScreenUtilInit(
           designSize: const Size(412, 924),
@@ -90,7 +92,7 @@ class MyApp extends StatelessWidget {
               ],
               debugShowCheckedModeBanner: false,
               initialRoute: OnboardingScreen.routeName,
-          //   initialRoute: MainLayout.routeName,
+              //initialRoute: MainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;

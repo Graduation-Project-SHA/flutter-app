@@ -153,11 +153,11 @@ class ChatCubit extends Cubit<ChatState> {
       }
 
       final tempMsg = Message(
-        id: "temp_${DateTime.now().millisecondsSinceEpoch}",
-        senderId: senderId,
-        text: text,
-        conversationId: convId,
-        createdAt: DateTime.now()
+          id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+          senderId: senderId,
+          text: text,
+          conversationId: convId,
+          createdAt: DateTime.now()
       );
 
       messages.add(tempMsg);

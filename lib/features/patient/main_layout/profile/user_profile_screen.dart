@@ -149,7 +149,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               children: [
                                 Expanded(
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                    },
                                     borderRadius: BorderRadius.circular(10.r),
                                     child: Container(
                                       padding: EdgeInsets.symmetric(vertical: 16.h),

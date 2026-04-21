@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/auth/cubit/auth_cubit.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_profile/doctor_services/controler/doctor_services_cubit.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_profile/doctor_services/doctor_services.dart';
 import 'package:health_care_project/features/onboarding/pages/onboarding_screen.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 import 'package:health_care_project/features/patient/donation/views/donation_screen.dart';
@@ -63,6 +65,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
         BlocProvider(create: (context) => DonationCubit()..getDonationData()),
+        BlocProvider(create: (context) => DoctorServicesCubit()..getDoctorServices()),
 
         BlocProvider(
           lazy: false,
@@ -93,7 +96,7 @@ class MyApp extends StatelessWidget {
               ],
               debugShowCheckedModeBanner: false,
               initialRoute: OnboardingScreen.routeName,
-          //   initialRoute: MainLayout.routeName,
+            // initialRoute: MainLayout.routeName,
               onGenerateRoute: (settings) {
                 if (settings.name == MainLayout.routeName) {
                   final selectedIndex = settings.arguments as int? ?? 0;
@@ -125,6 +128,7 @@ class MyApp extends StatelessWidget {
                 RequestDonation.routeName: (_) => RequestDonation(),
                 RequestBlood.routeName: (_) => RequestBlood(),
                 RequestMachine.routeName: (_) => RequestMachine(),
+                DoctorServices.routeName: (_) => DoctorServices(),
 
               },
             );

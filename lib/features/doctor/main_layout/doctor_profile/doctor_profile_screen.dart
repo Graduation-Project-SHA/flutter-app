@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_profile/doctor_services/doctor_services.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -106,7 +107,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.settings_outlined, color: Colors.white, size: 24.sp),
+                    Icon(
+                      Icons.settings_outlined,
+                      color: Colors.white,
+                      size: 24.sp,
+                    ),
                     Text(
                       "حسابي",
                       style: TextStyle(
@@ -115,7 +120,11 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios_outlined, color: Colors.white, size: 20.sp),
+                    Icon(
+                      Icons.arrow_forward_ios_outlined,
+                      color: Colors.white,
+                      size: 20.sp,
+                    ),
                   ],
                 ),
               ),
@@ -161,7 +170,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           SizedBox(height: 24.h),
                           Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 4.h,
+                              horizontal: 4.w,
+                            ),
                             decoration: BoxDecoration(
                               color: const Color(0xffF8F8F8),
                               borderRadius: BorderRadius.circular(16.r),
@@ -171,10 +183,17 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                 children: [
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          DoctorServices.routeName,
+                                        );
+                                      },
                                       borderRadius: BorderRadius.circular(10.r),
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 16.h,
+                                        ),
                                         alignment: Alignment.center,
                                         child: Text(
                                           "خدماتي",
@@ -196,10 +215,17 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                                   ),
                                   Expanded(
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          DoctorServices.routeName,
+                                        );
+                                      },
                                       borderRadius: BorderRadius.circular(10.r),
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 16.h,
+                                        ),
                                         alignment: Alignment.center,
                                         child: Text(
                                           "حجوزاتي",
@@ -222,7 +248,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             color: Colors.blue,
                             title: "معلومات شخصية",
                             onTap: () {
-                              Navigator.pushNamed(context, "DoctorPersonalInformationScreen");
+                              Navigator.pushNamed(
+                                context,
+                                "DoctorPersonalInformationScreen",
+                              );
                             },
                           ),
                           _buildOptionItem(
@@ -236,7 +265,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             color: Colors.redAccent,
                             title: "المدفوعات",
                             onTap: () {
-                              Navigator.pushNamed(context, "DoctorPaymentMethodsScreen");
+                              Navigator.pushNamed(
+                                context,
+                                "DoctorPaymentMethodsScreen",
+                              );
                             },
                           ),
                           _buildOptionItem(
@@ -245,7 +277,10 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             title: "مواعيدي",
                             isLast: true,
                             onTap: () {
-                              Navigator.pushNamed(context, "ManageAppointmentsScreen");
+                              Navigator.pushNamed(
+                                context,
+                                "ManageAppointmentsScreen",
+                              );
                             },
                           ),
                           SizedBox(height: 16.h),
@@ -269,7 +304,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                         radius: 50.r,
                         backgroundImage: _selectedImage != null
                             ? FileImage(_selectedImage!)
-                            : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                            : const AssetImage("assets/images/person_image.png")
+                                  as ImageProvider,
                       ),
                     ),
                     InkWell(
@@ -281,9 +317,13 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                           color: Colors.black12,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.edit, color: Colors.blue, size: 16.sp),
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                          size: 16.sp,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

@@ -9,10 +9,12 @@ class Defaulttextformfield extends StatelessWidget {
   final Color? suffixIconColor;
   final Function(String)? onChanged;
   final Color? borderColor;
+  final double? borderRadius;
   final String? initialValue;
   final bool readOnly;
   final void Function()? onTap;
   final int maxLines;
+  TextInputType? keyboardType;
 
    Defaulttextformfield({
     super.key,
@@ -28,12 +30,14 @@ class Defaulttextformfield extends StatelessWidget {
     this.readOnly = false,
     this.onTap ,
      this.maxLines=1,
+     this.borderRadius,
+      this.keyboardType,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
+      keyboardType: keyboardType,
       onTap: onTap,
       maxLines: maxLines,
       initialValue: initialValue,
@@ -55,14 +59,14 @@ class Defaulttextformfield extends StatelessWidget {
           horizontal: 12,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
           borderSide: BorderSide(
             color: borderColor ?? Colors.grey.shade400,
             width: 1,
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
           borderSide: BorderSide(
             color: borderColor ?? Colors.blueAccent,
             width: 1.3,

@@ -15,6 +15,7 @@ class DefaultButton extends StatelessWidget {
     this.buttonTextWeight,
     this.buttonTextColor,
     this.boderColor,
+    this.borderRadius,
   });
 
   final void Function()? onPressed;
@@ -29,6 +30,7 @@ class DefaultButton extends StatelessWidget {
   final FontWeight? buttonTextWeight;
   final Color? buttonTextColor;
   final Color? boderColor;
+  final double? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -41,14 +43,14 @@ class DefaultButton extends StatelessWidget {
         elevation: elevation,
         shape: shape ??
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(borderRadius ?? 8.r),
             ),
       ),
       child: Ink(
         width: double.infinity,
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8.r),
           gradient: backgroundColor == null
               ? const LinearGradient(
                   colors: [

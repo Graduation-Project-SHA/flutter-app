@@ -29,6 +29,7 @@ import 'features/patient/care/care_screen.dart';
 import 'features/patient/care/nurses_list_screen.dart';
 import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
 import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
+import 'features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_cubit.dart';
 import 'features/patient/main_layout/profile/medical_profile/medical_profile_cubit.dart';
 import 'features/patient/main_layout/profile/medical_profile/medical_record_screen.dart';
 import 'features/patient/main_layout/profile/user_payment_methods_screen.dart';
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorDetailsCubit()),
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
+        BlocProvider(create: (context) => AppointmentCubit()),
         BlocProvider(
           lazy: false,
           create: (context) => ChatCubit(

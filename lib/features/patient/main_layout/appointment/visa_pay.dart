@@ -2,11 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
-
 import 'Pin.dart';
 
 class VisaPay extends StatefulWidget {
-  const VisaPay({super.key});
+  final String doctorId;
+  final String appointmentDate;
+  final String startTime;
+  final int serviceId;
+
+  const VisaPay({
+    super.key,
+    required this.doctorId,
+    required this.appointmentDate,
+    required this.startTime,
+    required this.serviceId,
+  });
 
   @override
   State<VisaPay> createState() => _VisaPayState();
@@ -26,11 +36,12 @@ class _VisaPayState extends State<VisaPay> {
     ];
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 10.h),
           child: Container(
-            color: Color.fromRGBO(237, 237, 237, 1),
+            color: const Color.fromRGBO(237, 237, 237, 1),
             height: 2.h,
           ),
         ),
@@ -50,13 +61,11 @@ class _VisaPayState extends State<VisaPay> {
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Color.fromRGBO(205, 205, 205, 1)),
+                border: Border.all(color: const Color.fromRGBO(205, 205, 205, 1)),
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),
@@ -74,22 +83,14 @@ class _VisaPayState extends State<VisaPay> {
                 children: List.generate(logos.length, (index) {
                   bool isSelected = selectedIndex == index;
                   return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
+                    onTap: () => setState(() => selectedIndex = index),
                     child: Container(
                       height: 50.h,
                       width: 100.w,
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? Color.fromRGBO(43, 115, 243, 0.1)
-                            : Colors.white,
+                        color: isSelected ? const Color.fromRGBO(43, 115, 243, 0.1) : Colors.white,
                         border: Border.all(
-                          color: isSelected
-                              ? Color.fromRGBO(43, 115, 243, 1)
-                              : Color.fromRGBO(220, 220, 220, 1),
+                          color: isSelected ? const Color.fromRGBO(43, 115, 243, 1) : const Color.fromRGBO(220, 220, 220, 1),
                         ),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
@@ -98,7 +99,7 @@ class _VisaPayState extends State<VisaPay> {
                         children: [
                           Padding(
                             padding: EdgeInsets.all(8.h),
-                            child: Container(
+                            child: SizedBox(
                               height: 40.h,
                               width: 84.w,
                               child: Image.asset(logos[index], fit: BoxFit.cover),
@@ -110,7 +111,7 @@ class _VisaPayState extends State<VisaPay> {
                               right: -4,
                               child: Icon(
                                 Icons.check_circle,
-                                color: Color.fromRGBO(43, 115, 243, 1),
+                                color: const Color.fromRGBO(43, 115, 243, 1),
                                 size: 24.sp,
                               ),
                             ),
@@ -121,24 +122,18 @@ class _VisaPayState extends State<VisaPay> {
                 }),
               ),
               SizedBox(height: 30.h),
-              Text(
-                'اسم حامل البطاقة',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-              ),
+              Text('اسم حامل البطاقة', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
               SizedBox(height: 10.h),
               Defaulttextformfield(
                 hintText: 'ادخل اسم حامل البطاقة',
-                borderColor: Color.fromRGBO(220, 220, 220, 1),
+                borderColor: const Color.fromRGBO(220, 220, 220, 1),
               ),
               SizedBox(height: 20.h),
-              Text(
-                'رقم البطاقة',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700),
-              ),
+              Text('رقم البطاقة', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
               SizedBox(height: 10.h),
               Defaulttextformfield(
                 hintText: 'ادخل رقم البطاقة',
-                borderColor: Color.fromRGBO(220, 220, 220, 1),
+                borderColor: const Color.fromRGBO(220, 220, 220, 1),
               ),
               SizedBox(height: 20.h),
               Row(
@@ -147,13 +142,7 @@ class _VisaPayState extends State<VisaPay> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'تاريخ الانتهاء',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                        Text('تاريخ الانتهاء', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
                         SizedBox(height: 10.h),
                         Defaulttextformfield(
                           readOnly: true,
@@ -165,22 +154,14 @@ class _VisaPayState extends State<VisaPay> {
                               firstDate: DateTime(2000),
                               lastDate: DateTime(2101),
                             );
-          
                             if (pickedDate != null) {
-                              String formattedDate =
-                                  '${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year.toString().substring(2)}';
-                              setState(() {
-                                expiryController.text = formattedDate;
-                              });
+                              String formattedDate = '${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year.toString().substring(2)}';
+                              setState(() => expiryController.text = formattedDate);
                             }
                           },
-                          suffixIcon: Icon(
-                            Icons.calendar_month_outlined,
-                            size: 20.sp,
-                            color: Color.fromRGBO(43, 115, 243, 1),
-                          ),
+                          suffixIcon: Icon(Icons.calendar_month_outlined, size: 20.sp, color: const Color.fromRGBO(43, 115, 243, 1)),
                           hintText: 'MM/YY',
-                          borderColor: Color.fromRGBO(220, 220, 220, 1),
+                          borderColor: const Color.fromRGBO(220, 220, 220, 1),
                         ),
                       ],
                     ),
@@ -190,17 +171,11 @@ class _VisaPayState extends State<VisaPay> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'رمز التحقق',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                        Text('رمز التحقق', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
                         SizedBox(height: 10.h),
                         Defaulttextformfield(
                           hintText: 'CVV',
-                          borderColor: Color.fromRGBO(220, 220, 220, 1),
+                          borderColor: const Color.fromRGBO(220, 220, 220, 1),
                         ),
                       ],
                     ),
@@ -210,21 +185,11 @@ class _VisaPayState extends State<VisaPay> {
               SizedBox(height: 30.h),
               Row(
                 children: [
-                  Text(
-                    'احفظ بيانات البطاقة',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Spacer(),
+                  Text('احفظ بيانات البطاقة', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                  const Spacer(),
                   Switch(
                     value: saveVisaCardDetails,
-                    onChanged: (value) {
-                      setState(() {
-                        saveVisaCardDetails = value;
-                      });
-                    },
+                    onChanged: (value) => setState(() => saveVisaCardDetails = value),
                     activeColor: Colors.white,
                     activeTrackColor: Colors.blue,
                   ),
@@ -236,7 +201,6 @@ class _VisaPayState extends State<VisaPay> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -244,52 +208,27 @@ class _VisaPayState extends State<VisaPay> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, -3), // changes position of shadow
+              offset: const Offset(0, -3),
             ),
           ],
         ),
         child: SafeArea(
-
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
-                  Text(
-                    '300 جنيه',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    'حجز الكشف',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text('300 جنيه', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  Text('حجز الكشف', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp)),
                 ],
               ),
               SizedBox(height: 16.h),
               Row(
                 children: [
-                  Text(
-                    "مجانا",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "إعادة",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text("مجانا", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  Text("إعادة", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp)),
                 ],
               ),
               Container(
@@ -298,25 +237,12 @@ class _VisaPayState extends State<VisaPay> {
                 width: double.infinity,
                 color: Colors.grey.shade400,
               ),
-          
               SizedBox(height: 15.h),
               Row(
                 children: [
-                  Text(
-                    "300 جنيه",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "المجموع",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text("300 جنيه", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  Text("المجموع", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16.sp)),
                 ],
               ),
               SizedBox(height: 15.h),
@@ -324,7 +250,14 @@ class _VisaPayState extends State<VisaPay> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Pin()),
+                    MaterialPageRoute(
+                      builder: (context) => Pin(
+                        doctorId: widget.doctorId,
+                        serviceId: widget.serviceId,
+                        appointmentDate: widget.appointmentDate,
+                        startTime: widget.startTime,
+                      ),
+                    ),
                   );
                 },
                 buttonText: 'أدفع',

@@ -79,19 +79,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           children: [
             CircleAvatar(
               radius: 35.r,
-              backgroundColor: Colors.grey.shade100,
-              child: ClipOval(
-                child: (doctor.profileImage != null && doctor.profileImage!.isNotEmpty)
-                    ? Image.network(
-                  "$imageBaseUrl${doctor.profileImage}",
-                  fit: BoxFit.cover,
-                  width: 70.r,
-                  height: 70.r,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Icon(Icons.person, color: Colors.grey, size: 35.r),
-                )
-                    : Icon(Icons.person, color: Colors.grey, size: 35.r),
-              ),
+              backgroundColor: Colors.grey.shade200,
+              child: Icon(Icons.person, size: 35.r, color: Colors.grey),
             ),
             SizedBox(width: 24.w),
             Expanded(
@@ -111,7 +100,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "سعر الكشف: ${doctor.consultationFee?.toStringAsFixed(0) ?? "-"} جنيه",
+                    "سعر الكشف: ${doctor.consultationFee?.toString() ?? "-"} جنيه",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -443,7 +432,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => AppointmentTimeScreen(
-                                    doctorId: doctor.id,
+                                    doctor: doctor.toJson(),
                                   ),
                                 ),
                               );

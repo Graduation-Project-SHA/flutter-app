@@ -28,6 +28,7 @@ import 'features/doctor/main_layout/doctor_profile/update_doctor_profile_cubit/u
 import 'features/patient/care/care_map_screen.dart';
 import 'features/patient/care/care_screen.dart';
 import 'features/patient/care/nurses_list_screen.dart';
+import 'features/patient/main_layout/appointment/appointment.dart';
 import 'features/patient/main_layout/appointment/doctor_details_cubit/doctor_details_cubit.dart';
 import 'features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
 import 'features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_cubit.dart';
@@ -129,6 +130,7 @@ class MyApp extends StatelessWidget {
                 RequestDonation.routeName: (_) => RequestDonation(),
                 RequestBlood.routeName: (_) => RequestBlood(),
                 RequestMachine.routeName: (_) => RequestMachine(),
+                Appointment.routeName: (_) => Appointment(),
 
               },
             );

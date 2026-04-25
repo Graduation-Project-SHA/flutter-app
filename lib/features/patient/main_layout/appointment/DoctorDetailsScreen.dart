@@ -113,64 +113,33 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            Row(
               children: [
-                Row(
-                  children: [
-                    const Image(
-                      image: AssetImage("assets/images/time-fill.png"),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      "ساعات العمل",
-                      style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-                    ),
-                  ],
+                const Image(
+                  image: AssetImage("assets/images/time-fill.png"),
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(width: 4.w),
                 Text(
-                  "تحدد لاحقًا",
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  "ساعات العمل",
+                  style: TextStyle(fontSize: 13.sp, color: Colors.black87),
                 ),
               ],
             ),
-            Container(height: 40.h, width: 1.w, color: Colors.grey.shade300),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Image(
-                      image: AssetImage("assets/images/redhospital.png"),
-                    ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      "المكان",
-                      style: TextStyle(fontSize: 13.sp, color: Colors.black87),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  doctor.city?.isNotEmpty == true ? doctor.city! : "غير محدد",
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            SizedBox(height: 4.h),
+            Text(
+              "تحدد لاحقًا",
+              style: TextStyle(
+                fontSize: 15.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
+
       ],
     );
   }

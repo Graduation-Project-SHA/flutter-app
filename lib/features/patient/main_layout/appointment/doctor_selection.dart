@@ -156,16 +156,14 @@ class _DoctorSelectionState extends State<DoctorSelection> {
       price: doctor.consultationFee != null
           ? "سعر الكشف ${doctor.consultationFee!.toStringAsFixed(0)} جنيه"
           : "السعر غير متاح",
-      image: doctor.profileImage?.isNotEmpty == true
-          ? doctor.profileImage!
-          : "assets/images/doctor.png",
-      isNetworkImage: doctor.profileImage?.isNotEmpty == true,
+        image: "assets/images/doctor.png",
+        isNetworkImage: false,
       onBook: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => AppointmentTimeScreen(
-              doctorId: doctor.userId,
+              doctor: doctor.toJson(),
             ),
           ),
         );

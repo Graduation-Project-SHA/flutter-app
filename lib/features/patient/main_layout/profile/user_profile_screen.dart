@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../main_layout.dart';
+
 class UserProfileScreen extends StatefulWidget {
   static const String routeName = "UserProfileScreen";
 
@@ -83,7 +85,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.settings_outlined, color: Colors.white, size: 24.sp),
+                  InkWell(
+                  onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainLayout(selectedIndex: 3),
+                        ),
+                            (route) => false,
+                      );
+                    },
+                    child: Icon(Icons.settings_outlined, color: Colors.white, size: 24.sp),
+                  ),
                   Text(
                     "حسابي",
                     style: TextStyle(
@@ -137,71 +150,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           ),
                         ),
                         SizedBox(height: 24.h),
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 4.w),
-                          decoration: BoxDecoration(
-                            color: const Color(0xffF8F8F8),
-                            borderRadius: BorderRadius.circular(16.r),
-                          ),
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {},
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "خدماتي",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff242424),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                VerticalDivider(
-                                  color: Colors.grey.shade300,
-                                  thickness: 1.5,
-                                  indent: 10.h,
-                                  endIndent: 10.h,
-                                  width: 20.w,
-                                ),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {},
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        "حجوزاتي",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: Color(0xff242424),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height:24.h),
 
                         _buildOptionItem(
                           image:"assets/images/personalcard.png",
                           color: Colors.blue,
                           title: "معلومات شخصية",
                           onTap: () {
-                            Navigator.pushNamed(context, "UserPersonalInformationScreen").then((_) {
+                            Navigator.pushNamed(context, "MedicalRecordScreen").then((_) {
                               _loadData();
                             });
                           },
@@ -220,15 +175,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                             Navigator.pushNamed(context, "UserPaymentMethodsScreen");
                           },
                         ),
-                        _buildOptionItem(
-                          image: "assets/images/clock.png",
-                          color: Colors.purple,
-                          title: "السجل الطبي",
-                          isLast: true,
-                          onTap: () {
-                            Navigator.pushNamed(context, "MedicalRecordScreen");
-                          },
-                        ),
+
                         SizedBox(height:16.h),
                       ],
                     ),

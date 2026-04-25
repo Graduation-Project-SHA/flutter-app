@@ -126,24 +126,24 @@ class ListOfDonation extends StatelessWidget {
                   ),
                 ),
               ),
-      
-              Positioned(
-                top: 30.h,
-                left: 10.w,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '',),
-                      ),
-                    );
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/images/svgs/message_icon.svg',
-                    height: 30.h,
-                    width: 30.w,
-                  ),
+            ),
+
+            Positioned(
+              top: 30.h,
+              left: 10.w,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '', targetUserName: '',),
+                    ),
+                  );
+                },
+                icon: SvgPicture.asset(
+                  'assets/images/svgs/message_icon.svg',
+                  height: 30.h,
+                  width: 30.w,
                 ),
               ),
             ],

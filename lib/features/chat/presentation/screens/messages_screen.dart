@@ -174,6 +174,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                 myId: widget.myId,
                                 conversationId: conv.id,
                                 targetUserId: conv.targetUserId,
+                                targetUserName: conv.name,
                               ),
                             ),
                           );
@@ -187,8 +188,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                 children: [
                                   Text(
                                     conv.lastMessageAt != null
-                                        ? DateFormat('hh:mm a')
-                                        .format(conv.lastMessageAt!)
+                                        ? DateFormat('hh:mm a').format(conv.lastMessageAt!.toLocal()) 
                                         : "_",
                                     style: TextStyle(
                                         fontSize: 12.sp,
@@ -223,14 +223,6 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                       maxLines: 1,
                                       overflow:
                                       TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Text(
-                                      isOnline
-                                          ? "Online🟢 "
-                                          : "Offline⚫ ",
-                                      style:
-                                      TextStyle(fontSize: 11.sp),
                                     ),
                                   ],
                                 ),

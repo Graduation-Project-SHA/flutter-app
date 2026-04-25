@@ -8,12 +8,8 @@ class DoctorDetailsModel {
   final String? profileImage;
   final String? bio;
   final String? city;
-  final String? clinicName;
-  final String? clinicAddress;
   final double? consultationFee;
-  final double? rating;
-  final double? latitude;
-  final double? longitude;
+  final List<ServiceInDoctor> services;
 
   DoctorDetailsModel({
     required this.id,
@@ -22,23 +18,21 @@ class DoctorDetailsModel {
     required this.lastName,
     required this.fullName,
     required this.specialization,
+    required this.services,
+    this.consultationFee,
     this.profileImage,
     this.bio,
     this.city,
-    this.clinicName,
-    this.clinicAddress,
-    this.consultationFee,
-    this.rating,
-    this.latitude,
-    this.longitude,
   });
 
   factory DoctorDetailsModel.fromJson(Map<String, dynamic> json) {
     final user = json['user'] as Map<String, dynamic>? ?? {};
-
     final firstName = user['firstName']?.toString() ?? "";
     final lastName = user['lastName']?.toString() ?? "";
-    final imagePath = user['profileImage']?.toString();
+
+    var servicesList = json['services'] as List? ?? [];
+    List<ServiceInDoctor> parsedServices =
+    servicesList.map((s) => ServiceInDoctor.fromJson(s)).toList();
 
     return DoctorDetailsModel(
       id: json['id'].toString(),
@@ -47,25 +41,42 @@ class DoctorDetailsModel {
       lastName: lastName,
       fullName: "د. $firstName $lastName".trim(),
       specialization: json['specialization']?.toString() ?? "",
-      profileImage: imagePath != null && imagePath.isNotEmpty
-          ? "http://wiqaya.duckdns.org:3000$imagePath"
-          : null,
-      bio: json['bio']?.toString(),
-      city: json['city']?.toString(),
-      clinicName: json['clinicName']?.toString(),
-      clinicAddress: json['clinicAddress']?.toString(),
+      services: parsedServices,
       consultationFee: json['consultationFee'] == null
           ? null
           : double.tryParse(json['consultationFee'].toString()),
-      rating: json['averageRating'] == null
-          ? null
-          : double.tryParse(json['averageRating'].toString()),
-      latitude: json['latitude'] == null
-          ? null
-          : double.tryParse(json['latitude'].toString()),
-      longitude: json['longitude'] == null
-          ? null
-          : double.tryParse(json['longitude'].toString()),
+      profileImage: user['profileImage'],
+      bio: json['bio']?.toString(),
+      city: json['city']?.toString(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "userId": userId,
+      "fullName": fullName,
+      "specialization": specialization,
+      "consultationFee": consultationFee,
+      "services": services.map((s) => s.toJson()).toList(),
+    };
+  }
+}
+
+class ServiceInDoctor {
+  final int id;
+  final String name;
+  final double price;
+
+  ServiceInDoctor({required this.id, required this.name, required this.price});
+
+  factory ServiceInDoctor.fromJson(Map<String, dynamic> json) {
+    return ServiceInDoctor(
+      id: json['id'],
+      name: json['name'] ?? "",
+      price: double.parse(json['price'].toString()),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {"id": id, "name": name, "price": price};
 }

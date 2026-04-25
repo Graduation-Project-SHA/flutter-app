@@ -174,6 +174,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           onTap: (){
                             Navigator.pushNamed(context, "UserPaymentMethodsScreen");
                           },
+                        ),   _buildOptionItem(
+                          image: "assets/images/clock.png",
+                          color: Colors.orangeAccent,
+                          title: "مواعيدي",
+                          onTap: (){
+                            Navigator.pushNamed(context, "Appointment");
+                          },
                         ),
 
                         SizedBox(height:16.h),

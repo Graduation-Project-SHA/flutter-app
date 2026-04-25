@@ -126,7 +126,6 @@ class ListOfDonation extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
 
             Positioned(
               top: 30.h,
@@ -146,7 +145,7 @@ class ListOfDonation extends StatelessWidget {
                   width: 30.w,
                 ),
               ),
-            ],
+            ),],
           );
         },
       );

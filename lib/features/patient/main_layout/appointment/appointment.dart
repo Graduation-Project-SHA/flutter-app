@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 
 
 class Appointment extends StatefulWidget {
+  static const String routeName = "Appointment";
   const Appointment({super.key});
 
   @override
@@ -51,7 +52,9 @@ class _AppointmentState extends State<Appointment> {
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: IconButton(
-                  onPressed:(){},
+                  onPressed:(){
+                    Navigator.pop(context);
+                  },
                   icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
                 ),
               ),
@@ -246,66 +249,120 @@ class _AppointmentState extends State<Appointment> {
 
   Widget _buildPastCard(appointment) {
     bool isCancelled = appointment.status == "CANCELLED";
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 24.w,
-          child: Container(
-            width: 54.w,
-            height: 30.h,
-            decoration: BoxDecoration(
-              color: isCancelled ? const Color.fromRGBO(244, 228, 227, 1) : const Color.fromRGBO(251, 248, 244, 1),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(8.r), bottomRight: Radius.circular(14.r)),
-            ),
-            child: Center(
-              child: Text(isCancelled ? 'ألغيت' : 'تمت',
-                style: TextStyle(
-                  color: isCancelled ? const Color.fromRGBO(243, 66, 54, 1) : const Color.fromRGBO(242, 181, 68, 1),
-                  fontSize: 12.sp,
+
+    Color statusBg = isCancelled ? const Color(0xffFEEBEB) : const Color(0xffFFF9E7);
+    Color statusText = isCancelled ? const Color(0xffF34236) : const Color(0xffF2B544);
+    Color dotColor = isCancelled ? const Color(0xffF34236) : const Color(0xffF2B544);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color.fromRGBO(207, 223, 252, 1)),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: statusBg,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(11.r),
+                    bottomLeft: Radius.circular(14.r),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      isCancelled ? 'ألغيت' : 'تمت',
+                      style: TextStyle(color: statusText, fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(width: 4.w),
+                    Container(
+                      width: 6.w,
+                      height: 6.h,
+                      decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Container(
-            decoration: BoxDecoration(border: Border.all(color: const Color.fromRGBO(207, 223, 252, 1)), borderRadius: BorderRadius.circular(12.r)),
-            padding: EdgeInsets.all(12.r),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 40.r,
-                  backgroundColor: const Color.fromRGBO(183, 207, 251, 1),
-                  backgroundImage: appointment.doctor.profileImage != null
-                      ? NetworkImage(appointment.doctor.profileImage!)
-                      : const AssetImage('assets/images/doctor.png') as ImageProvider,
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(appointment.doctor.fullName, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700)),
-                      Text(appointment.doctor.specialization, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
-                      SizedBox(height: 10.h),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2B73F3)),
-                        child: Text(isCancelled ? 'حجز مرة أخرى' : 'تقييم', style: const TextStyle(color: Colors.white)),
-                      ),
-                    ],
+            Padding(
+              padding: EdgeInsets.all(16.r),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 40.r,
+                    backgroundColor: const Color(0xffB7CFFB),
+                    backgroundImage: appointment.doctor.profileImage != null
+                        ? NetworkImage(appointment.doctor.profileImage!)
+                        : const AssetImage('assets/images/doctor.png') as ImageProvider,
                   ),
-                ),
-              ],
+                  SizedBox(width: 16.w),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          appointment.doctor.fullName,
+                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          appointment.doctor.specialization,
+                          style: TextStyle(fontSize: 13.sp, color: Colors.grey),
+                        ),
+                        SizedBox(height: 12.h),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF2B73F3),
+                                  padding: EdgeInsets.symmetric(vertical: 8.h),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                                ),
+                                child: Text('حجز مرة اخرى',
+                                    style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+                              ),
+                            ),
+
+                            if (!isCancelled) ...[
+                              SizedBox(width: 8.w),
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: () {},
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(color: Color(0xFF2B73F3)),
+                                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                                  ),
+                                  child: Text('تقييم',
+                                      style: TextStyle(color: const Color(0xFF2B73F3), fontSize: 12.sp)),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
-
   Widget _buildDoctorHeader(appointment) {
     return Row(
       children: [

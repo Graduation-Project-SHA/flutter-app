@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 
 class SelectBoxOfMachine extends StatefulWidget {
   const SelectBoxOfMachine({super.key});
@@ -9,12 +10,14 @@ class SelectBoxOfMachine extends StatefulWidget {
 }
 
 class _SelectBoxOfMachineState extends State<SelectBoxOfMachine> {
-  String? selectedValue;
+
 
   List<String> items = ['جهاز تنفس صناعي', 'جهاز غسيل كلى', 'جهاز تنظيم ضربات القلب', 'جهاز مراقبة ضغط الدم'];
 
   @override
   Widget build(BuildContext context) {
+    DonationCubit cubit = DonationCubit.get(context);
+    
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
@@ -22,7 +25,7 @@ class _SelectBoxOfMachineState extends State<SelectBoxOfMachine> {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: DropdownButton<String>(
-        value: selectedValue,
+        value: cubit.selectedValueOfMachine,
         hint: Text('اختار نوع الجهاز'),
         isExpanded: true,
         underline: SizedBox(), 
@@ -34,7 +37,7 @@ class _SelectBoxOfMachineState extends State<SelectBoxOfMachine> {
         }).toList(),
         onChanged: (value) {
           setState(() {
-            selectedValue = value;
+            cubit.selectedValueOfMachine = value;
           });
         },
       ),

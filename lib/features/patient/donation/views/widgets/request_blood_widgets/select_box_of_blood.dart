@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 
 class SelectBoxOfBlood extends StatefulWidget {
   const SelectBoxOfBlood({super.key});
@@ -9,12 +10,13 @@ class SelectBoxOfBlood extends StatefulWidget {
 }
 
 class _SelectBoxOfBloodState extends State<SelectBoxOfBlood> {
-  String? selectedValue;
+
 
   List<String> items = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-'];
 
   @override
   Widget build(BuildContext context) {
+    DonationCubit cubit = DonationCubit.get(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       decoration: BoxDecoration(
@@ -22,19 +24,21 @@ class _SelectBoxOfBloodState extends State<SelectBoxOfBlood> {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: DropdownButton<String>(
-        value: selectedValue,
+        value: cubit.selectedValueOfBlood,
         hint: Text('اختار فصيلة الدم'),
         isExpanded: true,
         underline: SizedBox(), 
         items: items.map((item) {
           return DropdownMenuItem(
             value: item,
-            child: Text(item,style: TextStyle(fontWeight: FontWeight.w700),),
+            child: Text(
+              textDirection: TextDirection.ltr,
+              item,style: TextStyle(fontWeight: FontWeight.w700,fontFamily: "Roboto"),),
           );
         }).toList(),
         onChanged: (value) {
           setState(() {
-            selectedValue = value;
+            cubit.selectedValueOfBlood = value;
           });
         },
       ),

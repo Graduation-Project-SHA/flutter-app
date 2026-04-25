@@ -24,7 +24,7 @@ class SearchField extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
         hintText: hint,
-        hintStyle: TextStyle(fontSize: 14.sp, color: Colors.grey),
+        hintStyle: TextStyle(fontSize: 14.sp, color: Colors.grey,fontFamily: "Roboto"),
         prefixIcon: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SvgPicture.asset("assets/images/svgs/search_icon.svg"),

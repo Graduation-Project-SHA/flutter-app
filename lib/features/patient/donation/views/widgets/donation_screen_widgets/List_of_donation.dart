@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
+import 'package:health_care_project/features/patient/donation/donation_cubit/donation_states.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../../chat/presentation/screens/chat_details_screen.dart';
@@ -9,72 +13,117 @@ class ListOfDonation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+    final cubit = DonationCubit.get(context);
 
-      itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            Container(
-              height: 115.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: Color(0xffCFDFFC), width: 1.5),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 10.w,
-                  right: 10.w,
-                  top: 18.h,
-                  bottom: 10.h,
+    return BlocConsumer<DonationCubit, DonationState>(
+      listener: (context, state) {
+        
+      },
+
+      builder: (context, state) {
+      
+      
+        
+        return ListView.separated(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cubit.donations.length,
+        separatorBuilder: (context, index) => SizedBox(height: 15.h),
+        itemBuilder: (context, index) {
+            final item = cubit.donations[index];
+              final isBlood = item.donationType == "BLOOD";
+      
+          return Stack(
+            children: [
+              Container(
+                height: 115.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: const Color(0xffCFDFFC), width: 1.5),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 30.r,
-                      backgroundColor: Color(0xffDCE7FF),
-                      child: Image.asset(
-                        'assets/images/girl_photo.png',
-                        fit: BoxFit.cover,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 10.w,
+                    right: 10.w,
+                    top: 18.h,
+                    bottom: 10.h,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30.r,
+                        backgroundColor: const Color(0xffDCE7FF),
+                        child: Image.asset(
+                          'assets/images/girl_photo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10.w),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'محمد أحمد',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
+      
+                      SizedBox(width: 10.w),
+      
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${item.firstName} ${item.lastName}",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontFamily: "Roboto",
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'تبحث عن متبرع بدم',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Color(0xff71717A),
-                            fontWeight: FontWeight.w400,
+      
+                          SizedBox(height: 4.h),
+      
+                          Text(
+                            isBlood
+                                ? "تبحث عن متبرع بدم"
+                                : "تبحث عن متبرع بجهاز طبي",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: const Color(0xff71717A),
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          'فصيلة الدم المطلوبة : A+',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Color(0xff18181B),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 5.h),
-                      ],
-                    ),
-                  ],
+      
+                          SizedBox(height: 5.h),
+      
+                        Row(
+        children: [
+      Text(
+        isBlood
+            ? "فصيلة الدم المطلوبة : "
+            : "نوع الجهاز المطلوب : ",
+        style: TextStyle(
+          fontSize: 14.sp,
+          color: const Color(0xff18181B),
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Text(
+          isBlood
+              ? (item.bloodType ?? 'غير محدد')
+              : (item.deviceType ?? 'غير محدد'),
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: const Color(0xff18181B),
+            fontWeight: FontWeight.w700,
+            fontFamily: "Roboto",
+          ),
+        ),
+      ),
+        ],
+      )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -96,14 +145,15 @@ class ListOfDonation extends StatelessWidget {
                   height: 30.h,
                   width: 30.w,
                 ),
-                color: Color(0xff2B73F3),
               ),
-            ),
-          ],
-        );
+            ],
+          );
+        },
+      );
+    
+        
+      
       },
-      separatorBuilder: (context, index) => SizedBox(height: 15.h),
-      itemCount: 5,
     );
   }
 }

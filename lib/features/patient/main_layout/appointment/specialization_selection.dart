@@ -135,7 +135,7 @@ class SpecializationSelection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: onBack,
+                onPressed: (){},
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),

@@ -51,7 +51,7 @@ class _AppointmentState extends State<Appointment> {
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed:(){},
                   icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
                 ),
               ),

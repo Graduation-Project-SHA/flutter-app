@@ -9,6 +9,8 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
   static AppointmentCubit get(context) => BlocProvider.of(context);
 
+  List<AppointmentModel> upcoming = [];
+  List<AppointmentModel> past = [];
 
   Future<void> getMyAppointments() async {
     emit(AppointmentLoading());
@@ -20,11 +22,12 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       final List data = response.data['data'] ?? [];
       List<AppointmentModel> allAppointments = data.map((e) => AppointmentModel.fromJson(e)).toList();
 
-      var upcoming = allAppointments.where((a) => a.status == "PENDING").toList();
-      var past = allAppointments.where((a) => a.status != "PENDING").toList();
+      upcoming = allAppointments.where((a) => a.status == "PENDING").toList();
+      past = allAppointments.where((a) => a.status == "COMPLETED" || a.status == "CANCELLED").toList();
 
       emit(AppointmentLoaded(upcoming, past));
     } catch (e) {
+      print("Error fetching appointments: ${e.toString()}");
       emit(AppointmentError("فشل في تحميل المواعيد"));
     }
   }
@@ -55,7 +58,6 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
-
   Future<void> cancelAppointment({
     required int appointmentId,
     required String reason,
@@ -69,6 +71,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       emit(CancelAppointmentSuccess());
       getMyAppointments();
     } catch (e) {
+      print("Error cancelling appointment: ${e.toString()}");
       emit(AppointmentError("فشل في إلغاء الموعد"));
     }
   }
@@ -81,7 +84,7 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     emit(AppointmentLoading());
     try {
       final response = await DioHelper.fetchData(
-        url: "/doctors/$userId/slots",
+        url: ApiConstants.getDoctorSlots(userId),
         query: {
           "date": date,
           "serviceId": serviceId,

@@ -1,4 +1,3 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +6,7 @@ import 'package:health_care_project/features/patient/main_layout/appointment/pat
 import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 
+import 'DoctorDetailsScreen.dart';
 
 class Appointment extends StatefulWidget {
   static const String routeName = "Appointment";
@@ -17,31 +17,25 @@ class Appointment extends StatefulWidget {
 }
 
 class _AppointmentState extends State<Appointment> {
-  bool isUpcomingMode = false;
+  bool isUpcomingMode = true;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AppointmentCubit()..getMyAppointments(),
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           bottom: PreferredSize(
-            preferredSize: Size(double.infinity, 10.h),
-            child: Container(
-              color: const Color.fromRGBO(237, 237, 237, 1),
-              height: 2.h,
-            ),
+            preferredSize: Size(double.infinity, 1.h),
+            child: Container(color: const Color.fromRGBO(237, 237, 237, 1), height: 1.h),
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           automaticallyImplyLeading: false,
           title: Text(
             'مواعيدي',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 18.sp,
-            ),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18.sp),
           ),
           actions: [
             Padding(
@@ -52,193 +46,160 @@ class _AppointmentState extends State<Appointment> {
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: IconButton(
-                  onPressed:(){
-                    Navigator.pop(context);
-                  },
+                  onPressed: () => Navigator.pop(context),
                   icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
                 ),
               ),
             ),
           ],
         ),
-        body: BlocBuilder<AppointmentCubit, AppointmentState>(
-          builder: (context, state) {
-            if (state is AppointmentLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is AppointmentError) {
-              return Center(child: Text(state.message));
-            } else if (state is AppointmentLoaded) {
-
-              final list = isUpcomingMode ? state.upcoming : state.past;
-
-              return Column(
-                children: [
-                  SizedBox(height: 24.h),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-
-                        Expanded(
-                          child: _buildToggleButton(
-                            text: 'مواعيد سابقة',
-                            isSelected: !isUpcomingMode,
-                            onTap: () => setState(() => isUpcomingMode = false),
-                            isRight: true,
-                          ),
-                        ),
-                        Expanded(
-                          child: _buildToggleButton(
-                            text: 'مواعيد قادمة',
-                            isSelected: isUpcomingMode,
-                            onTap: () => setState(() => isUpcomingMode = true),
-                            isRight: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 40.h),
-                  Divider(height: 3.h, color: const Color.fromRGBO(207, 223, 252, 1)),
-                  SizedBox(height: 40.h),
-
-                  Expanded(
-                    child: list.isEmpty
-                        ? const Center(child: Text("لا توجد مواعيد"))
-                        : ListView.separated(
-                      padding: EdgeInsets.only(bottom: 20.h),
-                      itemCount: list.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 24.h),
-                      itemBuilder: (context, index) {
-                        final appointment = list[index];
-
-                        return ConditionalBuilder(
-                          condition: isUpcomingMode,
-                          builder: (context) => _buildUpcomingCard(appointment),
-                          fallback: (context) => _buildPastCard(appointment),
-                        );
-                      },
-                    ),
-                  ),
-                ],
+        body: BlocConsumer<AppointmentCubit, AppointmentState>(
+          listener: (context, state) {
+            if (state is CancelAppointmentSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("تم إلغاء الموعد بنجاح"), backgroundColor: Colors.green),
+              );
+              AppointmentCubit.get(context).getMyAppointments();
+            }
+            if (state is AppointmentError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message), backgroundColor: Colors.redAccent),
               );
             }
-            return const SizedBox();
+          },
+          builder: (context, state) {
+            final cubit = AppointmentCubit.get(context);
+
+            if (state is AppointmentLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final list = isUpcomingMode ? cubit.upcoming : cubit.past;
+
+            return Column(
+              children: [
+                SizedBox(height: 24.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildToggleButton(
+                          text: 'مواعيد سابقة',
+                          isSelected: !isUpcomingMode,
+                          onTap: () => setState(() => isUpcomingMode = false),
+                          isRight: true,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildToggleButton(
+                          text: 'مواعيد قادمة',
+                          isSelected: isUpcomingMode,
+                          onTap: () => setState(() => isUpcomingMode = true),
+                          isRight: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                const Divider(height: 1, color: Color.fromRGBO(207, 223, 252, 1)),
+                SizedBox(height: 20.h),
+                Expanded(
+                  child: list.isEmpty
+                      ? Center(child: Text("لا توجد مواعيد ${isUpcomingMode ? 'قادمة' : 'سابقة'}"))
+                      : ListView.separated(
+                    padding: EdgeInsets.only(bottom: 20.h),
+                    itemCount: list.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 24.h),
+                    itemBuilder: (context, index) {
+                      final appointment = list[index];
+                      return isUpcomingMode
+                          ? _buildUpcomingCard(context, appointment)
+                          : _buildPastCard(appointment);
+                    },
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),
     );
   }
 
-
   Widget _buildToggleButton({required String text, required bool isSelected, required VoidCallback onTap, required bool isRight}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 18.r, vertical: 8.r),
+        padding: EdgeInsets.symmetric(vertical: 10.h),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
-          border: Border.all(color: isSelected ? const Color.fromRGBO(43, 115, 243, 1) : const Color.fromRGBO(205, 205, 205, 1)),
+          color: isSelected ? const Color(0xFF2B73F3) : Colors.white,
+          border: Border.all(color: const Color(0xFF2B73F3)),
           borderRadius: isRight
               ? BorderRadius.only(topRight: Radius.circular(8.r), bottomRight: Radius.circular(8.r))
               : BorderRadius.only(topLeft: Radius.circular(8.r), bottomLeft: Radius.circular(8.r)),
         ),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
-            color: isSelected ? Colors.white : const Color.fromRGBO(43, 115, 243, 1),
-          ),
+          style: TextStyle(fontSize: 14.sp, color: isSelected ? Colors.white : const Color(0xFF2B73F3)),
         ),
       ),
     );
   }
 
-  Widget _buildUpcomingCard(appointment) {
-    final String myId = Hive.box('authBox').get('userId').toString();
+  Widget _buildUpcomingCard(BuildContext context, appointment) {
     return Center(
       child: Container(
-        width: 327.w,
+        width: 340.w,
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
-          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 3))],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 5))],
+          border: Border.all(color: const Color(0xFFDCDCDC)),
         ),
         child: Column(
           children: [
             Container(
-              width: 327.w,
-              height: 59.h,
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: const Color(0xFF2B73F3),
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(12.r), topRight: Radius.circular(12.r)),
               ),
               alignment: Alignment.centerLeft,
-              child: Text(
-                appointment.startTime,
-                style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold),
-              ),
+              child: Text(appointment.startTime, style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.bold)),
             ),
-            Container(
-              width: 327.w,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12.r), bottomRight: Radius.circular(12.r)),
-                border: Border.all(color: const Color(0xFFDCDCDC)),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(14.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDoctorHeader(appointment),
-                    SizedBox(height: 18.h),
-                    _buildInfoRow(Icons.star_border, "التخصص", appointment.doctor.specialization),
-                    SizedBox(height: 18.h),
-                    _buildInfoRow(Icons.calendar_month_outlined, "التاريخ", DateFormat('EEEE، d MMMM yyyy', 'ar').format(appointment.appointmentDate)),
-                    SizedBox(height: 18.h),
-                    _buildInfoRow(Icons.access_time, "الوقت", appointment.startTime),
-                    SizedBox(height: 18.h),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(12.r),
-                      decoration: BoxDecoration(color: const Color(0xFFF1F5FF), borderRadius: BorderRadius.circular(10.r)),
-                      child: Text(appointment.notes.isEmpty ? "لا توجد ملاحظات" : appointment.notes, style: TextStyle(fontSize: 12.sp)),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Navigator.push(context, MaterialPageRoute(builder: (_) => ChatDetailsScreen(
-                              //   myId: myId,
-                              //   targetUserId: appointment.doctor.userId,
-                              //   conversationId: "",
-                              //   targetUserName: appointment.doctor.fullName,
-                              // )));
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2B73F3), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
-                            child: Text('ضبط تنبيه', style: TextStyle(color: Colors.white, fontSize: 14.sp)),
-                          ),
+            Padding(
+              padding: EdgeInsets.all(16.r),
+              child: Column(
+                children: [
+                  _buildDoctorHeader(appointment),
+                  SizedBox(height: 16.h),
+                  _buildInfoRow(Icons.calendar_month_outlined, "التاريخ", DateFormat('EEEE، d MMMM yyyy', 'ar').format(appointment.appointmentDate)),
+                  SizedBox(height: 12.h),
+                  _buildInfoRow(Icons.access_time, "الوقت", appointment.startTime),
+                  SizedBox(height: 20.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2B73F3), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
+                          child: const Text('ضبط تنبيه', style: TextStyle(color: Colors.white)),
                         ),
-                        SizedBox(width: 12.w),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.white, side: const BorderSide(color: Color(0xFF2B73F3)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
-                            child: Text('إلغاء', style: TextStyle(color: const Color(0xFF2B73F3), fontSize: 14.sp)),
-                          ),
+                      ),
+                      SizedBox(width: 12.w),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _showCancelBottomSheet(context, appointment.id),
+                          style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFF2B73F3)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
+                          child: const Text('إلغاء', style: TextStyle(color: Color(0xFF2B73F3))),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
@@ -249,10 +210,8 @@ class _AppointmentState extends State<Appointment> {
 
   Widget _buildPastCard(appointment) {
     bool isCancelled = appointment.status == "CANCELLED";
-
     Color statusBg = isCancelled ? const Color(0xffFEEBEB) : const Color(0xffFFF9E7);
     Color statusText = isCancelled ? const Color(0xffF34236) : const Color(0xffF2B544);
-    Color dotColor = isCancelled ? const Color(0xffF34236) : const Color(0xffF2B544);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -270,24 +229,14 @@ class _AppointmentState extends State<Appointment> {
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: statusBg,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(11.r),
-                    bottomLeft: Radius.circular(14.r),
-                  ),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(11.r), bottomRight: Radius.circular(14.r)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      isCancelled ? 'ألغيت' : 'تمت',
-                      style: TextStyle(color: statusText, fontSize: 12.sp, fontWeight: FontWeight.bold),
-                    ),
+                    Container(width: 6.w, height: 6.h, decoration: BoxDecoration(color: statusText, shape: BoxShape.circle)),
                     SizedBox(width: 4.w),
-                    Container(
-                      width: 6.w,
-                      height: 6.h,
-                      decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
-                    ),
+                    Text(isCancelled ? 'ألغيت' : 'تمت', style: TextStyle(color: statusText, fontSize: 12.sp, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -297,56 +246,44 @@ class _AppointmentState extends State<Appointment> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: 40.r,
-                    backgroundColor: const Color(0xffB7CFFB),
+                    radius: 35.r,
                     backgroundImage: appointment.doctor.profileImage != null
                         ? NetworkImage(appointment.doctor.profileImage!)
                         : const AssetImage('assets/images/doctor.png') as ImageProvider,
                   ),
                   SizedBox(width: 16.w),
-
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          appointment.doctor.fullName,
-                          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          appointment.doctor.specialization,
-                          style: TextStyle(fontSize: 13.sp, color: Colors.grey),
-                        ),
+                        Text(appointment.doctor.fullName, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
+                        Text(appointment.doctor.specialization, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
                         SizedBox(height: 12.h),
-
                         Row(
                           children: [
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DoctorDetailsScreen(
+                                        doctorId: appointment.doctor.id.toString(),
+                                      ),
+                                    ),
+                                  );
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF2B73F3),
-                                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                                ),
-                                child: Text('حجز مرة اخرى',
-                                    style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+                                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2B73F3), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
+                                child: const Text('حجز مرة اخرى', style: TextStyle(color: Colors.white,)),
                               ),
                             ),
-
                             if (!isCancelled) ...[
                               SizedBox(width: 8.w),
                               Expanded(
                                 child: OutlinedButton(
                                   onPressed: () {},
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(color: Color(0xFF2B73F3)),
-                                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                                  ),
-                                  child: Text('تقييم',
-                                      style: TextStyle(color: const Color(0xFF2B73F3), fontSize: 12.sp)),
+                                  style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFF2B73F3)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
+                                  child: const Text('تقييم', style: TextStyle(color: Color(0xFF2B73F3), )),
                                 ),
                               ),
                             ],
@@ -363,12 +300,12 @@ class _AppointmentState extends State<Appointment> {
       ),
     );
   }
+
   Widget _buildDoctorHeader(appointment) {
     return Row(
       children: [
         CircleAvatar(
           radius: 20.r,
-          backgroundColor: const Color.fromRGBO(183, 207, 251, 1),
           backgroundImage: appointment.doctor.profileImage != null
               ? NetworkImage(appointment.doctor.profileImage!)
               : const AssetImage('assets/images/doctor.png') as ImageProvider,
@@ -377,8 +314,8 @@ class _AppointmentState extends State<Appointment> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('دكتور', style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
-            Text(appointment.doctor.fullName, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold)),
+            Text('دكتور', style: TextStyle(fontSize: 11.sp, color: Colors.grey)),
+            Text(appointment.doctor.fullName, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ],
@@ -388,19 +325,63 @@ class _AppointmentState extends State<Appointment> {
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        CircleAvatar(
-          backgroundColor: const Color.fromRGBO(231, 239, 254, 1),
-          child: Icon(icon, size: 22.sp, color: const Color(0xFF2B73F3)),
-        ),
+        Icon(icon, size: 20.sp, color: const Color(0xFF2B73F3)),
         SizedBox(width: 12.w),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
-            Text(value, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
-          ],
-        ),
+        Text("$label: ", style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+        Text(value, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600)),
       ],
+    );
+  }
+
+  void _showCancelBottomSheet(BuildContext context, int appointmentId) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20.r))),
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(24.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('إلغاء الحجز', style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xffF34236))),
+              SizedBox(height: 12.h),
+              const Divider(color: Color(0xffECECEC)),
+              SizedBox(height: 12.h),
+              Text('هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟', textAlign: TextAlign.center, style: TextStyle(fontSize: 14.sp, color: Colors.grey[700])),
+              SizedBox(height: 30.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2B73F3), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
+                      child: const Text('تراجع', style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        BlocProvider.of<AppointmentCubit>(context).cancelAppointment(
+                          appointmentId: appointmentId,
+                          reason: "Personal emergency",
+                        );
+                        Navigator.pop(context);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: const Color(0xffFEEBEB),
+                        side: const BorderSide(color: Color(0xffF34236)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                      ),
+                      child: const Text('نعم، إلغاء', style: TextStyle(color: Color(0xffF34236))),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -3,11 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/shared/component/defaultTextFormField/defaultTextFormField.dart';
 import 'package:health_care_project/shared/component/defaultbutton/defaultbutton.dart';
-
 import 'Pin.dart';
 
 class InstaPay extends StatefulWidget {
-  const InstaPay({super.key});
+
+  final String doctorId;
+  final String appointmentDate;
+  final String startTime;
+  final int serviceId;
+
+  const InstaPay({
+    super.key,
+    required this.doctorId,
+    required this.appointmentDate,
+    required this.startTime,
+    required this.serviceId,
+  });
 
   @override
   State<InstaPay> createState() => _InstaPayState();
@@ -15,17 +26,18 @@ class InstaPay extends StatefulWidget {
 
 class _InstaPayState extends State<InstaPay> {
   Color insta_pay_button_color = Colors.white;
-  Color insta_pay_button_border_color = Color.fromRGBO(220, 220, 220, 1);
+  Color insta_pay_button_border_color = const Color.fromRGBO(220, 220, 220, 1);
   bool insta_pay_button_isClicked = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 10.h),
           child: Container(
-            color: Color.fromRGBO(237, 237, 237, 1),
+            color: const Color.fromRGBO(237, 237, 237, 1),
             height: 2.h,
           ),
         ),
@@ -45,13 +57,11 @@ class _InstaPayState extends State<InstaPay> {
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Color.fromRGBO(205, 205, 205, 1)),
+                border: Border.all(color: const Color.fromRGBO(205, 205, 205, 1)),
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),
@@ -59,8 +69,8 @@ class _InstaPayState extends State<InstaPay> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 24.h),
-        child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: SingleChildScrollView(
@@ -72,36 +82,20 @@ class _InstaPayState extends State<InstaPay> {
                     setState(() {
                       insta_pay_button_isClicked = !insta_pay_button_isClicked;
                       if (insta_pay_button_isClicked) {
-                        insta_pay_button_color = Color.fromRGBO(
-                          43,
-                          115,
-                          243,
-                          0.1,
-                        );
-                        insta_pay_button_border_color = Color.fromRGBO(
-                          43,
-                          115,
-                          243,
-                          1,
-                        );
+                        insta_pay_button_color = const Color.fromRGBO(43, 115, 243, 0.1);
+                        insta_pay_button_border_color = const Color.fromRGBO(43, 115, 243, 1);
                       } else {
                         insta_pay_button_color = Colors.white;
-                        insta_pay_button_border_color = Color.fromRGBO(
-                          220,
-                          220,
-                          220,
-                          1,
-                        );
+                        insta_pay_button_border_color = const Color.fromRGBO(220, 220, 220, 1);
                       }
                     });
                   },
                   child: Container(
                     height: 50,
                     width: 100,
-            
                     decoration: BoxDecoration(
                       color: insta_pay_button_color,
-                      border: BoxBorder.all(color: insta_pay_button_border_color),
+                      border: Border.all(color: insta_pay_button_border_color),
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: ConditionalBuilder(
@@ -118,14 +112,13 @@ class _InstaPayState extends State<InstaPay> {
                       fallback: (context) {
                         return Stack(
                           clipBehavior: Clip.none,
-            
                           children: [
                             Positioned(
                               top: -4,
                               right: -4,
                               child: Icon(
                                 Icons.check_circle,
-                                color: Color.fromRGBO(43, 115, 243, 1),
+                                color: const Color.fromRGBO(43, 115, 243, 1),
                                 size: 24.sp,
                               ),
                             ),
@@ -152,7 +145,7 @@ class _InstaPayState extends State<InstaPay> {
                 SizedBox(height: 8.h),
                 Defaulttextformfield(
                   hintText: 'Example@instapay.com',
-                  hintStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                  hintStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -162,7 +155,7 @@ class _InstaPayState extends State<InstaPay> {
                 SizedBox(height: 8.h),
                 Defaulttextformfield(hintText: 'رقم الهاتف الخاص بالحساب'),
                 SizedBox(height: 16.h),
-                Text("""
+                const Text("""
          الخطوات
         1. اتمم ملئ البيانات بشكل صحيح
         2. اضغط علي طلب الدفع
@@ -175,7 +168,6 @@ class _InstaPayState extends State<InstaPay> {
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -183,7 +175,7 @@ class _InstaPayState extends State<InstaPay> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 5,
-              offset: Offset(0, -3), // changes position of shadow
+              offset: const Offset(0, -3),
             ),
           ],
         ),
@@ -193,41 +185,17 @@ class _InstaPayState extends State<InstaPay> {
             children: [
               Row(
                 children: [
-                  Text(
-                    '300 جنيه',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    'حجز الكشف',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text('300 جنيه', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  const Text('حجز الكشف', style: TextStyle(fontWeight: FontWeight.w400, )),
                 ],
               ),
               SizedBox(height: 16.h),
               Row(
                 children: [
-                  Text(
-                    "مجانا",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "إعادة",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text("مجانا", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  const Text("إعادة", style: TextStyle(fontWeight: FontWeight.w400, )),
                 ],
               ),
               Container(
@@ -236,25 +204,12 @@ class _InstaPayState extends State<InstaPay> {
                 width: double.infinity,
                 color: Colors.grey.shade400,
               ),
-          
               SizedBox(height: 15.h),
               Row(
                 children: [
-                  Text(
-                    "300 جنيه",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "المجموع",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp,
-                    ),
-                  ),
+                  Text("300 جنيه", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.sp)),
+                  const Spacer(),
+                  const Text("المجموع", style: TextStyle(fontWeight: FontWeight.w400, )),
                 ],
               ),
               SizedBox(height: 15.h),
@@ -263,9 +218,12 @@ class _InstaPayState extends State<InstaPay> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) {
-                        return   Pin();
-                      },
+                      builder: (context) => Pin(
+                        doctorId: widget.doctorId,
+                        serviceId: widget.serviceId,
+                        appointmentDate: widget.appointmentDate,
+                        startTime: widget.startTime,
+                      ),
                     ),
                   );
                 },

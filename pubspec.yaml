@@ -212,6 +212,11 @@ flutter:
     - assets/images/add_services_design.png
     - assets/images/teeth.png
     - assets/images/svgs/
+    - assets/images/card3_in_pi.png
+    - assets/images/card1_in_pi.png
+    - assets/images/card2_in_pi.png
+    - assets/images/card4_in_pi.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

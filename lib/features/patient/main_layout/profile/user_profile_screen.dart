@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../main_layout.dart';
+
 class UserProfileScreen extends StatefulWidget {
   static const String routeName = "UserProfileScreen";
 
@@ -83,7 +85,18 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.settings_outlined, color: Colors.white, size: 24.sp),
+                  InkWell(
+                  onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MainLayout(selectedIndex: 3),
+                        ),
+                            (route) => false,
+                      );
+                    },
+                    child: Icon(Icons.settings_outlined, color: Colors.white, size: 24.sp),
+                  ),
                   Text(
                     "حسابي",
                     style: TextStyle(
@@ -202,7 +215,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           color: Colors.blue,
                           title: "معلومات شخصية",
                           onTap: () {
-                            Navigator.pushNamed(context, "UserPersonalInformationScreen").then((_) {
+                            Navigator.pushNamed(context, "MedicalRecordScreen").then((_) {
                               _loadData();
                             });
                           },
@@ -220,16 +233,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           onTap: (){
                             Navigator.pushNamed(context, "UserPaymentMethodsScreen");
                           },
-                        ),
-                        _buildOptionItem(
+                        ),   _buildOptionItem(
                           image: "assets/images/clock.png",
-                          color: Colors.purple,
-                          title: "السجل الطبي",
-                          isLast: true,
-                          onTap: () {
-                            Navigator.pushNamed(context, "MedicalRecordScreen");
+                          color: Colors.orangeAccent,
+                          title: "مواعيدي",
+                          onTap: (){
+                            Navigator.pushNamed(context, "Appointment");
                           },
                         ),
+
                         SizedBox(height:16.h),
                       ],
                     ),

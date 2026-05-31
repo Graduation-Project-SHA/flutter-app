@@ -62,6 +62,9 @@ class AuthCubit extends Cubit<AuthState> {
 
 
     if (error is DioException && error.response != null) {
+      print(" STATUS CODE: ${error.response?.statusCode}");
+      print(" ERROR TYPE: ${error.type}");
+      print(" SERVER DATA: ${error.response?.data}");
       final responseData = error.response!.data;
 
       if (responseData is Map) {

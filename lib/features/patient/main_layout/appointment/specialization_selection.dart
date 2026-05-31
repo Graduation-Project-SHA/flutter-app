@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:health_care_project/features/patient/main_layout/appointment/widgets/doctor_card.dart';
 import 'package:health_care_project/features/patient/main_layout/appointment/widgets/specialty_card.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
@@ -136,7 +135,7 @@ class SpecializationSelection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: onBack,
+                onPressed: (){},
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),

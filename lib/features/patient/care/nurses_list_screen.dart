@@ -212,7 +212,12 @@ class NursesListScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Payment(),
+                        builder: (context) => Payment(
+                          doctorProfileId: nurse['id']?.toString() ?? "0",
+                          serviceId: 1,
+                          appointmentDate: "2026-04-25",
+                          startTime: "10:00 AM",
+                        ),
                       ),
                     );
                   },

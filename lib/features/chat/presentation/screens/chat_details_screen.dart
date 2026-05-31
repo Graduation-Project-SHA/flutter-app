@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../shared/component/customAppbarButton/custom_app_bar_button.dart';
 import '../../cubit/chat_cubit.dart';
 import '../../cubit/chat_state.dart';
 import '../../presentation/data/models/message_model.dart';
@@ -13,12 +14,14 @@ class ChatDetailsScreen extends StatefulWidget {
   final String myId;
   final String conversationId;
   final String targetUserId;
+  final String targetUserName;
 
   const ChatDetailsScreen({
     super.key,
     required this.myId,
     required this.conversationId,
     required this.targetUserId,
+    required this.targetUserName,
   });
 
   @override
@@ -37,7 +40,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
     super.initState();
     context
         .read<ChatCubit>()
-        .loadMessages(widget.conversationId, widget.myId);
+        .loadMessages(widget.conversationId, widget.myId,targetUserId: widget.targetUserId);
   }
 
   @override
@@ -251,9 +254,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           icon: const Icon(Icons.phone, color: Color(0xff2B73F3)),
           onPressed: () {},
         ),
-        title: const Text(
-          "Chat",
-          style: TextStyle(color: Colors.black),
+        actions: [
+          CustomAppBarBtn()
+
+        ],
+        title: Text(
+          widget.targetUserName,
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold
+          ),
         ),
         centerTitle: true,
       ),
@@ -313,9 +324,12 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     color: const Color(0xff2B73F3),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
-                  child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white),
-                    onPressed: _sendMessage,
+                  child: Transform.scale(
+                    scaleX: -1,
+                    child: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.white),
+                      onPressed: _sendMessage,
+                    ),
                   ),
                 ),
                 SizedBox(width: 8.w),

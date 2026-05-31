@@ -17,7 +17,7 @@ class SocketService {
     final authBox = Hive.box('authBox');
     final token = authBox.get('accessToken');
     print("🔑 Connecting with token: ${token?.substring(0,10)}...");
-    const url = "http://api.wiqaya.duckdns.org";
+    const url = "http://api.wiqaya-app.me";
 
     _socket?.dispose();
 

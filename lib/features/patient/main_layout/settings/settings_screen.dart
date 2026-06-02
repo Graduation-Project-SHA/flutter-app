@@ -38,29 +38,7 @@ class SettingsScreen extends StatelessWidget {
             fontSize: 18.sp,
           ),
         ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color.fromRGBO(205, 205, 205, 1),
-                ),
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              child: IconButton(
-                onPressed: () {
-
-                },
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18.sp,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ],
+        
       ),
 
       body: Column(

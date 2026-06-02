@@ -98,124 +98,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/doctor_logo.png
-    - assets/images/user_logo.png
-    - assets/images/frame1.png
-    - assets/images/frame2.png
-    - assets/images/frame3.png
-    - assets/images/frame4.png
-    - assets/images/frame5.png
-    - assets/images/Blob1.png
-    - assets/images/Blob2.png
-    - assets/images/Blob3.png
-    - assets/images/doctor.png
-    - assets/images/button.png
-    - assets/images/bg.png
-    - assets/images/hospital.png
-    - assets/images/appointment.png
-    - assets/images/splash.png
-    - assets/images/success.png
-    - assets/images/donors.png
-    - assets/images/Medicine.png
-    - assets/images/Nurse.png
-    - assets/images/Home_care.png
-    - assets/images/bone.png
-    - assets/images/brain.png
-    - assets/images/ear.png
-    - assets/images/tooth.png
-
-    - assets/images/filter.svg
-
-    - assets/images/home_icon.svg
-
-    - assets/images/settings_icon.svg
-
-    - assets/images/message-text_icon.svg
-
-    - assets/images/calendar_icon.svg
-    - assets/images/redhospital.png
-    - assets/images/time-fill.png
-    - assets/images/Maps.png
-
-    - assets/images/bill_icon.svg
-    - assets/images/visa_logo.png
-    - assets/images/InstaPay_Logo.png
-    - assets/images/instapay_bigLogo.png
-    - assets/images/meza_logo.png
-    - assets/images/mastecard_logo.png
-    - assets/images/visaa_logo.png
-    - assets/images/pay_done_back2.png
-    - assets/images/pay_done_back1.png
-    - assets/images/pay_done.png
-    - assets/images/eme.png
-    - assets/images/shield-plus.png
-    - assets/images/shield_red.png
-    - assets/images/j.png
-    - assets/images/direction.png
-    - assets/images/female_doctor.png
-    - assets/images/doctor1.png
-    - assets/images/doctor2.png
-    - assets/images/doctor3.png
-    - assets/images/doctor4.png
-    - assets/images/doctor5.png
-    - assets/images/emergency_car_icon.png
-    - assets/images/message-icon.png
-    - assets/images/pay.png
-    - assets/images/person_image.png
-    - assets/images/memoji.png
-    - assets/images/review.png
-    - assets/images/wallet.png
-    - assets/images/personalcard.png
-    - assets/images/clock.png
-    - assets/images/progress_bar1.png
-    - assets/images/progress_bar2.png
-    - assets/images/progress_bar3.png
-    - assets/images/mapImage.png
-    - assets/images/markOnMap.png
-    - assets/images/ID_Logo.png
-    - assets/images/camerarotate.png
-    - assets/images/FaceId.png
-    - assets/images/completeRegister.png
-    - assets/images/Loader.png
-    - assets/images/notificationLogo.png
-    - assets/images/message-question.png
-    - assets/images/logout.png
-    - assets/images/lock.png
-    - assets/images/logoo.png
-    - assets/images/paypal_logo.png
-    - assets/images/applepay_logo.png
-    - assets/images/mastercard_logo2.png
-    - assets/images/internal_medicine.png
-    - assets/images/pediatrics.png
-    - assets/images/dermatology.png
-    - assets/images/cardiology.png
-    - assets/images/radiology.png
-    - assets/images/oncology.png
-    - assets/images/nutrition.png
-    - assets/images/physiotherapy.png
-    - assets/images/urology.png
-    - assets/images/surgery.png
-    - assets/images/neurology.png
-    - assets/images/eye.png
-    - assets/images/gynecology.png
-    - assets/images/EAR_NOSE_THROAT.png
-    - assets/images/DENTISTRY.png
-    - assets/images/ORTHOPEDICS.png
-    - assets/images/PSYCHIATRY.png
-    - assets/images/nurse_ahmed.png
-    - assets/images/nurse_fatma.png
-    - assets/images/nurse_sara.png
-    - assets/images/help_icon.png
-    - assets/images/girl_photo.png
-    - assets/images/blood.png
-    - assets/images/medical_machine.png
-    - assets/images/add_services_design.png
-    - assets/images/teeth.png
+    - assets/images/
+    - assets/fonts/
     - assets/images/svgs/
-    - assets/images/card3_in_pi.png
-    - assets/images/card1_in_pi.png
-    - assets/images/card2_in_pi.png
-    - assets/images/card4_in_pi.png
 
 
 
@@ -241,10 +126,10 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  fonts:
-    - family: SF Arabic
-      fonts:
-        - asset: assets/fonts/SF Arabic.ttf
+  # fonts:
+  #   - family: SF Arabic
+  #     fonts:
+  #       - asset: assets/fonts/SF Arabic.ttf
         
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

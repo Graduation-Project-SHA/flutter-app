@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_states.dart';
 import 'package:health_care_project/features/patient/donation/views/widgets/donation_screen_widgets/List_of_donation.dart';
@@ -10,7 +9,6 @@ import 'package:health_care_project/features/patient/donation/views/widgets/dona
 import 'package:health_care_project/features/patient/donation/views/widgets/donation_screen_widgets/need_help.dart';
 import 'package:health_care_project/features/patient/donation/views/widgets/donation_screen_widgets/see_all_donations.dart';
 import 'package:health_care_project/shared/component/defaultTextButton/defaultTextButton.dart';
-import 'package:health_care_project/shared/component/filterButton/filter_button.dart';
 import 'package:health_care_project/shared/component/searchField/search_field.dart';
 
 class DonationScreen extends StatelessWidget {

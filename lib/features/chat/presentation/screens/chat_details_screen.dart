@@ -38,9 +38,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<ChatCubit>()
-        .loadMessages(widget.conversationId, widget.myId,targetUserId: widget.targetUserId);
+    context.read<ChatCubit>().loadMessages(
+          widget.conversationId,
+          widget.myId,
+          targetUserId: widget.targetUserId,
+        );
   }
 
   @override
@@ -64,8 +66,10 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
   void _sendMessage() {
     if (messageController.text.trim().isEmpty) return;
 
-    context.read<ChatCubit>().sendMessage(
-      conversationId: widget.conversationId,
+    final cubit = context.read<ChatCubit>();
+
+    cubit.sendMessage(
+      conversationId: cubit.currentConversationId ?? "",
       senderId: widget.myId,
       targetUserId: widget.targetUserId,
       text: messageController.text.trim(),
@@ -100,6 +104,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       ),
     );
   }
+
   void _showAttachmentOptions() {
     if (isEmojiVisible) {
       setState(() {
@@ -131,19 +136,16 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                 ),
               ),
               SizedBox(height: 16.h),
-
               _AttachmentOption(
                 icon: Icons.camera_alt,
                 label: "كاميرا",
                 onTap: () => Navigator.pop(context),
               ),
-
               _AttachmentOption(
                 icon: Icons.photo_library,
                 label: "صور/فيديو",
                 onTap: () => Navigator.pop(context),
               ),
-
               _AttachmentOption(
                 icon: Icons.folder,
                 label: "مستند",
@@ -254,17 +256,13 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
           icon: const Icon(Icons.phone, color: Color(0xff2B73F3)),
           onPressed: () {},
         ),
-        actions: [
-          CustomAppBarBtn()
-
-        ],
+        actions: [CustomAppBarBtn()],
         title: Text(
           widget.targetUserName,
           style: TextStyle(
               color: Colors.black,
               fontSize: 18.sp,
-              fontWeight: FontWeight.bold
-          ),
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -284,7 +282,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                     Expanded(
                       child: ListView.builder(
                         controller: _scrollController,
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
                           final message = messages[index];
@@ -309,11 +307,8 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               },
             ),
           ),
-
-
           Container(
-            padding:
-            EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
             color: Colors.white,
             child: Row(
               children: [
@@ -344,15 +339,17 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                       }
                     },
                     onChanged: (value) {
-                      context
-                          .read<ChatCubit>()
-                          .sendTyping(widget.conversationId);
+                      final cubit = context.read<ChatCubit>();
+                      // نستخدم المعرف المحدث من الكوبيت لإرسال الـ typing للغرفة الصحيحة
+                      if (cubit.currentConversationId != null &&
+                          cubit.currentConversationId!.isNotEmpty) {
+                        cubit.sendTyping(cubit.currentConversationId!);
+                      }
                     },
                     decoration: InputDecoration(
                       hintText: "اكتب رسالة",
                       hintStyle: TextStyle(
-                          color: const Color(0xffC7C7CC),
-                          fontSize: 14.sp),
+                          color: const Color(0xffC7C7CC), fontSize: 14.sp),
                       filled: true,
                       fillColor: Colors.white,
                       prefixIcon: InkWell(
@@ -367,13 +364,11 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: const BorderSide(
-                            color: Color(0xffC7C7CC)),
+                        borderSide: const BorderSide(color: Color(0xffC7C7CC)),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: const BorderSide(
-                            color: Color(0xffC7C7CC)),
+                        borderSide: const BorderSide(color: Color(0xffC7C7CC)),
                       ),
                     ),
                   ),
@@ -381,7 +376,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
               ],
             ),
           ),
-
           Offstage(
             offstage: !isEmojiVisible,
             child: SizedBox(
@@ -392,7 +386,7 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
                   emojiViewConfig: EmojiViewConfig(
                     emojiSizeMax: 20 *
                         (foundation.defaultTargetPlatform ==
-                            TargetPlatform.android
+                                TargetPlatform.android
                             ? 1.2
                             : 1.0),
                   ),
@@ -404,8 +398,6 @@ class _ChatDetailsScreenState extends State<ChatDetailsScreen> {
       ),
     );
   }
-
-
 }
 
 class _AttachmentOption extends StatelessWidget {

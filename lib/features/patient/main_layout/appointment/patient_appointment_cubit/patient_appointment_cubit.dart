@@ -19,8 +19,19 @@ class AppointmentCubit extends Cubit<AppointmentState> {
         url: ApiConstants.patientAppointments,
       );
 
-      final List data = response.data['data'] ?? [];
-      List<AppointmentModel> allAppointments = data.map((e) => AppointmentModel.fromJson(e)).toList();
+      final responseData = response.data;
+      final dynamic rawAppointments = responseData is Map<String, dynamic> ? responseData['data'] : null;
+
+      final List<dynamic> appointmentsList = rawAppointments is List
+          ? rawAppointments
+          : rawAppointments is Map<String, dynamic> && rawAppointments['appointments'] is List
+              ? rawAppointments['appointments'] as List<dynamic>
+              : <dynamic>[];
+
+      final List<AppointmentModel> allAppointments = appointmentsList
+          .whereType<Map>()
+          .map((e) => AppointmentModel.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
 
       upcoming = allAppointments.where((a) => a.status == "PENDING").toList();
       past = allAppointments.where((a) => a.status == "COMPLETED" || a.status == "CANCELLED").toList();
@@ -91,8 +102,17 @@ class AppointmentCubit extends Cubit<AppointmentState> {
         },
       );
 
-      final List slotsFromApi = response.data['data']['availableSlots'] ?? [];
-      List<String> availableSlots = slotsFromApi.map((e) => e['startTime'].toString()).toList();
+      final responseData = response.data;
+      final dynamic slotsContainer = responseData is Map<String, dynamic> ? responseData['data'] : null;
+      final List<dynamic> slotsFromApi = slotsContainer is Map<String, dynamic> && slotsContainer['availableSlots'] is List
+          ? slotsContainer['availableSlots'] as List<dynamic>
+          : <dynamic>[];
+
+      final List<String> availableSlots = slotsFromApi
+          .whereType<Map>()
+          .map((e) => e['startTime']?.toString() ?? '')
+          .where((slot) => slot.isNotEmpty)
+          .toList();
 
       emit(AppointmentSlotsLoaded(availableSlots));
     } catch (e) {

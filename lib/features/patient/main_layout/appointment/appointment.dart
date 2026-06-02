@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_cubit.dart';
 import 'package:health_care_project/features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_states.dart';
+import 'package:health_care_project/features/patient/main_layout/home/home_screen.dart';
+import 'package:health_care_project/features/patient/main_layout/main_layout.dart';
 import 'package:intl/intl.dart';
-import 'package:hive/hive.dart';
 
 import 'DoctorDetailsScreen.dart';
 
@@ -46,7 +47,7 @@ class _AppointmentState extends State<Appointment> {
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: IconButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainLayout())),
                   icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
                 ),
               ),

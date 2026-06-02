@@ -65,7 +65,10 @@ class _AppointmentTimeScreenState extends State<AppointmentTimeScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: [
-          CustomAppBarBtn(),
+          CustomAppBarBtn(
+            
+          ),
+          
 
         ],
         backgroundColor: Colors.white,

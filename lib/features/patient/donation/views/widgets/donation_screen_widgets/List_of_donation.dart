@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:health_care_project/features/chat/cubit/chat_cubit.dart';
+import 'package:health_care_project/features/chat/presentation/data/repository/chat_repository.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_cubit.dart';
 import 'package:health_care_project/features/patient/donation/donation_cubit/donation_states.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 
 import '../../../../../chat/presentation/screens/chat_details_screen.dart';
 
@@ -132,10 +135,16 @@ class ListOfDonation extends StatelessWidget {
               left: 10.w,
               child: IconButton(
                 onPressed: () {
+                
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatDetailsScreen(myId: '',conversationId: '', targetUserId: '', targetUserName: '',),
+                      builder: (context) => ChatDetailsScreen(
+  myId: Hive.box('authBox').get('userId').toString(),
+  conversationId:  '',
+  targetUserId: item.requesterId.toString(),
+  targetUserName: "${item.firstName} ${item.lastName}",
+)
                     ),
                   );
                 },

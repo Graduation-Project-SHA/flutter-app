@@ -18,14 +18,27 @@ class AppointmentModel {
   });
 
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    final doctorJson = json['doctorProfile'];
+    final serviceJson = json['service'];
+
     return AppointmentModel(
-      id: json['id'],
-      appointmentDate: DateTime.parse(json['appointmentDate']),
-      startTime: json['startTime'],
-      status: json['status'],
-      notes: json['notes'] ?? "",
-      doctor: DoctorInAppointment.fromJson(json['doctorProfile']),
-      service: ServiceInAppointment.fromJson(json['service']),
+      id: json['id'] ?? 0,
+      appointmentDate: DateTime.tryParse(json['appointmentDate']?.toString() ?? '') ?? DateTime.now(),
+      startTime: json['startTime']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+      notes: json['notes']?.toString() ?? "",
+      doctor: doctorJson is Map<String, dynamic>
+          ? DoctorInAppointment.fromJson(doctorJson)
+          : DoctorInAppointment(
+              firstName: '',
+              lastName: '',
+              profileImage: null,
+              specialization: '',
+              id: 0,
+            ),
+      service: serviceJson is Map<String, dynamic>
+          ? ServiceInAppointment.fromJson(serviceJson)
+          : ServiceInAppointment(name: '', price: 0),
     );
   }
 }
@@ -47,12 +60,14 @@ class DoctorInAppointment {
 
 
   factory DoctorInAppointment.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'];
+
     return DoctorInAppointment(
-      firstName: json['user']['firstName'] ?? "",
-      lastName: json['user']['lastName'] ?? "",
-      profileImage: json['profileImage'],
-      specialization: json['specialization'] ?? "",
-      id: json['id'],
+      firstName: userJson is Map<String, dynamic> ? (userJson['firstName']?.toString() ?? '') : '',
+      lastName: userJson is Map<String, dynamic> ? (userJson['lastName']?.toString() ?? '') : '',
+      profileImage: json['profileImage']?.toString(),
+      specialization: json['specialization']?.toString() ?? "",
+      id: json['id'] ?? 0,
     );
   }
 
@@ -68,7 +83,7 @@ class ServiceInAppointment {
 
   factory ServiceInAppointment.fromJson(Map<String, dynamic> json) {
     return ServiceInAppointment(
-      name: json['name'] ?? "",
+      name: json['name']?.toString() ?? "",
       price: double.parse(json['price'].toString()),
     );
   }

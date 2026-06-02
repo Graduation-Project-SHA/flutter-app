@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:health_care_project/features/patient/main_layout/appointment/widgets/specialty_card.dart';
+import 'package:health_care_project/features/patient/main_layout/main_layout.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
 
@@ -125,6 +126,7 @@ class SpecializationSelection extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         actions: [
           Padding(
@@ -135,7 +137,10 @@ class SpecializationSelection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
               ),
               child: IconButton(
-                onPressed: (){},
+                onPressed: (){
+                Navigator.pushReplacement(context, 
+                MaterialPageRoute(builder: (context) =>MainLayout()));
+                },
                 icon: Icon(Icons.arrow_forward_ios, size: 18.sp),
               ),
             ),

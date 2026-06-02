@@ -1,11 +1,26 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:health_care_project/core/%20theme/app_colors.dart';
+import 'package:health_care_project/features/chat/presentation/screens/chat_details_screen.dart';
+import 'package:health_care_project/features/chat/presentation/screens/messages_screen.dart';
+import 'package:health_care_project/features/doctor/main_layout/doctor_profile/doctor_services/doctor_services.dart';
 import 'package:health_care_project/features/patient/donation/views/donation_screen.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/all_doctors_screen.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/appointment_screen.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_cubit.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_cubit.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/patient_appointment_cubit/patient_appointment_states.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/patient_appointment_model/patient_appointment_model.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/patient_doctor_model/patient_doctor_model.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/paient_doctor_cubit/patient_doctors_state.dart';
+import 'package:health_care_project/features/patient/main_layout/main_layout.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import '../../../../shared/component/filterButton/filter_button.dart';
 import '../../../../shared/component/searchField/search_field.dart';
 import '../../care/care_screen.dart';
@@ -23,11 +38,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Box authBox;
+  late final PageController _upcomingAppointmentsController;
+  int _currentUpcomingAppointmentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     authBox = Hive.box('authBox');
+    _upcomingAppointmentsController = PageController(viewportFraction: 1.0);
+    context.read<AppointmentCubit>().getMyAppointments();
+    context.read<PatientDoctorsCubit>().getDoctors();
+  }
+
+  @override
+  void dispose() {
+    _upcomingAppointmentsController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,10 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundImage: localImage != null
                             ? FileImage(File(localImage))
                             : (serverImage != null
-                            ? NetworkImage(serverImage)
-                            : const AssetImage("assets/images/doctor.png") as ImageProvider)
-                        as ImageProvider,
-
+                                      ? NetworkImage(serverImage)
+                                      : const AssetImage(
+                                              "assets/images/FaceId.png",
+                                            )
+                                            as ImageProvider)
+                                  as ImageProvider,
                       ),
                       SizedBox(width: 24.w),
                       Column(
@@ -77,14 +105,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Row(
                             children: [
-                              Icon(Icons.location_on, size: 16.sp, color: Colors.black),
+                              Icon(
+                                Icons.location_on,
+                                size: 16.sp,
+                                color: Colors.black,
+                              ),
                               SizedBox(width: 4.w),
                               Text(
                                 location,
-                                style: TextStyle(fontSize: 14.sp, color: Colors.black),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Colors.black,
+                                ),
                               ),
                               SizedBox(width: 4.w),
-                              Icon(Icons.keyboard_arrow_down_sharp, size: 16.sp, color: Colors.black),
+                              Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                size: 16.sp,
+                                color: Colors.black,
+                              ),
                             ],
                           ),
                         ],
@@ -100,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           borderRadius: BorderRadius.circular(10.r),
                           border: Border.all(color: Colors.grey.shade300),
                         ),
-                        child: SvgPicture.asset("assets/images/bill_icon.svg",),
+                        child: SvgPicture.asset("assets/images/bill_icon.svg"),
                       ),
                     ],
                   ),
@@ -109,15 +148,64 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 24.h),
               Text(
                 "المواعيد القادمة",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
               SizedBox(height: 8.h),
-              _buildUpcomingAppointmentCard(
-                doctorName: "د.محمد مرعي",
-                specialty: "استشاري مخ واعصاب",
-                date: "الأربعاء, 10 نوفمبر, 2025",
-                time: "11:00",
-                doctorImage: "assets/images/doctor.png",
+              BlocBuilder<AppointmentCubit, AppointmentState>(
+                builder: (context, state) {
+                  if (state is AppointmentLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is AppointmentLoaded) {
+                    final upcomingAppointments = state.upcoming;
+                    if (upcomingAppointments.isEmpty) {
+                      return const Text("لا توجد مواعيد قادمة");
+                    }
+                    final currentIndex =
+                        _currentUpcomingAppointmentIndex >=
+                            upcomingAppointments.length
+                        ? upcomingAppointments.length - 1
+                        : _currentUpcomingAppointmentIndex;
+
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 150.h,
+                          child: PageView.builder(
+                            controller: _upcomingAppointmentsController,
+                            reverse: true,
+                            itemCount: upcomingAppointments.length,
+                            onPageChanged: (index) {
+                              setState(() {
+                                _currentUpcomingAppointmentIndex = index;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                                child: _buildUpcomingAppointmentCard(
+                                  appointment: upcomingAppointments[index],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        _buildAppointmentsIndicator(
+                          context: context,
+                          totalItems: upcomingAppointments.length,
+                          currentPage: currentIndex,
+                        ),
+                      ],
+                    );
+                  } else if (state is AppointmentError) {
+                    return Text(state.message);
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               SizedBox(height: 24.h),
               Row(
@@ -153,7 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       onButtonPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const MainLayout(selectedIndex: 2)),
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const MainLayout(selectedIndex: 2),
+                          ),
                         );
                       },
                     ),
@@ -162,14 +253,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: _buildSideBySideCard(
                       title: "مسعف قريب",
-                      description: "استكشف المستشفيات والاطباء والممرضين الاقرب",
+                      description:
+                          "استكشف المستشفيات والاطباء والممرضين الاقرب",
                       buttonText: "ابحث عن مسعف",
                       cardColor: const Color(0xffFDF1F2),
                       buttonColor: const Color(0xffE6474F),
                       icon: "assets/images/hospital.png",
                       bgicon: const Color(0xffF9D2D4),
                       onButtonPressed: () {
-                        Navigator.pushNamed(context, FindNearbyServicesScreen.routeName);
+                        Navigator.pushNamed(
+                          context,
+                          FindNearbyServicesScreen.routeName,
+                        );
                       },
                     ),
                   ),
@@ -181,34 +276,67 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "خدماتنا",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87),
-                  ), Text(
-                    "عرض الكل",
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color:AppColors.gradientColor2),
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
+                  // Text(
+                  //   "عرض الكل",
+                  //   style: TextStyle(
+                  //       fontSize: 12.sp,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: AppColors.gradientColor2),
+                  // ),
                 ],
               ),
               SizedBox(height: 12.h),
               SizedBox(
                 height: 100.h,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                  _buildServiceCard(
-                  "assets/images/Home_care.png", "رعاية منزلية",
-                  onTap: () {
-                    Navigator.pushNamed(context, CareScreen.routeName);
-                  },
-                ),
-                    _buildServiceCard("assets/images/Medicine.png","أدوية"),
-                    _buildServiceCard("assets/images/Nurse.png", "ممرضة"),
-                    _buildServiceCard("assets/images/donors.png", "متبرعون",
-                      onTap: () {
-                        Navigator.pushNamed(context, DonationScreen.routeName);
-                      },
-                    ),
-                    _buildServiceCard("assets/images/doctor_logo.png", "طبيب"),
-                  ],
+                child: Directionality(
+                  textDirection: ui.TextDirection.ltr,
+                  child: ListView(
+                    
+                    
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buildServiceCard(
+                        "assets/images/Home_care.png",
+                        "رعاية منزلية",
+                        onTap: () {
+                          Navigator.pushNamed(context, CareScreen.routeName);
+                        },
+                      ),
+                        SizedBox(width: 18.w,),
+                        _buildServiceCard(
+                        "assets/images/donors.png",
+                        "متبرعون",
+                        onTap: () {
+                          Navigator.pushNamed(context, DonationScreen.routeName);
+                        },
+                      ),
+                        SizedBox(width: 18.w,),
+                      _buildServiceCard(
+                        "assets/images/doctor_logo.png",
+                        "طبيب",
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AppointmentScreen();
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                      // _buildServiceCard("assets/images/Medicine.png", "أدوية"),
+                      // _buildServiceCard("assets/images/Nurse.png", "ممرضة"),
+                    
+                      
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 12.h),
@@ -217,26 +345,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     "أشهر الأطباء",
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
-                  Text(
-                    "عرض الكل",
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color:AppColors.gradientColor2),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AllDoctorsScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "عرض الكل",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.gradientColor2,
+                      ),
+                    ),
                   ),
                 ],
               ),
               SizedBox(height: 8.h),
-              ListView.builder(
-                itemCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return _buildDoctorCard(
-                    rating: 4.8,
-                    name: "د.محمد مرعي",
-                    specialty: "استشاري مخ واعصاب",
-                    image: "assets/images/doctor.png",
-                  );
+              BlocBuilder<PatientDoctorsCubit, PatientDoctorsState>(
+                builder: (context, state) {
+                  if (state is PatientDoctorsLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is PatientDoctorsLoaded) {
+                    final doctors = state.doctors.take(2).toList();
+                    return ListView.builder(
+                      itemCount: doctors.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return _buildDoctorCard(doctor: doctors[index]);
+                      },
+                    );
+                  } else if (state is PatientDoctorsError) {
+                    return Text(state.error);
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
             ],
@@ -263,28 +416,69 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(color: bgicon, shape: BoxShape.circle),
-            child: Image.asset(icon, height: 45.w),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: bgicon,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(icon, height: 45.w),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
+                  ),
+
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 12.h),
-          Text(title, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87), textAlign: TextAlign.center),
-          SizedBox(height: 8.h),
-          Text(description, style: TextStyle(fontSize: 12.sp, color: Colors.black54), textAlign: TextAlign.center, maxLines: 3, overflow: TextOverflow.ellipsis),
+
           SizedBox(height: 15.h),
           SizedBox(
+            height: 40.h,
             width: double.infinity,
             child: ElevatedButton(
               onPressed: onButtonPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: buttonColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
                 padding: EdgeInsets.symmetric(vertical: 8.h),
               ),
-              child: Text(buttonText, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.white)),
+              child: Text(
+                buttonText,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -292,12 +486,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceCard(String imagePath, String title, {VoidCallback? onTap}) {
+  Widget _buildServiceCard(
+    String imagePath,
+    String title, {
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 74.25.w,
-        height: 78.75.h,
+        width: 95.w,
+        height:95.h,
         margin: EdgeInsets.only(right: 16.w),
         padding: EdgeInsets.symmetric(vertical: 7.5.h, horizontal: 5.w),
         decoration: BoxDecoration(
@@ -307,23 +505,33 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+      
           children: [
-            Image.asset(imagePath, height: 45.h, width: 45.w),
-            SizedBox(height: 5.h),
-            Text(title,
-                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center),
+
+            Image.asset(
+              imagePath, height: 61.h, width: 65.w,fit: BoxFit.cover,
+              ),
+
+            Text(
+              title,
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildDoctorCard({required double rating, required String name, required String specialty, required String image}) {
+  Widget _buildDoctorCard({required PatientDoctorModel doctor}) {
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
       padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r), border: Border.all(color: const Color(0xffEDF1F3), width: 0.75)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: const Color(0xffEDF1F3), width: 0.75),
+      ),
       child: Column(
         children: [
           Row(
@@ -333,7 +541,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 112.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+                  image: const DecorationImage(
+                    image: AssetImage("assets/images/doctor.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               SizedBox(width: 16.w),
@@ -345,35 +556,141 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const Icon(Icons.star, color: Colors.amber, size: 18),
                         SizedBox(width: 4.w),
-                        Text(rating.toString(), style: TextStyle(fontSize: 13.sp, color: Colors.black54)),
+                        Text(
+                          doctor.rating?.toString() ?? 'N/A',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: Colors.black54,
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 8.h),
-                    Text(name, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                    Text(
+                      "${doctor.firstName} ${doctor.lastName}",
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(height: 8.h),
-                    Text(specialty, style: TextStyle(fontSize: 13.sp, color: Colors.grey[700])),
+                    Text(
+                      doctor.specialization ?? 'N/A',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.grey[700],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
           SizedBox(height: 16.h),
-          ElevatedButton(onPressed: () {}, child: Text("ارسال رسالة")),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatDetailsScreen(
+                    myId: Hive.box('authBox').get('userId').toString(),
+                    conversationId: '',
+                    targetUserId: doctor.id.toString(),
+                    targetUserName: "${doctor.firstName} ${doctor.lastName}",
+                  ),
+                ),
+              );
+            },
+            child: Text("ارسال رسالة"),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildUpcomingAppointmentCard({required String doctorName, required String specialty, required String date, required String time, required String doctorImage}) {
+  Widget _buildAppointmentsIndicator({
+    required BuildContext context,
+    required int totalItems,
+    required int currentPage,
+  }) {
+    final displayCurrentPage = totalItems - 1 - currentPage;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        totalItems,
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: EdgeInsets.symmetric(horizontal: 3.w),
+          height: 8.h,
+          width: index == displayCurrentPage ? 22.w : 8.w,
+          decoration: BoxDecoration(
+            color: index == displayCurrentPage
+                ? const Color(0xff4786F5)
+                : const Color(0xff4786F5).withOpacity(0.25),
+            borderRadius: BorderRadius.circular(999.r),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUpcomingAppointmentCard({
+    required AppointmentModel appointment,
+  }) {
+    final formattedDate = DateFormat(
+      'EEEE, d MMMM, y',
+      'ar',
+    ).format(appointment.appointmentDate);
+    final formattedTime = appointment.startTime.isNotEmpty
+        ? appointment.startTime
+        : DateFormat('h:mm a').format(appointment.appointmentDate);
+
     return Container(
       width: double.infinity,
       height: 160.h,
-      decoration: BoxDecoration(color: const Color(0xff4786F5), borderRadius: BorderRadius.circular(16.r)),
+      decoration: BoxDecoration(
+        color: const Color(0xff4786F5),
+        borderRadius: BorderRadius.circular(16.r),
+      ),
       child: Stack(
         children: [
-          Positioned(top: -2.46.h, left: -42.w, child: Opacity(opacity: 0.1, child: Image.asset('assets/images/Blob1.png', width: 175.17.w, height: 107.93.h))),
-          Positioned(top: -17.h, left: -33.38.w, child: Opacity(opacity: 0.1, child: Image.asset('assets/images/Blob2.png', width: 158.84.w, height: 137.h))),
-          Positioned(top: 47.54.h, left: 205.w, child: Opacity(opacity: 0.1, child: Image.asset('assets/images/Blob3.png', width: 175.17.w, height: 107.93.h))),
+          Positioned(
+            top: -2.46.h,
+            left: -42.w,
+            child: Opacity(
+              opacity: 0.1,
+              child: Image.asset(
+                'assets/images/Blob1.png',
+                width: 175.17.w,
+                height: 107.93.h,
+              ),
+            ),
+          ),
+          Positioned(
+            top: -17.h,
+            left: -33.38.w,
+            child: Opacity(
+              opacity: 0.1,
+              child: Image.asset(
+                'assets/images/Blob2.png',
+                width: 158.84.w,
+                height: 137.h,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 47.54.h,
+            left: 205.w,
+            child: Opacity(
+              opacity: 0.1,
+              child: Image.asset(
+                'assets/images/Blob3.png',
+                width: 175.17.w,
+                height: 107.93.h,
+              ),
+            ),
+          ),
           Positioned.fill(
             child: Padding(
               padding: EdgeInsets.all(16.w),
@@ -386,14 +703,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         width: 48.w,
                         height: 48.h,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.r), image: DecorationImage(image: AssetImage(doctorImage), fit: BoxFit.cover)),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.r),
+                          image: const DecorationImage(
+                            image: AssetImage("assets/images/doctor.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(doctorName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.white)),
+                          Text(
+                            "د. ${appointment.doctor.firstName} ${appointment.doctor.lastName}",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(height: 4.h),
-                          Text(specialty, style: TextStyle(fontSize: 13.sp, color: Colors.white70)),
+                          Text(
+                            appointment.doctor.specialization ?? 'N/A',
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.white70,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -402,16 +738,44 @@ class _HomeScreenState extends State<HomeScreen> {
                   Container(
                     width: double.infinity,
                     height: 44.h,
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 10.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.access_time, size: 18.sp, color: Colors.grey.shade600),
+                        Icon(
+                          Icons.access_time,
+                          size: 18.sp,
+                          color: Colors.grey.shade600,
+                        ),
                         Text("الموعد:"),
-                        Text(time, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, color: Colors.black)),
-                        Icon(Icons.calendar_month, size: 18.sp, color: Colors.grey.shade600),
-                        Text(date, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600, color: Colors.black87)),
+                        Text(
+                          formattedTime,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Icon(
+                          Icons.calendar_month,
+                          size: 18.sp,
+                          color: Colors.grey.shade600,
+                        ),
+                        Text(
+                          formattedDate,
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
                       ],
                     ),
                   ),

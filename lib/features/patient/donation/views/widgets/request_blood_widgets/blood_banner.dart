@@ -7,7 +7,7 @@ class BloodBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: 180.h,
+        height: 182.h,
         width: 360.w,
         decoration: BoxDecoration(
           color:  Color(0xffFFF5F7),

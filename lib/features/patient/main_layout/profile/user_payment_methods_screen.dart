@@ -62,25 +62,25 @@ class UserPaymentMethodsScreen extends StatelessWidget {
 
               const Spacer(),
 
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff247CFF),
-                  minimumSize: Size(double.infinity, 52.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  elevation: 0,
-                ),
-                onPressed: () {},
-                child: Text(
-                  "أضف جديد",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              // ElevatedButton(
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color(0xff247CFF),
+              //     minimumSize: Size(double.infinity, 52.h),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(16.r),
+              //     ),
+              //     elevation: 0,
+              //   ),
+              //   onPressed: () {},
+              //   child: Text(
+              //     "أضف جديد",
+              //     style: TextStyle(
+              //       fontSize: 16.sp,
+              //       fontWeight: FontWeight.bold,
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 20.h),
             ],
           ),

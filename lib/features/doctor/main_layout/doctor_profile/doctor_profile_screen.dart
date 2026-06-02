@@ -267,7 +267,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
-                                "DoctorPaymentMethodsScreen",
+                                "UserPaymentMethodsScreen",
                               );
                             },
                           ),

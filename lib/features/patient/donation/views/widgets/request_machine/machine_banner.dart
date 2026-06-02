@@ -7,7 +7,7 @@ class MachineBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 180.h,
+        height: 182.h,
         width: 360.w,
         decoration: BoxDecoration(
           color:  Color(0xffF0F6FF),

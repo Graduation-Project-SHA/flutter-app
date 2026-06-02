@@ -71,6 +71,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
   }
 
   Widget _doctorHeader(DoctorDetailsModel doctor) {
+    final displayPrice = doctor.effectiveConsultationFee;
+
     return Column(
       children: [
         Row(
@@ -100,7 +102,9 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    "سعر الكشف: ${doctor.consultationFee?.toString() ?? "-"} جنيه",
+                    displayPrice != null
+                        ? "سعر الكشف: ${displayPrice.toStringAsFixed(0)} جنيه"
+                        : "سعر الكشف: - جنيه",
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,

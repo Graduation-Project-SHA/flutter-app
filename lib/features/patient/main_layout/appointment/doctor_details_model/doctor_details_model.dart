@@ -42,9 +42,7 @@ class DoctorDetailsModel {
       fullName: "د. $firstName $lastName".trim(),
       specialization: json['specialization']?.toString() ?? "",
       services: parsedServices,
-      consultationFee: json['consultationFee'] == null
-          ? null
-          : double.tryParse(json['consultationFee'].toString()),
+      consultationFee: _parseDoctorPrice(json),
       profileImage: user['profileImage'],
       bio: json['bio']?.toString(),
       city: json['city']?.toString(),
@@ -61,6 +59,72 @@ class DoctorDetailsModel {
       "services": services.map((s) => s.toJson()).toList(),
     };
   }
+
+  double? get effectiveConsultationFee {
+    if (consultationFee != null && consultationFee! > 0) {
+      return consultationFee;
+    }
+
+    for (final service in services) {
+      if (service.price > 0) {
+        return service.price;
+      }
+    }
+
+    return null;
+  }
+}
+
+double? _parseDoctorPrice(Map<String, dynamic> json) {
+  final consultationFee = _parseFlexibleDouble(json['consultationFee']);
+  if (consultationFee != null && consultationFee > 0) {
+    return consultationFee;
+  }
+
+  final rootPrice = _parseFlexibleDouble(json['price']);
+  if (rootPrice != null && rootPrice > 0) {
+    return rootPrice;
+  }
+
+  final services = json['services'] as List? ?? [];
+  for (final service in services) {
+    if (service is Map<String, dynamic>) {
+      final servicePrice = _parseFlexibleDouble(service['price']);
+      if (servicePrice != null && servicePrice > 0) {
+        return servicePrice;
+      }
+    }
+  }
+
+  return null;
+}
+
+double? _parseFlexibleDouble(dynamic value) {
+  if (value == null) {
+    return null;
+  }
+
+  if (value is num) {
+    return value.toDouble();
+  }
+
+  final text = value.toString().trim();
+  if (text.isEmpty) {
+    return null;
+  }
+
+  final normalized = text.replaceAll(',', '.');
+  final directParse = double.tryParse(normalized);
+  if (directParse != null) {
+    return directParse;
+  }
+
+  final match = RegExp(r'\d+(?:[\.,]\d+)?').firstMatch(text);
+  if (match != null) {
+    return double.tryParse(match.group(0)!.replaceAll(',', '.'));
+  }
+
+  return null;
 }
 
 class ServiceInDoctor {
@@ -72,9 +136,9 @@ class ServiceInDoctor {
 
   factory ServiceInDoctor.fromJson(Map<String, dynamic> json) {
     return ServiceInDoctor(
-      id: json['id'],
+      id: int.tryParse(json['id']?.toString() ?? '') ?? 0,
       name: json['name'] ?? "",
-      price: double.parse(json['price'].toString()),
+      price: _parseFlexibleDouble(json['price']) ?? 0,
     );
   }
 

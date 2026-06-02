@@ -150,14 +150,14 @@ class _DoctorSelectionState extends State<DoctorSelection> {
   }
 
   Widget _doctorItem(PatientDoctorModel doctor) {
+    final displayPrice = doctor.effectiveConsultationFee!;
+
     return DoctorCard(
       name: doctor.fullName,
       specialty: _specializationLabel(doctor.specialization),
-      price: doctor.consultationFee != null
-          ? "سعر الكشف ${doctor.consultationFee!.toStringAsFixed(0)} جنيه"
-          : "السعر غير متاح",
-        image: "assets/images/doctor.png",
-        isNetworkImage: false,
+      price: "سعر الكشف ${displayPrice.toStringAsFixed(0)} جنيه",
+      image: "assets/images/doctor.png",
+      isNetworkImage: false,
       onBook: () {
         Navigator.push(
           context,
@@ -196,6 +196,11 @@ class _DoctorSelectionState extends State<DoctorSelection> {
       },
       builder: (context, state) {
         final cubit = PatientDoctorsCubit.get(context);
+
+        // هنا بنعمل الفلترة قبل عرض القائمة
+        final activeDoctors = cubit.doctors
+            .where((doctor) => doctor.effectiveConsultationFee != null)
+            .toList();
 
         return Scaffold(
           appBar: AppBar(
@@ -262,7 +267,6 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                   ],
                 ),
                 SizedBox(height: 16.h),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -272,9 +276,7 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                     _specialtyIcon("EAR_NOSE_THROAT", "assets/images/ear.png", "أنف وأذن"),
                   ],
                 ),
-
                 SizedBox(height: 16.h),
-
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TextButton(
@@ -289,9 +291,7 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 12.h),
-
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -302,9 +302,10 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                 ),
                 SizedBox(height: 32.h),
 
+                // التحقق هنا بناءً على activeDoctors المفلترة
                 if (state is PatientDoctorsLoading)
                   const Center(child: CircularProgressIndicator())
-                else if (cubit.doctors.isEmpty)
+                else if (activeDoctors.isEmpty)
                   Center(
                     child: Padding(
                       padding: EdgeInsets.only(top: 100.h),
@@ -324,7 +325,7 @@ class _DoctorSelectionState extends State<DoctorSelection> {
                     ),
                   )
                 else
-                  ...cubit.doctors.map(_doctorItem).toList(),
+                  ...activeDoctors.map(_doctorItem).toList(),
 
                 SizedBox(height: 80.h),
               ],

@@ -43,6 +43,7 @@ import 'features/patient/main_layout/profile/user_personal_information_screen.da
 import 'features/patient/nearby_services/emergency_request_screen.dart';
 import 'features/patient/nearby_services/find_nearby_services_screen.dart';
 import 'features/patient/nearby_services/hospital_details_screen.dart';
+import 'package:health_care_project/features/patient/main_layout/appointment/all_doctors_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorDetailsCubit()),
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
+
         BlocProvider(create: (context) => AppointmentCubit()),
         BlocProvider(create: (context) => DonationCubit()..getDonationData()),
         BlocProvider(create: (context) => DoctorServicesCubit()..getDoctorServices()),
@@ -136,6 +138,7 @@ class MyApp extends StatelessWidget {
                 RequestMachine.routeName: (_) => RequestMachine(),
                 DoctorServices.routeName: (_) => DoctorServices(),
                 Appointment.routeName: (_) => Appointment(),
+                AllDoctorsScreen.routeName: (_) => const AllDoctorsScreen(),
 
               },
             );

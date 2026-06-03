@@ -6,13 +6,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../chat/cubit/chat_cubit.dart';
 import '../../chat/presentation/screens/messages_screen.dart';
 import 'doctor_appointment/doctor_appointment_screen.dart';
+import 'doctor_home/ doctor_home_cubit/doctor_home_cubit.dart';
 import 'doctor_home/doctor_home_screen.dart';
-
 import 'doctor_profile/doctor_profile_screen.dart';
 import 'doctor_settings/doctor_settings_screen.dart';
 
 class DoctorMainLayout extends StatefulWidget {
-  static const String routeName = "DoctorMainLayout";
+  static const String routeName = 'DoctorMainLayout';
 
   final int selectedIndex;
   const DoctorMainLayout({super.key, this.selectedIndex = 0});
@@ -23,8 +23,6 @@ class DoctorMainLayout extends StatefulWidget {
 
 class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   late int currentIndex;
-
-
 
   @override
   void initState() {
@@ -44,12 +42,13 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
   @override
   Widget build(BuildContext context) {
     var authBox = Hive.box('authBox');
-
     final String doctorId = authBox.get('userId').toString();
 
-
     final List<Widget> tabs = [
-      const DoctorHomeScreen(),
+      BlocProvider(
+        create: (_) => DoctorHomeCubit(),
+        child: const DoctorHomeScreen(),
+      ),
       MessagesScreen(myId: doctorId),
       const DoctorAppointmentScreen(),
       const DoctorSettingsScreen(),
@@ -67,11 +66,9 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
           height: MediaQuery.of(context).size.height * 0.1,
           child: Directionality(
             textDirection: TextDirection.ltr,
-
             child: ValueListenableBuilder(
               valueListenable: authBox.listenable(),
               builder: (context, box, widget) {
-
                 String? imagePath = box.get('profile_image_path');
 
                 return BottomNavigationBar(
@@ -86,44 +83,48 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
                   items: [
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/home_icon.svg",
+                        'assets/images/home_icon.svg',
                         height: 24,
                         width: 24,
-                        color: currentIndex == 0 ? Colors.blueAccent : const Color.fromRGBO(51, 51, 51, 1),
+                        color: currentIndex == 0
+                            ? Colors.blueAccent
+                            : const Color.fromRGBO(51, 51, 51, 1),
                       ),
                       label: '',
                     ),
-
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/message-text_icon.svg",
+                        'assets/images/message-text_icon.svg',
                         height: 24,
                         width: 24,
-                        color: currentIndex == 1 ? Colors.blueAccent : const Color.fromRGBO(51, 51, 51, 1),
+                        color: currentIndex == 1
+                            ? Colors.blueAccent
+                            : const Color.fromRGBO(51, 51, 51, 1),
                       ),
                       label: '',
                     ),
-
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/calendar_icon.svg",
+                        'assets/images/calendar_icon.svg',
                         height: 24,
                         width: 24,
-                        color: currentIndex == 2 ? Colors.blueAccent : const Color.fromRGBO(51, 51, 51, 1),
+                        color: currentIndex == 2
+                            ? Colors.blueAccent
+                            : const Color.fromRGBO(51, 51, 51, 1),
                       ),
                       label: '',
                     ),
-
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "assets/images/settings_icon.svg",
+                        'assets/images/settings_icon.svg',
                         height: 24,
                         width: 24,
-                        color: currentIndex == 3 ? Colors.blueAccent : const Color.fromRGBO(51, 51, 51, 1),
+                        color: currentIndex == 3
+                            ? Colors.blueAccent
+                            : const Color.fromRGBO(51, 51, 51, 1),
                       ),
                       label: '',
                     ),
-
                     BottomNavigationBarItem(
                       label: '',
                       icon: CircleAvatar(
@@ -131,7 +132,8 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
                         backgroundColor: Colors.grey.shade200,
                         backgroundImage: imagePath != null
                             ? FileImage(File(imagePath))
-                            : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                            : const AssetImage('assets/images/person_image.png')
+                        as ImageProvider,
                       ),
                       activeIcon: Container(
                         width: 30,
@@ -144,7 +146,7 @@ class _DoctorMainLayoutState extends State<DoctorMainLayout> {
                         child: CircleAvatar(
                           backgroundImage: imagePath != null
                               ? FileImage(File(imagePath))
-                              : const AssetImage("assets/images/person_image.png") as ImageProvider,
+                              : const AssetImage('assets/images/person_image.png') as ImageProvider,
                         ),
                       ),
                     ),

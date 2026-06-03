@@ -23,6 +23,8 @@ import 'features/chat/services/socket_service.dart';
 import 'features/doctor/availabilities/availability_cubit.dart';
 import 'features/doctor/main_layout/doctor_main_layout.dart';
 import 'features/doctor/main_layout/doctor_profile/doctor_me_cubit/doctor_me_cubit.dart';
+import 'features/doctor/main_layout/doctor_profile/doctor_reviews_cubit/doctor_reviews_cubit.dart';
+import 'features/doctor/main_layout/doctor_profile/doctor_reviews_screen.dart';
 import 'features/doctor/main_layout/doctor_profile/manage_appointment_screen.dart';
 import 'features/doctor/main_layout/doctor_profile/update_doctor_profile_cubit/update_doctor_profile_cubit.dart';
 import 'features/patient/care/care_map_screen.dart';
@@ -66,6 +68,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DoctorMeCubit()),
         BlocProvider(create: (context) => UpdateDoctorProfileCubit()),
         BlocProvider(create: (context) => AppointmentCubit()),
+        BlocProvider(create: (context) => DoctorReviewsCubit()),
         BlocProvider(create: (context) => DonationCubit()..getDonationData()),
 
         BlocProvider(
@@ -131,6 +134,7 @@ class MyApp extends StatelessWidget {
                 RequestBlood.routeName: (_) => RequestBlood(),
                 RequestMachine.routeName: (_) => RequestMachine(),
                 Appointment.routeName: (_) => Appointment(),
+                DoctorReviewsScreen.routeName: (_) => DoctorReviewsScreen(),
 
               },
             );

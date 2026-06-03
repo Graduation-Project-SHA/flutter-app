@@ -1,29 +1,27 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_care_project/core/network/api_constants.dart';
 import '../../../../../core/network/dio.dart';
-import 'doctor_me_model.dart';
-import 'doctor_me_state.dart';
+import '../../../../../core/network/api_constants.dart';
+import 'doctor_review_model.dart';
+import 'doctor_reviews_state.dart';
 
-class DoctorMeCubit extends Cubit<DoctorMeState> {
-  DoctorMeCubit() : super(DoctorMeInitial());
+class DoctorReviewsCubit extends Cubit<DoctorReviewsState> {
+  DoctorReviewsCubit() : super(DoctorReviewsInitial());
 
-  static DoctorMeCubit get(context) => BlocProvider.of(context);
+  static DoctorReviewsCubit get(context) => BlocProvider.of(context);
 
-  Future<void> getDoctorMe() async {
-    emit(DoctorMeLoading());
+  Future<void> getDoctorReviews() async {
+    emit(DoctorReviewsLoading());
 
     try {
       final response = await DioHelper.fetchData(
-        url: ApiConstants.getProfile
+        url: ApiConstants.doctorReviews,
       );
 
-      print("Doctor me response: ${response.data}");
-
-      final data = response.data['data'];
-      emit(DoctorMeLoaded(DoctorMeModel.fromJson(data)));
+      final reviewsData = DoctorReviewModel.fromJson(response.data);
+      emit(DoctorReviewsLoaded(reviewsData));
     } catch (e) {
-      emit(DoctorMeError(_mapErrorMessage(e)));
+      emit(DoctorReviewsError(_mapErrorMessage(e)));
     }
   }
 
@@ -33,7 +31,7 @@ class DoctorMeCubit extends Cubit<DoctorMeState> {
           error.type == DioExceptionType.connectionTimeout ||
           error.type == DioExceptionType.receiveTimeout ||
           error.type == DioExceptionType.sendTimeout) {
-        return "تعذر الاتصال بالإنترنت، تأكدي من الشبكة وحاولي مرة أخرى";
+        return "تعذر الاتصال بالإنترنت، تأكد من الشبكة وحاول مرة أخرى";
       }
 
       final data = error.response?.data;
@@ -46,6 +44,6 @@ class DoctorMeCubit extends Cubit<DoctorMeState> {
       }
     }
 
-    return "حدث خطأ أثناء تحميل بيانات الدكتور";
+    return "حدث خطأ أثناء تحميل التقييمات";
   }
 }

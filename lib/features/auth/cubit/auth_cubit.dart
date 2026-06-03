@@ -181,7 +181,10 @@ class AuthCubit extends Cubit<AuthState> {
         await authBox.put('dateOfBirth', userData['dateOfBirth']);
         await authBox.put('profileImage', userData['profileImage']);
         await authBox.put('userRole', userData['role']);
-
+        var doctorProfile = userData['doctorProfile'];
+        if (doctorProfile != null) {
+          await authBox.put('doctorProfileId', doctorProfile['id'].toString());
+        }
         emit(LoginSuccessState(response.data));
       }
     } catch (error) {

@@ -229,7 +229,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
                             image: "assets/images/review.png",
                             color: Colors.green,
                             title: "تقييماتي",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(context, "DoctorReviewsScreen");
+                            },
                           ),
                           _buildOptionItem(
                             image: "assets/images/wallet.png",

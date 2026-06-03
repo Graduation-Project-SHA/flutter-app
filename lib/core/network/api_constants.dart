@@ -38,4 +38,9 @@ class ApiConstants {
   static String getDoctorSlots(String id) => "$baseUrl/doctors/$id/slots";
   static const String patientAppointments = "$baseUrl/patient/me/appointments";
   static String cancelAppointment(int id) => "$baseUrl/patient/me/appointments/$id/cancel";
+
+  static const String doctorAppointments =
+      "$baseUrl/doctor/me/appointments";
+  static const String doctorReviews = "$baseUrl/doctor/me/reviews";
+
 }
